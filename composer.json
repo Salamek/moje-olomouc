@@ -1,0 +1,20 @@
+{
+    "name"        : "salamek/moje-olomouc",
+    "description" : "MojeOlomouc Client",
+    "license"     : "LGPL-3.0",
+    "require": {
+        "php": ">=7.0.0",
+        "guzzlehttp/guzzle": "~6.2"
+    },
+    "authors": [
+        {
+            "name"  : "Adam Schubert",
+            "email" : "adam.schubert@sg1-game.net"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Salamek"  : "src"
+        }
+    }
+}
