@@ -15,6 +15,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class Place implements IPlace
 {
+    use TIdentifier;
+    
     /** @var string */
     private $title;
 
@@ -54,11 +56,24 @@ class Place implements IPlace
      * @param string $lon
      * @param int $categoryId
      * @param EntityImage[] $images
-     * @param string $attachmentUrl
+     * @param string|null $attachmentUrl
      * @param bool $isVisible
-     * @param int $approveState
+     * @param int|null $approveState
+     * @param int|null $id
      */
-    public function __construct(string $title, string $description, string $address, string $lat, string $lon, int $categoryId, array $images = [], string $attachmentUrl = null, bool $isVisible = true, int $approveState = null)
+    public function __construct(
+        string $title,
+        string $description,
+        string $address,
+        string $lat,
+        string $lon,
+        int $categoryId,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        int $approveState = null,
+        int $id = null
+    )
     {
         $this->setTitle($title);
         $this->setDescription($description);
@@ -70,6 +85,7 @@ class Place implements IPlace
         $this->setAttachmentUrl($attachmentUrl);
         $this->setIsVisible($isVisible);
         $this->setApproveState($approveState);
+        $this->setId($id);
     }
 
 
@@ -247,5 +263,28 @@ class Place implements IPlace
         return $this->approveState;
     }
 
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        $primitiveImages = [];
+        foreach ($this->images AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
 
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'address' => $this->address,
+            'lat' => $this->lat,
+            'lon' => $this->lon,
+            'categoryId' => $this->categoryId,
+            'images' => $primitiveImages,
+            'attachmentUrl' => $this->attachmentUrl,
+            'isVisible' => $this->isVisible,
+            'approveState' => $this->approveState
+        ];
+    }
 }

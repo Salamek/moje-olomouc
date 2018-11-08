@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
-use Salamek\MojeOlomouc\Exception\ImportantMessageSeverityEnum;
-use Salamek\MojeOlomouc\Exception\ImportantMessageTypeEnum;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
-use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
+use Salamek\MojeOlomouc\Model\ImportantMessage as ImportantMessageModel;
 
 /**
  * Class ImportantMessage
@@ -39,103 +36,46 @@ class ImportantMessage implements IOperation
     }
 
     /**
-     * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
-     * @param int $type
-     * @param int $severity
-     * @param bool $isVisible
+     * @param ImportantMessageModel $importantMessage
      * @return Response
      */
     public function create(
-        string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
-        int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-        int $severity = ImportantMessageSeverityEnum::WARNING,
-        bool $isVisible = true
+        ImportantMessageModel $importantMessage
     ): Response
     {
-        MaxLengthValidator::validate($text, 500);
-
-        IntInArrayValidator::validate($type, [
-            ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-            ImportantMessageTypeEnum::WIND_CONDITIONS,
-            ImportantMessageTypeEnum::OTHER
-        ]);
-
-        IntInArrayValidator::validate($severity, [
-            ImportantMessageSeverityEnum::WARNING,
-            ImportantMessageSeverityEnum::DANGER
-        ]);
-
         $data = [
-            'importantMessage' => [
-                'text' => $text,
-                'dateTimeAt'   => $dateTimeAt->format(\DateTime::ISO8601),
-                'expireAt'  => $expireAt->format(\DateTime::ISO8601),
-                'type'   => $type,
-                'severity'   => $severity,
-                'isVisible'   => $isVisible
-            ]
+            'importantMessage' => $importantMessage->toPrimitiveArray()
         ];
 
         return $this->request->create('/api/import/important-messages', $data);
     }
 
     /**
-     * @param int $id
-     * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
-     * @param int $type
-     * @param int $severity
-     * @param bool $isVisible
+     * @param ImportantMessageModel $importantMessage
+     * @param int|null $id
      * @return Response
      */
     public function update(
-        int $id,
-        string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
-        int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-        int $severity = ImportantMessageSeverityEnum::WARNING,
-        bool $isVisible = true
+        ImportantMessageModel $importantMessage,
+        int $id = null
     ): Response
     {
-        MaxLengthValidator::validate($text, 500);
-
-        IntInArrayValidator::validate($type, [
-            ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-            ImportantMessageTypeEnum::WIND_CONDITIONS,
-            ImportantMessageTypeEnum::OTHER
-        ]);
-
-        IntInArrayValidator::validate($severity, [
-            ImportantMessageSeverityEnum::WARNING,
-            ImportantMessageSeverityEnum::DANGER
-        ]);
-
+        $id = (is_null($id) ? $importantMessage->getId() : $id);
         $data = [
-            'importantMessage' => [
-                'text' => $text,
-                'dateTimeAt'   => $dateTimeAt->format(\DateTime::ISO8601),
-                'expireAt'  => $expireAt->format(\DateTime::ISO8601),
-                'type'   => $type,
-                'severity'   => $severity,
-                'isVisible'   => $isVisible
-            ]
+            'importantMessage' => $importantMessage->toPrimitiveArray()
         ];
 
         return $this->request->update('/api/import/important-messages', $id, $data);
     }
 
     /**
-     * @param int $id
+     * @param ImportantMessageModel $importantMessage
+     * @param int|null $id
      * @return Response
      */
-    public function delete(int $id): Response
+    public function delete(ImportantMessageModel $importantMessage, int $id = null): Response
     {
+        $id = (is_null($id) ? $importantMessage->getId() : $id);
         return $this->request->delete('/api/import/important-messages', $id);
     }
 }

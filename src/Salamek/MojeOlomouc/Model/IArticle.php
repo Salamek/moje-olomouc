@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IArticle
  * @package Salamek\MojeOlomouc\Model
  */
-interface IArticle
+interface IArticle extends IModel
 {
     /**
      * @param string $title
@@ -58,7 +58,7 @@ interface IArticle
      * @param int $approveState
      */
     public function setApproveState(int $approveState): void;
-
+    
     /**
      * @return string
      */

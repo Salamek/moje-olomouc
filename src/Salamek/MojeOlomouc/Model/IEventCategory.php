@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IEventCategory
  * @package Salamek\MojeOlomouc\Model
  */
-interface IEventCategory
+interface IEventCategory extends IModel
 {
     /**
      * @param string $title
@@ -18,7 +18,7 @@ interface IEventCategory
      * @param bool $isVisible
      */
     public function setIsVisible(bool $isVisible): void;
-
+    
     /**
      * @return string
      */

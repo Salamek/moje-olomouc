@@ -5,19 +5,19 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Event as EventModel;
+use \Salamek\MojeOlomouc\Model\Place as PlaceModel;
 
 /**
- * Class Event
+ * Class Place
  * @package Salamek\MojeOlomouc\Operation
  */
-class Event implements IOperation
+class Place implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Event constructor.
+     * Place constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -49,50 +49,50 @@ class Event implements IOperation
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/places', $data); //@TODO HYDRATOR
     }
 
     /**
-     * @param EventModel $event
+     * @param PlaceModel $place
      * @return Response
      */
     public function create(
-        EventModel $event
+        PlaceModel $place
     ): Response
     {
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'place' => $place->toPrimitiveArray()
         ];
 
-        return $this->request->create('/api/import/events', $data);
+        return $this->request->create('/api/import/places', $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param PlaceModel $place
      * @param int|null $id
      * @return Response
      */
     public function update(
-        EventModel $event,
+        PlaceModel $place,
         int $id = null
     ): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
+        $id = (is_null($id) ? $place->getId() : $id);
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'place' => $place->toPrimitiveArray()
         ];
 
-        return $this->request->update('/api/import/events', $id, $data);
+        return $this->request->update('/api/import/places', $id, $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param PlaceModel $place
      * @param int|null $id
      * @return Response
      */
-    public function delete(EventModel $event, int $id = null): Response
+    public function delete(PlaceModel $place, int $id = null): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
-        return $this->request->delete('/api/import/events', $id);
+        $id = (is_null($id) ? $place->getId() : $id);
+        return $this->request->delete('/api/import/places', $id);
     }
 }

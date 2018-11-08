@@ -13,6 +13,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class EntityImage implements IEntityImage
 {
+    use TIdentifier;
+
     /** @var string|null */
     private $title;
 
@@ -31,13 +33,15 @@ class EntityImage implements IEntityImage
      * @param int $contentType
      * @param string|null $title
      * @param bool $isFeatured
+     * @param int|null $id
      */
-    public function __construct(string $imageUrl, int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER, string $title = null, bool $isFeatured = false)
+    public function __construct(string $imageUrl, int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER, string $title = null, bool $isFeatured = false, int $id = null)
     {
         $this->setImageUrl($imageUrl);
         $this->setContentType($contentType);
         $this->setTitle($title);
         $this->setIsFeatured($isFeatured);
+        $this->setId($id);
     }
 
     /**
@@ -110,4 +114,16 @@ class EntityImage implements IEntityImage
         return $this->isFeatured;
     }
 
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'imageUrl' => $this->imageUrl,
+            'contentType' => $this->contentType,
+            'isFeatured' => $this->isFeatured
+        ];
+    }
 }

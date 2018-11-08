@@ -8,7 +8,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IImportantMessage
  * @package Salamek\MojeOlomouc\Model
  */
-interface IImportantMessage
+interface IImportantMessage extends IModel
 {
     /**
      * @param string $text
@@ -39,7 +39,7 @@ interface IImportantMessage
      * @param bool $isVisible
      */
     public function setIsVisible(bool $isVisible): void;
-
+    
     /**
      * @return string
      */

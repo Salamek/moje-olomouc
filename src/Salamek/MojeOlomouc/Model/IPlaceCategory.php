@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IPlaceCategory
  * @package Salamek\MojeOlomouc\Model
  */
-interface IPlaceCategory
+interface IPlaceCategory extends IModel
 {
     /**
      * @param string $title

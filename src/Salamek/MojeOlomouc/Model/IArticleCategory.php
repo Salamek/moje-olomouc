@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IArticleCategory
  * @package Salamek\MojeOlomouc\Model
  */
-interface IArticleCategory
+interface IArticleCategory extends IModel
 {
     /**
      * @param string $title
@@ -28,7 +28,7 @@ interface IArticleCategory
      * @param boolean $isVisible
      */
     public function setIsVisible(bool $isVisible): void;
-
+    
     /**
      * @return string
      */

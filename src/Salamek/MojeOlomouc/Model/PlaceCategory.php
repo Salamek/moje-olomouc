@@ -12,6 +12,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class PlaceCategory implements IPlaceCategory
 {
+    use TIdentifier;
+
     /** @var string */
     private $title;
 
@@ -24,14 +26,16 @@ class PlaceCategory implements IPlaceCategory
     /**
      * PlaceCategory constructor.
      * @param string $title
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      * @param bool $isVisible
+     * @param int|null $id
      */
-    public function __construct(string $title, int $consumerFlags = null, $isVisible = true)
+    public function __construct(string $title, int $consumerFlags = null, $isVisible = true, int $id = null)
     {
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
         $this->setIsVisible($isVisible);
+        $this->setId($id);
     }
 
     /**
@@ -82,4 +86,17 @@ class PlaceCategory implements IPlaceCategory
     {
         return $this->isVisible;
     }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'consumerFlags' => $this->consumerFlags,
+            'isVisible' => $this->isVisible
+        ];
+    }
+    
 }

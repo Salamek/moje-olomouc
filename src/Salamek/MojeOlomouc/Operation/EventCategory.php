@@ -5,19 +5,19 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Event as EventModel;
+use \Salamek\MojeOlomouc\Model\EventCategory as EventCategoryModel;
 
 /**
- * Class Event
+ * Class EventCategory
  * @package Salamek\MojeOlomouc\Operation
  */
-class Event implements IOperation
+class EventCategory implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Event constructor.
+     * EventCategory constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -28,7 +28,6 @@ class Event implements IOperation
     /**
      * @param \DateTime|null $fromUpdatedAt
      * @param bool $showDeleted
-     * @param bool $onlyApproved
      * @param bool $onlyVisible
      * @param bool $extraFields
      * @return Response
@@ -36,7 +35,6 @@ class Event implements IOperation
     public function getAll(
         \DateTime $fromUpdatedAt = null,
         bool $showDeleted = false,
-        bool $onlyApproved = true,
         bool $onlyVisible = true,
         bool $extraFields = false
     ): Response
@@ -44,55 +42,54 @@ class Event implements IOperation
         $data = [
             'fromUpdatedAt' => ($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null),
             'showDeleted' => $showDeleted,
-            'onlyApproved' => $onlyApproved,
             'onlyVisible' => $onlyVisible,
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/event-categories', $data); //@TODO HYDRATOR
     }
 
     /**
-     * @param EventModel $event
+     * @param EventCategoryModel $eventCategory
      * @return Response
      */
     public function create(
-        EventModel $event
+        EventCategoryModel $eventCategory
     ): Response
     {
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'eventCategory' => $eventCategory->toPrimitiveArray()
         ];
 
-        return $this->request->create('/api/import/events', $data);
+        return $this->request->create('/api/import/event-categories', $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param EventCategoryModel $eventCategory
      * @param int|null $id
      * @return Response
      */
     public function update(
-        EventModel $event,
+        EventCategoryModel $eventCategory,
         int $id = null
     ): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
+        $id = (is_null($id) ? $eventCategory->getId() : $id);
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'eventCategory' => $eventCategory->toPrimitiveArray()
         ];
 
-        return $this->request->update('/api/import/events', $id, $data);
+        return $this->request->update('/api/import/event-categories', $id, $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param EventCategoryModel $eventCategory
      * @param int|null $id
      * @return Response
      */
-    public function delete(EventModel $event, int $id = null): Response
+    public function delete(EventCategoryModel $eventCategory, int $id = null): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
-        return $this->request->delete('/api/import/events', $id);
+        $id = (is_null($id) ? $eventCategory->getId() : $id);
+        return $this->request->delete('/api/import/event-categories', $id);
     }
 }

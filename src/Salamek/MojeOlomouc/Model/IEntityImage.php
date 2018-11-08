@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IEntityImage
  * @package Salamek\MojeOlomouc\Model
  */
-interface IEntityImage
+interface IEntityImage extends IModel
 {
     /**
      * @param string|null $title

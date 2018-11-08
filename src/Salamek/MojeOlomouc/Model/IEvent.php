@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IEvent
  * @package Salamek\MojeOlomouc\Model
  */
-interface IEvent
+interface IEvent extends IModel
 {
     /**
      * @param string $title
@@ -93,7 +93,7 @@ interface IEvent
      * @param int $featuredLevel
      */
     public function setFeaturedLevel(int $featuredLevel): void;
-
+    
     /**
      * @return string
      */

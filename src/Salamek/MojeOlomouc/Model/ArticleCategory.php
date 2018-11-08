@@ -12,6 +12,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class ArticleCategory implements IArticleCategory
 {
+    use TIdentifier;
+
     /** @var string */
     private $title;
 
@@ -27,16 +29,18 @@ class ArticleCategory implements IArticleCategory
     /**
      * ArticleCategory constructor.
      * @param string $title
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      * @param bool $isImportant
      * @param bool $isVisible
+     * @param int|null $id
      */
-    public function __construct(string $title, int $consumerFlags = null, bool $isImportant = false, bool $isVisible = true)
+    public function __construct(string $title, int $consumerFlags = null, bool $isImportant = false, bool $isVisible = true, int $id = null)
     {
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
         $this->setIsImportant($isImportant);
         $this->setIsVisible($isVisible);
+        $this->setId($id);
     }
     
     /**
@@ -71,7 +75,7 @@ class ArticleCategory implements IArticleCategory
     {
         $this->isVisible = $isVisible;
     }
-
+    
     /**
      * @return string
      */
@@ -103,5 +107,19 @@ class ArticleCategory implements IArticleCategory
     {
         return $this->isVisible;
     }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'consumerFlags' => $this->consumerFlags,
+            'isImportant' => $this->isImportant,
+            'isVisible' => $this->isVisible
+        ];
+    }
+
 
 }

@@ -14,6 +14,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class ImportantMessage implements IImportantMessage
 {
+    use TIdentifier;
+
     /** @var string */
     private $text;
 
@@ -40,6 +42,7 @@ class ImportantMessage implements IImportantMessage
      * @param int $type
      * @param int $severity
      * @param bool $isVisible
+     * @param int|null $id
      */
     public function __construct(
         string $text,
@@ -47,7 +50,8 @@ class ImportantMessage implements IImportantMessage
         \DateTime $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        bool $isVisible = true
+        bool $isVisible = true,
+        int $id = null
     )
     {
         $this->setText($text);
@@ -56,6 +60,7 @@ class ImportantMessage implements IImportantMessage
         $this->setType($type);
         $this->setSeverity($severity);
         $this->setIsVisible($isVisible);
+        $this->setId($id);
     }
 
     /**
@@ -162,6 +167,21 @@ class ImportantMessage implements IImportantMessage
     public function getIsVisible(): bool
     {
         return $this->isVisible;
+    }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        return [
+            'text' => $this->text,
+            'dateTimeAt'   => $this->dateTimeAt->format(\DateTime::ISO8601),
+            'expireAt'  => $this->expireAt->format(\DateTime::ISO8601),
+            'type'   => $this->type,
+            'severity'   => $this->severity,
+            'isVisible'   => $this->isVisible
+        ];
     }
 
 }

@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Interface IPlace
  * @package Salamek\MojeOlomouc\Model
  */
-interface IPlace
+interface IPlace extends IModel
 {
     /**
      * @param string $title

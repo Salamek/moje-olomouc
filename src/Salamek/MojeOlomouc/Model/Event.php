@@ -15,6 +15,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class Event implements IEvent
 {
+    use TIdentifier;
+    
     /** @var string */
     private $title;
 
@@ -76,7 +78,7 @@ class Event implements IEvent
      * @param string $placeLat
      * @param string $placeLon
      * @param array $categoryIdsArr
-     * @param IEntityImage[] $images
+     * @param EntityImage[] $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
      * @param string|null $webUrl
@@ -85,6 +87,7 @@ class Event implements IEvent
      * @param bool $isVisible
      * @param int|null $approveState
      * @param int|null $featuredLevel
+     * @param int|null $id
      */
     public function __construct(
         string $title,
@@ -103,7 +106,8 @@ class Event implements IEvent
         int $consumerFlags = null,
         bool $isVisible = true,
         int $approveState = null,
-        int $featuredLevel = null
+        int $featuredLevel = null,
+        int $id = null
     )
     {
         $this->setTitle($title);
@@ -123,6 +127,7 @@ class Event implements IEvent
         $this->setIsVisible($isVisible);
         $this->setApproveState($approveState);
         $this->setFeaturedLevel($featuredLevel);
+        $this->setId($id);
     }
 
     /**
@@ -297,7 +302,7 @@ class Event implements IEvent
         }
         $this->featuredLevel = $featuredLevel;
     }
-
+    
     /**
      * @return string
      */
@@ -432,6 +437,38 @@ class Event implements IEvent
     public function getFeaturedLevel(): int
     {
         return $this->featuredLevel;
+    }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        $primitiveImages = [];
+        foreach ($this->images AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
+
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'startAt' => ($this->startAt ? $this->startAt->format(\DateTime::ISO8601): null),
+            'endAt' => ($this->endAt ? $this->endAt->format(\DateTime::ISO8601): null),
+            'placeDesc' => $this->placeDesc,
+            'placeLat' => $this->placeLat,
+            'placeLon' => $this->placeLon,
+            'categoryIdsArr' => $this->categoryIdsArr,
+            'images'   => $primitiveImages,
+            'attachmentUrl'  => $this->attachmentUrl,
+            'fee'   => $this->fee,
+            'webUrl'   => $this->webUrl,
+            'facebookUrl'   => $this->facebookUrl,
+            'consumerFlags'   => $this->consumerFlags,
+            'isVisible'   => $this->isVisible,
+            'approveState'   => $this->approveState,
+            'featuredLevel'   => $this->featuredLevel
+        ];
     }
 
 }

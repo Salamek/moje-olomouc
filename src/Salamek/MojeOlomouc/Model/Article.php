@@ -12,6 +12,8 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class Article implements IArticle
 {
+    use TIdentifier;
+    
     /** @var string */
     private $title;
 
@@ -50,10 +52,11 @@ class Article implements IArticle
      * @param int $categoryId
      * @param \DateTime $dateTimeAt
      * @param EntityImage[] $images
-     * @param string $attachmentUrl
+     * @param string|null $attachmentUrl
      * @param bool $isVisible
      * @param bool $isImportant
-     * @param int $approveState
+     * @param int|null $approveState
+     * @param int|null $id
      */
     public function __construct(
         string $title,
@@ -65,7 +68,8 @@ class Article implements IArticle
         string $attachmentUrl = null,
         bool $isVisible = true,
         bool $isImportant = false,
-        int $approveState = null
+        int $approveState = null,
+        int $id = null
     )
     {
         $this->setTitle($title);
@@ -78,8 +82,9 @@ class Article implements IArticle
         $this->setIsVisible($isVisible);
         $this->setIsImportant($isImportant);
         $this->setApproveState($approveState);
+        $this->setId($id);
     }
-
+    
     /**
      * @param string $title
      */
@@ -171,7 +176,7 @@ class Article implements IArticle
         }
         $this->approveState = $approveState;
     }
-
+    
     /**
      * @return string
      */
@@ -251,5 +256,31 @@ class Article implements IArticle
     {
         return $this->approveState;
     }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        $primitiveImages = [];
+        foreach ($this->images AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
+
+        return [
+            'title' => $this->title,
+            'content' => $this->content,
+            'author' => $this->author,
+            'categoryId' => $this->categoryId,
+            'dateTimeAt' => $this->dateTimeAt->format(\DATE_ISO8601),
+            'images' => $primitiveImages,
+            'attachmentUrl' => $this->attachmentUrl,
+            'isVisible' => $this->isVisible,
+            'isImportant' => $this->isImportant,
+            'approveState' => $this->approveState,
+        ];
+    }
+
 
 }

@@ -9,6 +9,8 @@ namespace Salamek\MojeOlomouc\Model;
  */
 class EventCategory implements IEventCategory
 {
+    use TIdentifier;
+    
     /** @var string */
     private $title;
 
@@ -19,11 +21,13 @@ class EventCategory implements IEventCategory
      * EventCategory constructor.
      * @param string $title
      * @param bool $isVisible
+     * @param null $id
      */
-    public function __construct(string $title, bool $isVisible = true)
+    public function __construct(string $title, bool $isVisible = true, $id = null)
     {
         $this->setTitle($title);
         $this->setIsVisible($isVisible);
+        $this->setId($id);
     }
 
     /**
@@ -56,6 +60,17 @@ class EventCategory implements IEventCategory
     public function getIsVisible(): bool
     {
         return $this->isVisible;
+    }
+
+    /**
+     * @return array
+     */
+    public function toPrimitiveArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'isVisible' => $this->isVisible
+        ];
     }
 
 

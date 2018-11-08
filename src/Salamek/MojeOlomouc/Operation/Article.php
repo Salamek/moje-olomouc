@@ -5,19 +5,19 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Event as EventModel;
+use \Salamek\MojeOlomouc\Model\Article as ArticleModel;
 
 /**
- * Class Event
+ * Class Article
  * @package Salamek\MojeOlomouc\Operation
  */
-class Event implements IOperation
+class Article implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Event constructor.
+     * Article constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -49,50 +49,50 @@ class Event implements IOperation
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/articles', $data); //@TODO HYDRATOR
     }
 
     /**
-     * @param EventModel $event
+     * @param ArticleModel $article
      * @return Response
      */
     public function create(
-        EventModel $event
+        ArticleModel $article
     ): Response
     {
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'article' => $article->toPrimitiveArray()
         ];
 
-        return $this->request->create('/api/import/events', $data);
+        return $this->request->create('/api/import/articles', $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param ArticleModel $article
      * @param int|null $id
      * @return Response
      */
     public function update(
-        EventModel $event,
+        ArticleModel $article,
         int $id = null
     ): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
+        $id = (is_null($id) ? $article->getId() : $id);
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'article' => $article->toPrimitiveArray()
         ];
 
-        return $this->request->update('/api/import/events', $id, $data);
+        return $this->request->update('/api/import/articles', $id, $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param ArticleModel $article
      * @param int|null $id
      * @return Response
      */
-    public function delete(EventModel $event, int $id = null): Response
+    public function delete(ArticleModel $article, int $id = null): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
-        return $this->request->delete('/api/import/events', $id);
+        $id = (is_null($id) ? $article->getId() : $id);
+        return $this->request->delete('/api/import/articles', $id);
     }
 }
