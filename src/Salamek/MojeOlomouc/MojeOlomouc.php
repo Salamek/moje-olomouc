@@ -8,6 +8,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Salamek\MojeOlomouc\Operation\Event;
 use Salamek\MojeOlomouc\Operation\ImportantMessage;
+use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
+use Salamek\MojeOlomouc\Validator\MinLengthValidator;
 
 /**
  * Class MojeOlomouc
@@ -49,6 +51,8 @@ class MojeOlomouc
      */
     public function __construct(ClientInterface $client, string $apiKey)
     {
+        MaxLengthValidator::validate($apiKey, 64);
+        MinLengthValidator::validate($apiKey, 64);
         $this->client = $client;
         $this->apiKey = $apiKey;
 
@@ -56,14 +60,6 @@ class MojeOlomouc
 
         $this->event = new Event($request);
         $this->importantMessage = new ImportantMessage($request);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSetup(): bool
-    {
-        return '' !== trim($this->apiKey);
     }
 
     /**

@@ -9,6 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Response
  * @package Salamek\MojeOlomouc
+ * @TODO THIS NEEDS MORE WORK
+ * @TODO I DONT LIKE ERROR HANDLING HERE
  */
 class Response
 {
@@ -45,6 +47,11 @@ class Response
         else
         {
             $this->isError = false;
+        }
+
+        if (!$this->isError)
+        {
+            $this->isError = !empty($errors);
         }
 
         $this->errors = $errors;
