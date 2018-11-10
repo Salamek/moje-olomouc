@@ -5,6 +5,7 @@ namespace Salamek\MojeOlomouc\Model;
 use Salamek\MojeOlomouc\Exception\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
+use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
 
 /**
  * Class Article
@@ -133,6 +134,7 @@ class Article implements IArticle
      */
     public function setImages(array $images): void
     {
+        ObjectArrayValidator::validate($images, EntityImage::class);
         $this->images = $images;
     }
 

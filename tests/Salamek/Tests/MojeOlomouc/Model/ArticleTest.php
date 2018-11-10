@@ -13,23 +13,46 @@ class ArticleTest extends BaseTest
 {
     /**
      * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param string $content
+     * @param string $author
+     * @param int $categoryId
+     * @param \DateTime $dateTimeAt
+     * @param array $images
+     * @param string|null $attachmentUrl
+     * @param bool $isVisible
+     * @param bool $isImportant
+     * @param int|null $approveState
+     * @param int|null $id
      */
-    public function createRequiredShouldBeGoodTest()
+    public function createRequiredShouldBeGoodTest(
+        string $title,
+        string $content,
+        string $author,
+        int $categoryId,
+        \DateTime $dateTimeAt,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        bool $isImportant = false,
+        int $approveState = null,
+        int $id = null
+    )
     {
-        $dateTime = new \DateTime();
         $article = new Article(
-            'title',
-            'content',
-            'author',
-            1,
-            $dateTime
+            $title,
+            $content,
+            $author,
+            $categoryId,
+            $dateTimeAt
         );
 
-        $this->assertEquals('title', $article->getTitle());
-        $this->assertEquals('content', $article->getContent());
-        $this->assertEquals('author', $article->getAuthor());
-        $this->assertEquals(1, $article->getCategoryId());
-        $this->assertEquals($dateTime, $article->getDateTimeAt());
+        $this->assertEquals($title, $article->getTitle());
+        $this->assertEquals($content, $article->getContent());
+        $this->assertEquals($author, $article->getAuthor());
+        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals([], $article->getImages());
         $this->assertEquals(null, $article->getAttachmentUrl());
         $this->assertEquals(true, $article->getIsVisible());
@@ -37,46 +60,176 @@ class ArticleTest extends BaseTest
         $this->assertEquals(null, $article->getApproveState());
         $this->assertEquals(null, $article->getId());
         $this->assertInternalType('array', $article->toPrimitiveArray());
-        //@TODO check toPrimitiveArray output
-        //@TODO add data source
+
+
+        $primitiveImages = [];
+        foreach ($article->getImages() AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
+
+        $primitiveArrayTest = [
+            'title' => $title,
+            'content' => $content,
+            'author' => $author,
+            'categoryId' => $categoryId,
+            'dateTimeAt' => $dateTimeAt->format(\DATE_ISO8601),
+            'images' => $primitiveImages,
+            'attachmentUrl' => $article->getAttachmentUrl(),
+            'isVisible' => $article->getIsVisible(),
+            'isImportant' => $article->getIsImportant(),
+            'approveState' => $article->getApproveState(),
+        ];
+
+        $this->assertEquals($primitiveArrayTest, $article->toPrimitiveArray());
     }
 
 
     /**
      * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param string $content
+     * @param string $author
+     * @param int $categoryId
+     * @param \DateTime $dateTimeAt
+     * @param array $images
+     * @param string|null $attachmentUrl
+     * @param bool $isVisible
+     * @param bool $isImportant
+     * @param int|null $approveState
+     * @param int|null $id
      */
-    public function createOptionalShouldBeGoodTest()
+    public function createOptionalShouldBeGoodTest(
+        string $title,
+        string $content,
+        string $author,
+        int $categoryId,
+        \DateTime $dateTimeAt,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        bool $isImportant = false,
+        int $approveState = null,
+        int $id = null
+    )
     {
-        $dateTime = new \DateTime();
-        $id = mt_rand();
-        $image = new EntityImage('url');
         $article = new Article(
-            'title',
-            'content',
-            'author',
-            1,
-            $dateTime,
-            [$image],
-            'url',
-            false,
-            true,
-            ArticleApproveStateEnum::WAITING_FOR_ADD,
+            $title,
+            $content,
+            $author,
+            $categoryId,
+            $dateTimeAt,
+            $images,
+            $attachmentUrl,
+            $isVisible,
+            $isImportant,
+            $approveState,
             $id
         );
 
-        $this->assertEquals('title', $article->getTitle());
-        $this->assertEquals('content', $article->getContent());
-        $this->assertEquals('author', $article->getAuthor());
-        $this->assertEquals(1, $article->getCategoryId());
-        $this->assertEquals($dateTime, $article->getDateTimeAt());
-        $this->assertEquals([$image], $article->getImages());
-        $this->assertEquals('url', $article->getAttachmentUrl());
-        $this->assertEquals(false, $article->getIsVisible());
-        $this->assertEquals(true, $article->getIsImportant());
-        $this->assertEquals(ArticleApproveStateEnum::WAITING_FOR_ADD, $article->getApproveState());
+        $this->assertEquals($title, $article->getTitle());
+        $this->assertEquals($content, $article->getContent());
+        $this->assertEquals($author, $article->getAuthor());
+        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
+        $this->assertEquals($images, $article->getImages());
+        $this->assertEquals($attachmentUrl, $article->getAttachmentUrl());
+        $this->assertEquals($isVisible, $article->getIsVisible());
+        $this->assertEquals($isImportant, $article->getIsImportant());
+        $this->assertEquals($approveState, $article->getApproveState());
         $this->assertEquals($id, $article->getId());
         $this->assertInternalType('array', $article->toPrimitiveArray());
-        //@TODO check toPrimitiveArray output
-        //@TODO add data source
+        $primitiveImages = [];
+
+        foreach ($images AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
+
+        $primitiveArrayTest = [
+            'title' => $title,
+            'content' => $content,
+            'author' => $author,
+            'categoryId' => $categoryId,
+            'dateTimeAt' => $dateTimeAt->format(\DATE_ISO8601),
+            'images' => $primitiveImages,
+            'attachmentUrl' => $attachmentUrl,
+            'isVisible' => $isVisible,
+            'isImportant' => $isImportant,
+            'approveState' => $approveState,
+        ];
+
+        $this->assertEquals($primitiveArrayTest, $article->toPrimitiveArray());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideInvalidConstructorParameters
+     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @param string $title
+     * @param string $content
+     * @param string $author
+     * @param int $categoryId
+     * @param \DateTime $dateTimeAt
+     * @param array $images
+     * @param string|null $attachmentUrl
+     * @param bool $isVisible
+     * @param bool $isImportant
+     * @param int|null $approveState
+     * @param int|null $id
+     */
+    public function createOptionalShouldFailOnBadData(
+        string $title,
+        string $content,
+        string $author,
+        int $categoryId,
+        \DateTime $dateTimeAt,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        bool $isImportant = false,
+        int $approveState = null,
+        int $id = null
+    )
+    {
+        new Article(
+            $title,
+            $content,
+            $author,
+            $categoryId,
+            $dateTimeAt,
+            $images,
+            $attachmentUrl,
+            $isVisible,
+            $isImportant,
+            $approveState,
+            $id
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function provideInvalidConstructorParameters(): array
+    {
+        return [
+            [str_repeat('title-'.mt_rand(), 128), 'content-'.mt_rand(), 'author-'.mt_rand(), mt_rand(), new \DateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), str_repeat('author-'.mt_rand(), 128), mt_rand(), new \DateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), 'author-'.mt_rand(), mt_rand(), new \DateTime(), ['notAEntityImage'], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function provideValidConstructorParameters(): array
+    {
+        $image = new EntityImage('url');
+        return [
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), new \DateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), new \DateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+        ];
     }
 }
