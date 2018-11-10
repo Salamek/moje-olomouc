@@ -12,9 +12,9 @@ use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
  */
 class GpsStringValidator
 {
-    public static function validate(string $value)
+    public static function validate(string $value): void
     {
-        if (preg_match('^\d{2}\.\d{3+}$', $value) === 0) {
+        if (preg_match('/^-?\d{2}\.\d{3,}$/', $value) === 0) {
             throw new InvalidArgumentException(sprintf('GPS value (%s) has incorrect format, only /^\d{2}\.\d{3+}$/ is allowed', $value));
         }
     }

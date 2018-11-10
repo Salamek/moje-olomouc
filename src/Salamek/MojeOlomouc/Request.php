@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc;
 
 use GuzzleHttp\ClientInterface;
+use Salamek\MojeOlomouc\Exception\RequestActionCodeEnum;
 
 /**
  * Class Request
@@ -12,9 +13,11 @@ use GuzzleHttp\ClientInterface;
  */
 class Request
 {
-    const ACTION_CODE_CREATE = 1;
-    const ACTION_CODE_UPDATE = 2;
-    const ACTION_CODE_DELETE = 3;
+    /** @var ClientInterface */
+    private $client;
+
+    /** @var string */
+    private $apiKey;
 
     /**
      * Request constructor.
@@ -63,12 +66,12 @@ class Request
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions['json'] = [
             'action' => [
-                'code' => self::ACTION_CODE_CREATE,
+                'code' => RequestActionCodeEnum::ACTION_CODE_CREATE,
                 'id' => null
             ]
         ];
 
-        $defaultClientOptions = array_merge($defaultClientOptions, ['json' => $data]);
+        $defaultClientOptions = array_merge_recursive($defaultClientOptions, ['json' => $data]);
 
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
         return new Response($response);
@@ -85,12 +88,12 @@ class Request
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions['json'] = [
             'action' => [
-                'code' => self::ACTION_CODE_UPDATE,
+                'code' => RequestActionCodeEnum::ACTION_CODE_UPDATE,
                 'id' => $id
             ]
         ];
 
-        $defaultClientOptions = array_merge($defaultClientOptions, ['json' => $data]);
+        $defaultClientOptions = array_merge_recursive($defaultClientOptions, ['json' => $data]);
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
 
         return new Response($response);
@@ -106,7 +109,7 @@ class Request
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions['json'] = [
             'action' => [
-                'code' => self::ACTION_CODE_DELETE,
+                'code' => RequestActionCodeEnum::ACTION_CODE_DELETE,
                 'id' => $id
             ]
         ];

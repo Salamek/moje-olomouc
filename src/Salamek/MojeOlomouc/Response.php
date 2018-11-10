@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc;
 
 use Psr\Http\Message\ResponseInterface;
+use Salamek\MojeOlomouc\Exception\InvalidJsonResponseException;
 
 /**
  * Class Response
@@ -34,7 +35,26 @@ class Response
     public function __construct(ResponseInterface $response, array $errors = [])
     {
         $this->httpCode = $response->getStatusCode();
-        $this->data = json_decode($response->getBody()->getContents());
+        $rawContents = $response->getBody()->getContents();
+        $this->data = json_decode($rawContents);
+        if (!$this->data){
+            throw new InvalidJsonResponseException(sprintf('getContents returned malformed or none JSON string (%s)', $rawContents));
+        }
+
+        if (!isset($this->data->isError))
+        {
+            throw new InvalidJsonResponseException(sprintf('isError is missing in JSON data (%s)', $rawContents));
+        }
+
+        if (!isset($this->data->message))
+        {
+            throw new InvalidJsonResponseException(sprintf('message is missing in JSON data (%s)', $rawContents));
+        }
+
+        if (!isset($this->data->code))
+        {
+            throw new InvalidJsonResponseException(sprintf('code is missing in JSON data (%s)', $rawContents));
+        }
 
         if ($this->data->isError)
         {

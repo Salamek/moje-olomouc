@@ -16,7 +16,7 @@ class MinLengthValidator
      * @param string $value
      * @param int $need
      */
-    public static function validate(string $value, int $need)
+    public static function validate(string $value, int $need): void
     {
         if (($len = mb_strlen($value)) < $need) {
             throw new InvalidArgumentException(sprintf('value (%s) is shorter than %d characters (%d)', $value, $need, $len));

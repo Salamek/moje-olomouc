@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
-use PHPUnit\Framework\TestCase;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\MojeOlomouc;
 
-class MojeOlomoucTest extends TestCase
+
+class MojeOlomoucTest extends BaseTest
 {
+
     /** @test */
-    public function instantiationShouldBeGood()
+    public function instantiationShouldBeGood(): void
     {
         $mojeOlomouc = new MojeOlomouc($this->getClientMock(), $this->getTestApiKey());
         $this->assertInstanceOf(MojeOlomouc::class, $mojeOlomouc);
     }
 
     /** @test */
-    public function createShouldBeGood()
+    public function createShouldBeGood(): void
     {
         $mojeOlomouc = MojeOlomouc::create($this->getTestApiKey());
         $this->assertInstanceOf(MojeOlomouc::class, $mojeOlomouc);
@@ -27,32 +27,31 @@ class MojeOlomoucTest extends TestCase
     /**
      * @test
      * @dataProvider provideBadApiKey
-     * @expectedException InvalidArgumentException
+     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      */
-    public function checkFailOnBadApiKey($apiKey)
+    public function checkFailOnBadApiKey(string $apiKey): void
     {
         new MojeOlomouc($this->getClientMock(), $apiKey);
     }
 
     /** @test */
-    public function getApiKeyShouldReturnApiKey()
+    public function getApiKeyShouldReturnApiKey(): void
     {
         $apiKey = $this->getTestApiKey((string)mt_rand());
         $mojeOlomouc = new MojeOlomouc($this->getClientMock(), $apiKey);
         $this->assertEquals($apiKey, $mojeOlomouc->getApiKey());
     }
+
+    /** @test */
+    public function getClientShouldReturnClient(): void
+    {
+        $apiKey = $this->getTestApiKey((string)mt_rand());
+        $client = $this->getClientMock();
+        $mojeOlomouc = new MojeOlomouc($client, $apiKey);
+        $this->assertEquals($client, $mojeOlomouc->getClient());
+    }
     
-    private function getClientMock()
-    {
-        return $this->createMock('GuzzleHttp\ClientInterface');
-    }
-
-    private function getTestApiKey($input = 'testKey')
-    {
-        return hash('sha256', $input);
-    }
-
-    public function provideBadApiKey()
+    public function provideBadApiKey(): array
     {
         return [
             [''],
