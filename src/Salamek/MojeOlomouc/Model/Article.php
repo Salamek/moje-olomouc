@@ -139,7 +139,7 @@ class Article implements IArticle
     /**
      * @param string $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl): void
+    public function setAttachmentUrl(string $attachmentUrl = null): void
     {
         $this->attachmentUrl = $attachmentUrl;
     }
@@ -163,7 +163,7 @@ class Article implements IArticle
     /**
      * @param int $approveState
      */
-    public function setApproveState(int $approveState): void
+    public function setApproveState(int $approveState = null): void
     {
         if (!is_null($approveState))
         {
@@ -228,7 +228,7 @@ class Article implements IArticle
     /**
      * @return string
      */
-    public function getAttachmentUrl(): string
+    public function getAttachmentUrl()//: ?string
     {
         return $this->attachmentUrl;
     }
@@ -250,9 +250,9 @@ class Article implements IArticle
     }
 
     /**
-     * @return boolean
+     * @return int
      */
-    public function getApproveState(): bool
+    public function getApproveState()//: int
     {
         return $this->approveState;
     }

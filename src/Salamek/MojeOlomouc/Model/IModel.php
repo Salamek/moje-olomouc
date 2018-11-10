@@ -15,14 +15,14 @@ namespace Salamek\MojeOlomouc\Model;
 interface IModel
 {
     /**
-     * @param int $id
+     * @param int|null $id
      */
-    public function setId(int $id): void;
+    public function setId(int $id = null): void;
 
     /**
      * @return int
      */
-    public function getId(): int;
+    public function getId()/*: ?int*/;
 
     /**
      * @return array

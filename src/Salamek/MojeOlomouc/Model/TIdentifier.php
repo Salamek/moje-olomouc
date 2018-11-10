@@ -15,17 +15,17 @@ trait TIdentifier
     public $id = null;
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
-    public function setId(int $id): void
+    public function setId(int $id = null): void
     {
         $this->id = $id;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId()//: ?int
     {
         return $this->id;
     }

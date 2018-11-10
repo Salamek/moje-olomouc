@@ -49,7 +49,11 @@ class EntityImage implements IEntityImage
      */
     public function setTitle(string $title = null): void
     {
-        MaxLengthValidator::validate($title, 65535); // Not defined in docs. i assume TEXT col type
+        if (!is_null($title))
+        {
+            MaxLengthValidator::validate($title, 65535); // Not defined in docs. i assume TEXT col type
+        }
+
         $this->title = $title;
     }
 
