@@ -1,6 +1,6 @@
 # PHP MojeOlomouc
 
-[![Build Status](https://secure.travis-ci.org/salamek/MojeOlomouc.png?branch=master)](http://travis-ci.org/salamek/MojeOlomouc)
+[![Build Status](https://secure.travis-ci.org/Salamek/moje-olomouc.png?branch=master)](https://travis-ci.org/Salamek/moje-olomouc)
 
 It's been designed to be testable and uses [Guzzle](http://guzzlephp.org) as a
 transport layer.

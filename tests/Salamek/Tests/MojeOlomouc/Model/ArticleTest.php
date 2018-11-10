@@ -37,6 +37,8 @@ class ArticleTest extends BaseTest
         $this->assertEquals(null, $article->getApproveState());
         $this->assertEquals(null, $article->getId());
         $this->assertInternalType('array', $article->toPrimitiveArray());
+        //@TODO check toPrimitiveArray output
+        //@TODO add data source
     }
 
 
@@ -74,5 +76,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals(ArticleApproveStateEnum::WAITING_FOR_ADD, $article->getApproveState());
         $this->assertEquals($id, $article->getId());
         $this->assertInternalType('array', $article->toPrimitiveArray());
+        //@TODO check toPrimitiveArray output
+        //@TODO add data source
     }
 }
