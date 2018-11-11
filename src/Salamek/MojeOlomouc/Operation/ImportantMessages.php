@@ -74,7 +74,7 @@ class ImportantMessages implements IOperation
      * @param int|null $id
      * @return Response
      */
-    public function delete(IImportantMessage $importantMessage, int $id = null): Response
+    public function delete(IImportantMessage $importantMessage = null, int $id = null): Response
     {
         if (is_null($importantMessage) && is_null($id))
         {
