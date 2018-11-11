@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sadam
- * Date: 11/10/18
- * Time: 2:54 AM
- */
+declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
 
-use Salamek\MojeOlomouc\Exception\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
 

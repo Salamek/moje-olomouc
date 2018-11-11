@@ -48,9 +48,9 @@ class PlaceCategory implements IPlaceCategory
     }
 
     /**
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags): void
+    public function setConsumerFlags(int $consumerFlags = null): void
     {
         $this->consumerFlags = $consumerFlags;
     }
@@ -72,9 +72,9 @@ class PlaceCategory implements IPlaceCategory
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getConsumerFlags(): int
+    public function getConsumerFlags(): ?int
     {
         return $this->consumerFlags;
     }
@@ -82,7 +82,7 @@ class PlaceCategory implements IPlaceCategory
     /**
      * @return boolean
      */
-    public function isIsVisible(): bool
+    public function getIsVisible(): bool
     {
         return $this->isVisible;
     }

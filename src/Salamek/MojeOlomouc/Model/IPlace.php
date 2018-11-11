@@ -45,9 +45,9 @@ interface IPlace extends IModel
     public function setImages(array $images): void;
 
     /**
-     * @param string $attachmentUrl
+     * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl): void;
+    public function setAttachmentUrl(string $attachmentUrl = null): void;
 
     /**
      * @param boolean $isVisible
@@ -55,9 +55,9 @@ interface IPlace extends IModel
     public function setIsVisible(bool $isVisible): void;
 
     /**
-     * @param int $approveState
+     * @param int|null $approveState
      */
-    public function setApproveState(int $approveState): void;
+    public function setApproveState(int $approveState = null): void;
 
     /**
      * @return string
@@ -95,9 +95,9 @@ interface IPlace extends IModel
     public function getImages(): array;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAttachmentUrl(): string;
+    public function getAttachmentUrl(): ?string;
 
     /**
      * @return boolean
@@ -105,8 +105,8 @@ interface IPlace extends IModel
     public function getIsVisible(): bool;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getApproveState(): int;
+    public function getApproveState(): ?int;
 
 }

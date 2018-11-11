@@ -53,9 +53,9 @@ class ArticleCategory implements IArticleCategory
     }
 
     /**
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags): void
+    public function setConsumerFlags(int $consumerFlags = null): void
     {
         $this->consumerFlags = $consumerFlags;
     }
@@ -85,9 +85,9 @@ class ArticleCategory implements IArticleCategory
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getConsumerFlags(): int
+    public function getConsumerFlags(): ?int
     {
         return $this->consumerFlags;
     }
@@ -95,7 +95,7 @@ class ArticleCategory implements IArticleCategory
     /**
      * @return boolean
      */
-    public function isIsImportant(): bool
+    public function getIsImportant(): bool
     {
         return $this->isImportant;
     }
@@ -103,7 +103,7 @@ class ArticleCategory implements IArticleCategory
     /**
      * @return boolean
      */
-    public function isIsVisible(): bool
+    public function getIsVisible(): bool
     {
         return $this->isVisible;
     }

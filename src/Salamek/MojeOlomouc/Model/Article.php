@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
-use Salamek\MojeOlomouc\Exception\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
 use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
@@ -230,7 +230,7 @@ class Article implements IArticle
     /**
      * @return string
      */
-    public function getAttachmentUrl()//: ?string
+    public function getAttachmentUrl(): ?string
     {
         return $this->attachmentUrl;
     }
@@ -254,7 +254,7 @@ class Article implements IArticle
     /**
      * @return int
      */
-    public function getApproveState()//: int
+    public function getApproveState(): ?int
     {
         return $this->approveState;
     }

@@ -15,9 +15,9 @@ interface IArticleCategory extends IModel
     public function setTitle(string $title): void;
 
     /**
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags): void;
+    public function setConsumerFlags(int $consumerFlags = null): void;
 
     /**
      * @param boolean $isImportant
@@ -37,15 +37,15 @@ interface IArticleCategory extends IModel
     /**
      * @return int
      */
-    public function getConsumerFlags(): int;
+    public function getConsumerFlags(): ?int;
 
     /**
      * @return boolean
      */
-    public function isIsImportant(): bool;
+    public function getIsImportant(): bool;
 
     /**
      * @return boolean
      */
-    public function isIsVisible(): bool;
+    public function getIsVisible(): bool;
 }

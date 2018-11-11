@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc\Enum;
 
 /**
- * Class EventConsumerFlagEnum
+ * Class PlaceConsumerFlagEnum
  * @package Salamek\MojeOlomouc\Exception
  */
-class EventConsumerFlagEnum
+class PlaceConsumerFlagEnum
 {
     const CITIZEN = 1;
     const TOURIST = 2;

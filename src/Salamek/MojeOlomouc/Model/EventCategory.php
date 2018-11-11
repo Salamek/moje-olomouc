@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
+use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
 
 /**
  * Class EventCategory
@@ -35,6 +36,7 @@ class EventCategory implements IEventCategory
      */
     public function setTitle(string $title): void
     {
+        MaxLengthValidator::validate($title, 150);
         $this->title = $title;
     }
 

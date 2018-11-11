@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Exception\EventApproveStateEnum;
-use Salamek\MojeOlomouc\Exception\EventFeaturedLevelEnum;
+use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
 use Salamek\MojeOlomouc\Validator\GpsStringValidator;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
@@ -378,7 +378,7 @@ class Event implements IEvent
     /**
      * @return string
      */
-    public function getAttachmentUrl(): string
+    public function getAttachmentUrl(): ?string
     {
         return $this->attachmentUrl;
     }
@@ -386,7 +386,7 @@ class Event implements IEvent
     /**
      * @return string
      */
-    public function getFee(): string
+    public function getFee(): ?string
     {
         return $this->fee;
     }
@@ -394,7 +394,7 @@ class Event implements IEvent
     /**
      * @return string
      */
-    public function getWebUrl(): string
+    public function getWebUrl(): ?string
     {
         return $this->webUrl;
     }
@@ -402,7 +402,7 @@ class Event implements IEvent
     /**
      * @return string
      */
-    public function getFacebookUrl(): string
+    public function getFacebookUrl(): ?string
     {
         return $this->facebookUrl;
     }
@@ -410,7 +410,7 @@ class Event implements IEvent
     /**
      * @return int
      */
-    public function getConsumerFlags(): int
+    public function getConsumerFlags(): ?int
     {
         return $this->consumerFlags;
     }
@@ -426,7 +426,7 @@ class Event implements IEvent
     /**
      * @return int
      */
-    public function getApproveState(): int
+    public function getApproveState(): ?int
     {
         return $this->approveState;
     }
@@ -434,7 +434,7 @@ class Event implements IEvent
     /**
      * @return int
      */
-    public function getFeaturedLevel(): int
+    public function getFeaturedLevel(): ?int
     {
         return $this->featuredLevel;
     }

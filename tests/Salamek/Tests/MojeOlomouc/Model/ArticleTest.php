@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Exception\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\Tests\MojeOlomouc\BaseTest;

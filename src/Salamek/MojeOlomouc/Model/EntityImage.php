@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Exception\EntityImageContentTypeEnum;
+use Salamek\MojeOlomouc\Enum\EntityImageContentTypeEnum;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
 
@@ -89,7 +89,7 @@ class EntityImage implements IEntityImage
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

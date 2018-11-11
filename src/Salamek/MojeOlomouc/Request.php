@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc;
 
 use GuzzleHttp\ClientInterface;
-use Salamek\MojeOlomouc\Exception\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 
 /**
  * Class Request

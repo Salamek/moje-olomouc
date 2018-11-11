@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
-use Salamek\MojeOlomouc\Exception\ImportantMessageSeverityEnum;
-use Salamek\MojeOlomouc\Exception\ImportantMessageTypeEnum;
+use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
+use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
 

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sadam
- * Date: 11/8/18
- * Time: 2:39 PM
- */
+declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
 

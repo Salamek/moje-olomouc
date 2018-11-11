@@ -92,7 +92,7 @@ interface IArticle extends IModel
     /**
      * @return string
      */
-    public function getAttachmentUrl()/*: ?string*/;
+    public function getAttachmentUrl(): ?string;
 
     /**
      * @return boolean
@@ -107,5 +107,5 @@ interface IArticle extends IModel
     /**
      * @return int
      */
-    public function getApproveState()/*: ?int*/;
+    public function getApproveState(): ?int;
 }

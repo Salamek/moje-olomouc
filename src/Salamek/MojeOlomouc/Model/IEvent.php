@@ -142,27 +142,27 @@ interface IEvent extends IModel
     /**
      * @return string
      */
-    public function getAttachmentUrl(): string;
+    public function getAttachmentUrl(): ?string;
 
     /**
      * @return string
      */
-    public function getFee(): string;
+    public function getFee(): ?string;
 
     /**
      * @return string
      */
-    public function getWebUrl(): string;
+    public function getWebUrl(): ?string;
 
     /**
      * @return string
      */
-    public function getFacebookUrl(): string;
+    public function getFacebookUrl(): ?string;
 
     /**
      * @return int
      */
-    public function getConsumerFlags(): int;
+    public function getConsumerFlags(): ?int;
 
     /**
      * @return bool
@@ -172,10 +172,10 @@ interface IEvent extends IModel
     /**
      * @return int
      */
-    public function getApproveState(): int;
+    public function getApproveState(): ?int;
 
     /**
      * @return int
      */
-    public function getFeaturedLevel(): int;
+    public function getFeaturedLevel(): ?int;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc\Model;
 
 
-use Salamek\MojeOlomouc\Exception\PlaceApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Validator\GpsStringValidator;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
@@ -151,9 +151,9 @@ class Place implements IPlace
     }
 
     /**
-     * @param string $attachmentUrl
+     * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl): void
+    public function setAttachmentUrl(string $attachmentUrl = null): void
     {
         $this->attachmentUrl = $attachmentUrl;
     }
@@ -167,9 +167,9 @@ class Place implements IPlace
     }
 
     /**
-     * @param int $approveState
+     * @param int|null $approveState
      */
-    public function setApproveState(int $approveState): void
+    public function setApproveState(int $approveState = null): void
     {
         if (!is_null($approveState))
         {
@@ -240,9 +240,9 @@ class Place implements IPlace
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAttachmentUrl(): string
+    public function getAttachmentUrl(): ?string
     {
         return $this->attachmentUrl;
     }
@@ -256,9 +256,9 @@ class Place implements IPlace
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getApproveState(): int
+    public function getApproveState(): ?int
     {
         return $this->approveState;
     }

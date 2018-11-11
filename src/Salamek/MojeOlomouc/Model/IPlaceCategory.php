@@ -15,9 +15,9 @@ interface IPlaceCategory extends IModel
     public function setTitle(string $title): void;
 
     /**
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags): void;
+    public function setConsumerFlags(int $consumerFlags = null): void;
 
     /**
      * @param boolean $isVisible
@@ -30,12 +30,12 @@ interface IPlaceCategory extends IModel
     public function getTitle(): string;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getConsumerFlags(): int;
+    public function getConsumerFlags(): ?int;
 
     /**
      * @return boolean
      */
-    public function isIsVisible(): bool;
+    public function getIsVisible(): bool;
 }
