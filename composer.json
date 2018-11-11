@@ -3,7 +3,7 @@
     "description" : "MojeOlomouc Client",
     "license"     : "LGPL-3.0",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "guzzlehttp/guzzle": "~6.2"
     },
     "require-dev": {
