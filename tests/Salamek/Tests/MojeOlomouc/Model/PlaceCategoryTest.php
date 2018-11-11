@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Enum\ArticleConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\PlaceConsumerFlagEnum;
-use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 

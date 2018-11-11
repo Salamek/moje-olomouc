@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
-use Salamek\MojeOlomouc\Model\Article;
-use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
@@ -19,8 +16,8 @@ class ImportantMessageTest extends BaseTest
      * @test
      * @dataProvider provideValidConstructorParameters
      * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $dateTimeAt
+     * @param \DateTimeInterface $expireAt
      * @param int $type
      * @param int $severity
      * @param bool $isVisible
@@ -28,8 +25,8 @@ class ImportantMessageTest extends BaseTest
      */
     public function createRequiredShouldBeGoodTest(
         string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
+        \DateTimeInterface $dateTimeAt,
+        \DateTimeInterface $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
         bool $isVisible = true,
@@ -68,8 +65,8 @@ class ImportantMessageTest extends BaseTest
      * @test
      * @dataProvider provideValidConstructorParameters
      * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $dateTimeAt
+     * @param \DateTimeInterface $expireAt
      * @param int $type
      * @param int $severity
      * @param bool $isVisible
@@ -77,8 +74,8 @@ class ImportantMessageTest extends BaseTest
      */
     public function createOptionalShouldBeGoodTest(
         string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
+        \DateTimeInterface $dateTimeAt,
+        \DateTimeInterface $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
         bool $isVisible = true,
@@ -122,8 +119,8 @@ class ImportantMessageTest extends BaseTest
      * @dataProvider provideInvalidConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $dateTimeAt
+     * @param \DateTimeInterface $expireAt
      * @param int $type
      * @param int $severity
      * @param bool $isVisible
@@ -131,8 +128,8 @@ class ImportantMessageTest extends BaseTest
      */
     public function createOptionalShouldFailOnBadData(
         string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
+        \DateTimeInterface $dateTimeAt,
+        \DateTimeInterface $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
         bool $isVisible = true,

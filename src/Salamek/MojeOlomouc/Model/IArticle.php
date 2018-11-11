@@ -30,9 +30,9 @@ interface IArticle extends IModel
     public function setCategoryId(int $categoryId): void;
 
     /**
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      */
-    public function setDateTimeAt(\DateTime $dateTimeAt): void;
+    public function setDateTimeAt(\DateTimeInterface $dateTimeAt): void;
 
     /**
      * @param EntityImage[] $images
@@ -80,9 +80,9 @@ interface IArticle extends IModel
     public function getCategoryId(): int;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getDateTimeAt(): \DateTime;
+    public function getDateTimeAt(): \DateTimeInterface;
 
     /**
      * @return EntityImage[]

@@ -16,14 +16,14 @@ interface IImportantMessage extends IModel
     public function setText(string $text): void;
 
     /**
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      */
-    public function setDateTimeAt(\DateTime $dateTimeAt): void;
+    public function setDateTimeAt(\DateTimeInterface $dateTimeAt): void;
 
     /**
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $expireAt
      */
-    public function setExpireAt(\DateTime $expireAt): void;
+    public function setExpireAt(\DateTimeInterface $expireAt): void;
 
     /**
      * @param int $type
@@ -46,14 +46,14 @@ interface IImportantMessage extends IModel
     public function getText(): string;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getDateTimeAt(): \DateTime;
+    public function getDateTimeAt(): \DateTimeInterface;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getExpireAt(): \DateTime;
+    public function getExpireAt(): \DateTimeInterface;
 
     /**
      * @return int

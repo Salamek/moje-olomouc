@@ -18,8 +18,8 @@ class EventTest extends BaseTest
      * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
-     * @param \DateTime $startAt
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $startAt
+     * @param \DateTimeInterface $endAt
      * @param string $placeDesc
      * @param string $placeLat
      * @param string $placeLon
@@ -38,8 +38,8 @@ class EventTest extends BaseTest
     public function createRequiredShouldBeGoodTest(
         string $title,
         string $description,
-        \DateTime $startAt,
-        \DateTime $endAt,
+        \DateTimeInterface $startAt,
+        \DateTimeInterface $endAt,
         string $placeDesc,
         string $placeLat,
         string $placeLon,
@@ -123,8 +123,8 @@ class EventTest extends BaseTest
      * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
-     * @param \DateTime $startAt
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $startAt
+     * @param \DateTimeInterface $endAt
      * @param string $placeDesc
      * @param string $placeLat
      * @param string $placeLon
@@ -143,8 +143,8 @@ class EventTest extends BaseTest
     public function createOptionalShouldBeGoodTest(
         string $title,
         string $description,
-        \DateTime $startAt,
-        \DateTime $endAt,
+        \DateTimeInterface $startAt,
+        \DateTimeInterface $endAt,
         string $placeDesc,
         string $placeLat,
         string $placeLon,
@@ -238,8 +238,8 @@ class EventTest extends BaseTest
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param string $description
-     * @param \DateTime $startAt
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $startAt
+     * @param \DateTimeInterface $endAt
      * @param string $placeDesc
      * @param string $placeLat
      * @param string $placeLon
@@ -258,8 +258,8 @@ class EventTest extends BaseTest
     public function createOptionalShouldFailOnBadData(
         string $title,
         string $description,
-        \DateTime $startAt,
-        \DateTime $endAt,
+        \DateTimeInterface $startAt,
+        \DateTimeInterface $endAt,
         string $placeDesc,
         string $placeLat,
         string $placeLon,

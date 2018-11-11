@@ -19,10 +19,10 @@ class ImportantMessage implements IImportantMessage
     /** @var string */
     private $text;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $dateTimeAt;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $expireAt;
 
     /** @var int */
@@ -37,8 +37,8 @@ class ImportantMessage implements IImportantMessage
     /**
      * ImportantMessage constructor.
      * @param string $text
-     * @param \DateTime $dateTimeAt
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $dateTimeAt
+     * @param \DateTimeInterface $expireAt
      * @param int $type
      * @param int $severity
      * @param bool $isVisible
@@ -46,8 +46,8 @@ class ImportantMessage implements IImportantMessage
      */
     public function __construct(
         string $text,
-        \DateTime $dateTimeAt,
-        \DateTime $expireAt,
+        \DateTimeInterface $dateTimeAt,
+        \DateTimeInterface $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
         bool $isVisible = true,
@@ -73,17 +73,17 @@ class ImportantMessage implements IImportantMessage
     }
 
     /**
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      */
-    public function setDateTimeAt(\DateTime $dateTimeAt): void
+    public function setDateTimeAt(\DateTimeInterface $dateTimeAt): void
     {
         $this->dateTimeAt = $dateTimeAt;
     }
 
     /**
-     * @param \DateTime $expireAt
+     * @param \DateTimeInterface $expireAt
      */
-    public function setExpireAt(\DateTime $expireAt): void
+    public function setExpireAt(\DateTimeInterface $expireAt): void
     {
         $this->expireAt = $expireAt;
     }
@@ -130,17 +130,17 @@ class ImportantMessage implements IImportantMessage
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getDateTimeAt(): \DateTime
+    public function getDateTimeAt(): \DateTimeInterface
     {
         return $this->dateTimeAt;
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getExpireAt(): \DateTime
+    public function getExpireAt(): \DateTimeInterface
     {
         return $this->expireAt;
     }

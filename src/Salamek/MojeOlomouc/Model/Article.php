@@ -27,7 +27,7 @@ class Article implements IArticle
     /** @var int */
     private $categoryId;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $dateTimeAt;
 
     /** @var EntityImage[] */
@@ -51,7 +51,7 @@ class Article implements IArticle
      * @param string $content
      * @param string $author
      * @param int $categoryId
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -64,7 +64,7 @@ class Article implements IArticle
         string $content,
         string $author,
         int $categoryId,
-        \DateTime $dateTimeAt,
+        \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -122,9 +122,9 @@ class Article implements IArticle
     }
 
     /**
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      */
-    public function setDateTimeAt(\DateTime $dateTimeAt): void
+    public function setDateTimeAt(\DateTimeInterface $dateTimeAt): void
     {
         $this->dateTimeAt = $dateTimeAt;
     }
@@ -212,9 +212,9 @@ class Article implements IArticle
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getDateTimeAt(): \DateTime
+    public function getDateTimeAt(): \DateTimeInterface
     {
         return $this->dateTimeAt;
     }

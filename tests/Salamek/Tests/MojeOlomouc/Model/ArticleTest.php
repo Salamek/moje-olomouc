@@ -18,7 +18,7 @@ class ArticleTest extends BaseTest
      * @param string $content
      * @param string $author
      * @param int $categoryId
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -31,7 +31,7 @@ class ArticleTest extends BaseTest
         string $content,
         string $author,
         int $categoryId,
-        \DateTime $dateTimeAt,
+        \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -92,7 +92,7 @@ class ArticleTest extends BaseTest
      * @param string $content
      * @param string $author
      * @param int $categoryId
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -105,7 +105,7 @@ class ArticleTest extends BaseTest
         string $content,
         string $author,
         int $categoryId,
-        \DateTime $dateTimeAt,
+        \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -171,7 +171,7 @@ class ArticleTest extends BaseTest
      * @param string $content
      * @param string $author
      * @param int $categoryId
-     * @param \DateTime $dateTimeAt
+     * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -184,7 +184,7 @@ class ArticleTest extends BaseTest
         string $content,
         string $author,
         int $categoryId,
-        \DateTime $dateTimeAt,
+        \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,

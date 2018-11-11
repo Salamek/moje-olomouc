@@ -20,14 +20,14 @@ interface IEvent extends IModel
     public function setDescription(string $description): void;
 
     /**
-     * @param \DateTime $startAt
+     * @param \DateTimeInterface $startAt
      */
-    public function setStartAt(\DateTime $startAt): void;
+    public function setStartAt(\DateTimeInterface $startAt): void;
 
     /**
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $endAt
      */
-    public function setEndAt(\DateTime $endAt): void;
+    public function setEndAt(\DateTimeInterface $endAt): void;
 
     /**
      * @param string $placeDesc
@@ -105,14 +105,14 @@ interface IEvent extends IModel
     public function getDescription(): string;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getStartAt(): \DateTime;
+    public function getStartAt(): \DateTimeInterface;
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getEndAt(): \DateTime;
+    public function getEndAt(): \DateTimeInterface;
 
     /**
      * @return string

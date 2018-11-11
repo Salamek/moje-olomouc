@@ -26,14 +26,14 @@ class EventCategory implements IOperation
     }
 
     /**
-     * @param \DateTime|null $fromUpdatedAt
+     * @param \DateTimeInterface|null $fromUpdatedAt
      * @param bool $showDeleted
      * @param bool $onlyVisible
      * @param bool $extraFields
      * @return Response
      */
     public function getAll(
-        \DateTime $fromUpdatedAt = null,
+        \DateTimeInterface $fromUpdatedAt = null,
         bool $showDeleted = false,
         bool $onlyVisible = true,
         bool $extraFields = false

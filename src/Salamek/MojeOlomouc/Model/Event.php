@@ -23,10 +23,10 @@ class Event implements IEvent
     /** @var string */
     private $description;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $startAt;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $endAt;
 
     /** @var string */
@@ -72,8 +72,8 @@ class Event implements IEvent
      * Event constructor.
      * @param string $title
      * @param string $description
-     * @param \DateTime $startAt
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $startAt
+     * @param \DateTimeInterface $endAt
      * @param string $placeDesc
      * @param string $placeLat
      * @param string $placeLon
@@ -92,8 +92,8 @@ class Event implements IEvent
     public function __construct(
         string $title,
         string $description,
-        \DateTime $startAt,
-        \DateTime $endAt,
+        \DateTimeInterface $startAt,
+        \DateTimeInterface $endAt,
         string $placeDesc,
         string $placeLat,
         string $placeLon,
@@ -149,17 +149,17 @@ class Event implements IEvent
     }
 
     /**
-     * @param \DateTime $startAt
+     * @param \DateTimeInterface $startAt
      */
-    public function setStartAt(\DateTime $startAt): void
+    public function setStartAt(\DateTimeInterface $startAt): void
     {
         $this->startAt = $startAt;
     }
 
     /**
-     * @param \DateTime $endAt
+     * @param \DateTimeInterface $endAt
      */
-    public function setEndAt(\DateTime $endAt): void
+    public function setEndAt(\DateTimeInterface $endAt): void
     {
         $this->endAt = $endAt;
     }
@@ -320,17 +320,17 @@ class Event implements IEvent
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getStartAt(): \DateTime
+    public function getStartAt(): \DateTimeInterface
     {
         return $this->startAt;
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getEndAt(): \DateTime
+    public function getEndAt(): \DateTimeInterface
     {
         return $this->endAt;
     }

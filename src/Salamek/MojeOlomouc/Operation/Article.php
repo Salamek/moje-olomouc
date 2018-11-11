@@ -26,7 +26,7 @@ class Article implements IOperation
     }
 
     /**
-     * @param \DateTime|null $fromUpdatedAt
+     * @param \DateTimeInterface|null $fromUpdatedAt
      * @param bool $showDeleted
      * @param bool $onlyApproved
      * @param bool $onlyVisible
@@ -34,7 +34,7 @@ class Article implements IOperation
      * @return Response
      */
     public function getAll(
-        \DateTime $fromUpdatedAt = null,
+        \DateTimeInterface $fromUpdatedAt = null,
         bool $showDeleted = false,
         bool $onlyApproved = true,
         bool $onlyVisible = true,
