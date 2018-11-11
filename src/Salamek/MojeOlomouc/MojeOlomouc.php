@@ -23,26 +23,6 @@ class MojeOlomouc
     /** @var string */
     private $apiKey;
 
-    /** @var Event */
-    public $event;
-
-    // @TODO
-    public $eventCategory;
-
-    // @TODO
-    public $article;
-
-    // @TODO
-    public $articleCategory;
-
-    // @TODO
-    public $place;
-
-    // @TODO
-    public $placeCategory;
-
-    public $importantMessage;
-
 
     /**
      * MojeOlomouc constructor.
@@ -58,8 +38,6 @@ class MojeOlomouc
 
         $request = new Request($client, $apiKey);
 
-        $this->event = new Event($request);
-        $this->importantMessage = new ImportantMessage($request);
     }
 
     /**

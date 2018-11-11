@@ -3,21 +3,22 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Article as ArticleModel;
+use \Salamek\MojeOlomouc\Model\IArticle;
 
 /**
- * Class Article
+ * Class Articles
  * @package Salamek\MojeOlomouc\Operation
  */
-class Article implements IOperation
+class Articles implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Article constructor.
+     * Articles constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -53,11 +54,11 @@ class Article implements IOperation
     }
 
     /**
-     * @param ArticleModel $article
+     * @param IArticle $article
      * @return Response
      */
     public function create(
-        ArticleModel $article
+        IArticle $article
     ): Response
     {
         $data = [
@@ -68,12 +69,12 @@ class Article implements IOperation
     }
 
     /**
-     * @param ArticleModel $article
+     * @param IArticle $article
      * @param int|null $id
      * @return Response
      */
     public function update(
-        ArticleModel $article,
+        IArticle $article,
         int $id = null
     ): Response
     {
@@ -86,13 +87,22 @@ class Article implements IOperation
     }
 
     /**
-     * @param ArticleModel $article
+     * @param IArticle|null $article
      * @param int|null $id
      * @return Response
      */
-    public function delete(ArticleModel $article, int $id = null): Response
+    public function delete(IArticle $article = null, int $id = null): Response
     {
+        if (is_null($article) && is_null($id))
+        {
+            throw new InvalidArgumentException('arguments $article or $id must be provided');
+        }
         $id = (is_null($id) ? $article->getId() : $id);
+
+        if (is_null($id))
+        {
+            throw new InvalidArgumentException('$id is not set');
+        }
         return $this->request->delete('/api/import/articles', $id);
     }
 }

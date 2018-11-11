@@ -3,21 +3,22 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Event as EventModel;
+use \Salamek\MojeOlomouc\Model\IPlaceCategory;
 
 /**
- * Class Event
+ * Class PlaceCategories
  * @package Salamek\MojeOlomouc\Operation
  */
-class Event implements IOperation
+class PlaceCategories implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Event constructor.
+     * PlaceCategories constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -28,7 +29,6 @@ class Event implements IOperation
     /**
      * @param \DateTimeInterface|null $fromUpdatedAt
      * @param bool $showDeleted
-     * @param bool $onlyApproved
      * @param bool $onlyVisible
      * @param bool $extraFields
      * @return Response
@@ -36,7 +36,6 @@ class Event implements IOperation
     public function getAll(
         \DateTimeInterface $fromUpdatedAt = null,
         bool $showDeleted = false,
-        bool $onlyApproved = true,
         bool $onlyVisible = true,
         bool $extraFields = false
     ): Response
@@ -44,55 +43,63 @@ class Event implements IOperation
         $data = [
             'fromUpdatedAt' => ($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null),
             'showDeleted' => $showDeleted,
-            'onlyApproved' => $onlyApproved,
             'onlyVisible' => $onlyVisible,
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/place-categories', $data); //@TODO HYDRATOR
     }
 
     /**
-     * @param EventModel $event
+     * @param IPlaceCategory $placeCategory
      * @return Response
      */
     public function create(
-        EventModel $event
+        IPlaceCategory $placeCategory
     ): Response
     {
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'placeCategory' => $placeCategory->toPrimitiveArray()
         ];
 
-        return $this->request->create('/api/import/events', $data);
+        return $this->request->create('/api/import/place-categories', $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param IPlaceCategory $placeCategory
      * @param int|null $id
      * @return Response
      */
     public function update(
-        EventModel $event,
+        IPlaceCategory $placeCategory,
         int $id = null
     ): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
+        $id = (is_null($id) ? $placeCategory->getId() : $id);
         $data = [
-            'event' => $event->toPrimitiveArray()
+            'placeCategory' => $placeCategory->toPrimitiveArray()
         ];
 
-        return $this->request->update('/api/import/events', $id, $data);
+        return $this->request->update('/api/import/place-categories', $id, $data);
     }
 
     /**
-     * @param EventModel $event
+     * @param IPlaceCategory|null $placeCategory
      * @param int|null $id
      * @return Response
      */
-    public function delete(EventModel $event, int $id = null): Response
+    public function delete(IPlaceCategory $placeCategory = null, int $id = null): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
-        return $this->request->delete('/api/import/events', $id);
+        if (is_null($placeCategory) && is_null($id))
+        {
+            throw new InvalidArgumentException('arguments $placeCategory or $id must be provided');
+        }
+        $id = (is_null($id) ? $placeCategory->getId() : $id);
+
+        if (is_null($id))
+        {
+            throw new InvalidArgumentException('$id is not set');
+        }
+        return $this->request->delete('/api/import/place-categories', $id);
     }
 }

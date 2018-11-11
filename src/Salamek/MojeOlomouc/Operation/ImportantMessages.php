@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use Salamek\MojeOlomouc\Model\ImportantMessage as ImportantMessageModel;
+use Salamek\MojeOlomouc\Model\IImportantMessage;
 
 /**
- * Class ImportantMessage
+ * Class ImportantMessages
  * @package Salamek\MojeOlomouc\Operation
  */
-class ImportantMessage implements IOperation
+class ImportantMessages implements IOperation
 {
     /** @var Request */
     private $request;
@@ -36,11 +37,11 @@ class ImportantMessage implements IOperation
     }
 
     /**
-     * @param ImportantMessageModel $importantMessage
+     * @param IImportantMessage $importantMessage
      * @return Response
      */
     public function create(
-        ImportantMessageModel $importantMessage
+        IImportantMessage $importantMessage
     ): Response
     {
         $data = [
@@ -51,12 +52,12 @@ class ImportantMessage implements IOperation
     }
 
     /**
-     * @param ImportantMessageModel $importantMessage
+     * @param IImportantMessage $importantMessage
      * @param int|null $id
      * @return Response
      */
     public function update(
-        ImportantMessageModel $importantMessage,
+        IImportantMessage $importantMessage,
         int $id = null
     ): Response
     {
@@ -69,13 +70,22 @@ class ImportantMessage implements IOperation
     }
 
     /**
-     * @param ImportantMessageModel $importantMessage
+     * @param IImportantMessage|null $importantMessage
      * @param int|null $id
      * @return Response
      */
-    public function delete(ImportantMessageModel $importantMessage, int $id = null): Response
+    public function delete(IImportantMessage $importantMessage, int $id = null): Response
     {
+        if (is_null($importantMessage) && is_null($id))
+        {
+            throw new InvalidArgumentException('arguments $importantMessage or $id must be provided');
+        }
         $id = (is_null($id) ? $importantMessage->getId() : $id);
+
+        if (is_null($id))
+        {
+            throw new InvalidArgumentException('$id is not set');
+        }
         return $this->request->delete('/api/import/important-messages', $id);
     }
 }

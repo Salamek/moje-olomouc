@@ -3,21 +3,22 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\Place as PlaceModel;
+use \Salamek\MojeOlomouc\Model\IEvent;
 
 /**
- * Class Place
+ * Class Events
  * @package Salamek\MojeOlomouc\Operation
  */
-class Place implements IOperation
+class Events implements IOperation
 {
     /** @var Request */
     private $request;
 
     /**
-     * Place constructor.
+     * Events constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
@@ -49,50 +50,59 @@ class Place implements IOperation
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/places', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
     }
 
     /**
-     * @param PlaceModel $place
+     * @param IEvent $event
      * @return Response
      */
     public function create(
-        PlaceModel $place
+        IEvent $event
     ): Response
     {
         $data = [
-            'place' => $place->toPrimitiveArray()
+            'event' => $event->toPrimitiveArray()
         ];
 
-        return $this->request->create('/api/import/places', $data);
+        return $this->request->create('/api/import/events', $data);
     }
 
     /**
-     * @param PlaceModel $place
+     * @param IEvent $event
      * @param int|null $id
      * @return Response
      */
     public function update(
-        PlaceModel $place,
+        IEvent $event,
         int $id = null
     ): Response
     {
-        $id = (is_null($id) ? $place->getId() : $id);
+        $id = (is_null($id) ? $event->getId() : $id);
         $data = [
-            'place' => $place->toPrimitiveArray()
+            'event' => $event->toPrimitiveArray()
         ];
 
-        return $this->request->update('/api/import/places', $id, $data);
+        return $this->request->update('/api/import/events', $id, $data);
     }
 
     /**
-     * @param PlaceModel $place
+     * @param IEvent|null $event
      * @param int|null $id
      * @return Response
      */
-    public function delete(PlaceModel $place, int $id = null): Response
+    public function delete(IEvent $event = null, int $id = null): Response
     {
-        $id = (is_null($id) ? $place->getId() : $id);
-        return $this->request->delete('/api/import/places', $id);
+        if (is_null($event) && is_null($id))
+        {
+            throw new InvalidArgumentException('arguments $event or $id must be provided');
+        }
+        $id = (is_null($id) ? $event->getId() : $id);
+
+        if (is_null($id))
+        {
+            throw new InvalidArgumentException('$id is not set');
+        }
+        return $this->request->delete('/api/import/events', $id);
     }
 }
