@@ -16,6 +16,18 @@ $ composer require salamek/moje-olomouc
 
 ## Usage
 
+All API operations are implemented:
+
+* articleCategories
+* articles
+* eventCategories
+* events
+* importantMessages
+* placeCategories
+* places
+
+Usage is as fallows:
+
 ```php
 use Salamek\MojeOlomouc\MojeOlomouc;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
