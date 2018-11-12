@@ -14,7 +14,7 @@ use Salamek\MojeOlomouc\Exception\InvalidJsonResponseException;
 class Response
 {
     /** @var bool */
-    private $isError;
+    private $isError = false;
 
     /** @var int */
     private $httpCode;
@@ -23,7 +23,7 @@ class Response
     private $rawData;
 
     /** @var object */
-    private $data;
+    private $data = null;
 
     /** @var int */
     private $code;
@@ -45,11 +45,6 @@ class Response
             throw new InvalidJsonResponseException(sprintf('getContents returned malformed or none JSON string (%s)', $rawContents));
         }
 
-        if (!isset($this->rawData->isError))
-        {
-            throw new InvalidJsonResponseException(sprintf('isError is missing in JSON data (%s)', $rawContents));
-        }
-
         if (!isset($this->rawData->message))
         {
             throw new InvalidJsonResponseException(sprintf('message is missing in JSON data (%s)', $rawContents));
@@ -60,29 +55,37 @@ class Response
             throw new InvalidJsonResponseException(sprintf('code is missing in JSON data (%s)', $rawContents));
         }
 
-        if (!isset($this->rawData->data))
+        if (isset($this->rawData->isError))
         {
-            throw new InvalidJsonResponseException(sprintf('data is missing in JSON data (%s)', $rawContents));
+            $this->isError = $this->rawData->isError;
         }
 
-        $this->isError = $this->rawData->isError;
+        if (!$this->isError && !isset($this->rawData->data))
+        {
+            throw new InvalidJsonResponseException(sprintf('data is missing in success JSON data (%s)', $rawContents));
+        }
+
         $this->message = $this->rawData->message;
         $this->code = $this->rawData->code;
-        $this->data = $this->rawData->data;
 
-        //Use hydrator to modify data
-        foreach($hydratorMapping AS $itemKey => $hydrator)
+        if (isset($this->rawData->data))
         {
+            $this->data = $this->rawData->data;
 
-            if (isset($this->data->{$itemKey}))
+            //Use hydrator to modify data
+            foreach($hydratorMapping AS $itemKey => $hydrator)
             {
-                $hydratedItems = [];
-                foreach ($this->data->{$itemKey} AS $item)
-                {
-                    $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), (array)$item);
-                }
 
-                $this->data->{$itemKey} = $hydratedItems;
+                if (isset($this->data->{$itemKey}))
+                {
+                    $hydratedItems = [];
+                    foreach ($this->data->{$itemKey} AS $item)
+                    {
+                        $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), (array)$item);
+                    }
+
+                    $this->data->{$itemKey} = $hydratedItems;
+                }
             }
         }
     }

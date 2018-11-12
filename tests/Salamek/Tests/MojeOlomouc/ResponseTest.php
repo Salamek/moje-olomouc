@@ -34,7 +34,7 @@ class ResponseTest extends BaseTest
         $response = new Response($responseMock);
         $this->assertEquals($isError, $response->isError());
         $this->assertEquals($responseContent, json_encode($response->getRawData()));
-        $this->assertEquals($responseData->data, $response->getData());
+        $this->assertEquals((isset($responseData->data) ? $responseData->data : null), $response->getData());
         $this->assertEquals($responseData->message, $response->getMessage());
         $this->assertEquals($responseData->code, $response->getCode());
         $this->assertEquals(200, $response->getHttpCode());
@@ -137,8 +137,7 @@ class ResponseTest extends BaseTest
                 json_encode([
                     'isError' => true,
                     'message' => 'ERR',
-                    'code' => -128,
-                    'data' => []
+                    'code' => -128
                 ])
             ]
         ];
