@@ -7,7 +7,7 @@ before_script:
 php:
   - 7.1
   - 7.2
-  - hhvm
+  #- hhvm Not possible due to https://github.com/facebook/hhvm/issues/6954
 
 script:
   - phpunit --coverage-text
