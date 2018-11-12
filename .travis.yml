@@ -10,4 +10,8 @@ php:
   #- hhvm Not possible due to https://github.com/facebook/hhvm/issues/6954
 
 script:
-  - phpunit --coverage-text
+  - phpunit --coverage-text --coverage-clover=coverage.xml
+
+after_success:
+  # Submit coverage report to https://codecov.io
+  - bash <(curl -s https://codecov.io/bash)
