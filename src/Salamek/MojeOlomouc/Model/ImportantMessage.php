@@ -184,4 +184,21 @@ class ImportantMessage implements IImportantMessage
         ];
     }
 
+    /**
+     * @param array $modelData
+     * @return ImportantMessage
+     */
+    public static function fromPrimitiveArray(array $modelData): ImportantMessage
+    {
+        return new ImportantMessage(
+            $modelData['text'],
+            new \DateTime($modelData['dateTimeAt']),
+            new \DateTime($modelData['expireAt']),
+            (array_key_exists('type', $modelData) ? $modelData['type'] : ImportantMessageTypeEnum::TRAFFIC_SITUATION),
+            (array_key_exists('severity', $modelData) ? $modelData['severity'] : ImportantMessageSeverityEnum::WARNING),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
+        );
+    }
+
 }

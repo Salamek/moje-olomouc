@@ -96,6 +96,52 @@ class EventCategoryTest extends BaseTest
     }
 
     /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromRequiredPrimitiveArrayShouldBeGood(
+        string $title,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $articleCategory = EventCategory::fromPrimitiveArray([
+            'title' => $title
+        ]);
+
+        $this->assertEquals($title, $articleCategory->getTitle());
+        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getId());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromOptionalPrimitiveArrayShouldBeGood(
+        string $title,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $articleCategory = EventCategory::fromPrimitiveArray([
+            'title' => $title,
+            'isVisible' => $isVisible,
+            'id' => $id
+        ]);
+
+        $this->assertEquals($title, $articleCategory->getTitle());
+        $this->assertEquals($isVisible, $articleCategory->getIsVisible());
+        $this->assertEquals($id, $articleCategory->getId());
+    }
+
+    /**
      * @return array
      */
     public function provideInvalidConstructorParameters(): array

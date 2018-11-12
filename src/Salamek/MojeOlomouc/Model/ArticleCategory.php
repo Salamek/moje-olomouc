@@ -121,5 +121,18 @@ class ArticleCategory implements IArticleCategory
         ];
     }
 
-
+    /**
+     * @param array $modelData
+     * @return ArticleCategory
+     */
+    public static function fromPrimitiveArray(array $modelData): ArticleCategory
+    {
+        return new ArticleCategory(
+            $modelData['title'],
+            (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags']: null),
+            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant']: false),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: true),
+            (array_key_exists('id', $modelData) ? $modelData['id']: null)
+        );
+    }
 }

@@ -109,6 +109,59 @@ class PlaceCategoryTest extends BaseTest
     }
 
     /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param int|null $consumerFlags
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromRequiredPrimitiveArrayShouldBeGood(
+        string $title,
+        int $consumerFlags = null,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $placeCategory = PlaceCategory::fromPrimitiveArray([
+            'title' => $title
+        ]);
+
+        $this->assertEquals($title, $placeCategory->getTitle());
+        $this->assertEquals(null, $placeCategory->getConsumerFlags());
+        $this->assertEquals(true, $placeCategory->getIsVisible());
+        $this->assertEquals(null, $placeCategory->getId());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param int|null $consumerFlags
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromOptionalPrimitiveArrayShouldBeGood(
+        string $title,
+        int $consumerFlags = null,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $placeCategory = PlaceCategory::fromPrimitiveArray([
+            'title' => $title,
+            'consumerFlags' => $consumerFlags,
+            'isVisible' => $isVisible,
+            'id' => $id,
+        ]);
+
+        $this->assertEquals($title, $placeCategory->getTitle());
+        $this->assertEquals($consumerFlags, $placeCategory->getConsumerFlags());
+        $this->assertEquals($isVisible, $placeCategory->getIsVisible());
+        $this->assertEquals($id, $placeCategory->getId());
+    }
+
+    /**
      * @return array
      */
     public function provideInvalidConstructorParameters(): array

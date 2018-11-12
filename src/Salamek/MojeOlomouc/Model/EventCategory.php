@@ -75,5 +75,16 @@ class EventCategory implements IEventCategory
         ];
     }
 
-
+    /**
+     * @param array $modelData
+     * @return EventCategory
+     */
+    public static function fromPrimitiveArray(array $modelData): EventCategory
+    {
+        return new EventCategory(
+            $modelData['title'],
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: true),
+            (array_key_exists('id', $modelData) ? $modelData['id']: null)
+        );
+    }
 }

@@ -471,4 +471,40 @@ class Event implements IEvent
         ];
     }
 
+    /**
+     * @param array $modelData
+     * @return Event
+     */
+    public static function fromPrimitiveArray(array $modelData): Event
+    {
+        $images = [];
+        if (array_key_exists('images', $modelData))
+        {
+            foreach($modelData['images'] AS $primitiveImage)
+            {
+                $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
+            }
+        }
+
+        return new Event(
+            $modelData['title'],
+            $modelData['description'],
+            new \DateTime($modelData['startAt']),
+            new \DateTime($modelData['endAt']),
+            $modelData['placeDesc'],
+            $modelData['placeLat'],
+            $modelData['placeLon'],
+            $modelData['categoryIdsArr'],
+            $images,
+            (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
+            (array_key_exists('fee', $modelData) ? $modelData['fee'] : null),
+            (array_key_exists('webUrl', $modelData) ? $modelData['webUrl'] : null),
+            (array_key_exists('facebookUrl', $modelData) ? $modelData['facebookUrl'] : null),
+            (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags'] : null),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
+            (array_key_exists('featuredLevel', $modelData) ? $modelData['featuredLevel'] : null),
+            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
+        );
+    }
 }

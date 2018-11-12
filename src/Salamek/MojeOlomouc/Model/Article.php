@@ -275,7 +275,7 @@ class Article implements IArticle
             'content' => $this->content,
             'author' => $this->author,
             'categoryId' => $this->categoryId,
-            'dateTimeAt' => $this->dateTimeAt->format(\DATE_ISO8601),
+            'dateTimeAt' => $this->dateTimeAt->format(\DateTime::ISO8601),
             'images' => $primitiveImages,
             'attachmentUrl' => $this->attachmentUrl,
             'isVisible' => $this->isVisible,
@@ -284,5 +284,32 @@ class Article implements IArticle
         ];
     }
 
+    /**
+     * @param array $modelData
+     * @return Article
+     */
+    public static function fromPrimitiveArray(array $modelData): Article
+    {
+        $images = [];
+        foreach($modelData['images'] AS $primitiveImage)
+        {
+            $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
+        }
 
+        $dateTimeAt = \DateTime::createFromFormat(\DateTime::ISO8601, $modelData['dateTimeAt']);
+
+        return new Article(
+            $modelData['title'],
+            $modelData['content'],
+            $modelData['author'],
+            $modelData['categoryId'],
+            $dateTimeAt,
+            $images,
+            (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant'] : false),
+            (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
+            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
+        );
+    }
 }

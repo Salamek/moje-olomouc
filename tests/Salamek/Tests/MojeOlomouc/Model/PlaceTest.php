@@ -211,6 +211,123 @@ class PlaceTest extends BaseTest
     }
 
     /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param string $description
+     * @param string $address
+     * @param string $lat
+     * @param string $lon
+     * @param int $categoryId
+     * @param array $images
+     * @param string|null $attachmentUrl
+     * @param bool $isVisible
+     * @param int|null $approveState
+     * @param int|null $id
+     */
+    public function createFromRequiredPrimitiveArrayShouldBeGood(
+        string $title,
+        string $description,
+        string $address,
+        string $lat,
+        string $lon,
+        int $categoryId,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        int $approveState = null,
+        int $id = null
+    )
+    {
+        $place = Place::fromPrimitiveArray(
+            [
+                'title' => $title,
+                'description' => $description,
+                'address' => $address,
+                'lat' => $lat,
+                'lon' => $lon,
+                'categoryId' => $categoryId
+            ]
+        );
+
+        $this->assertEquals($title, $place->getTitle());
+        $this->assertEquals($description, $place->getDescription());
+        $this->assertEquals($address, $place->getAddress());
+        $this->assertEquals($lat, $place->getLat());
+        $this->assertEquals($lon, $place->getLon());
+        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals([], $place->getImages());
+        $this->assertEquals(null, $place->getAttachmentUrl());
+        $this->assertEquals(true, $place->getIsVisible());
+        $this->assertEquals(null, $place->getApproveState());
+        $this->assertEquals(null, $place->getId());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param string $description
+     * @param string $address
+     * @param string $lat
+     * @param string $lon
+     * @param int $categoryId
+     * @param array $images
+     * @param string|null $attachmentUrl
+     * @param bool $isVisible
+     * @param int|null $approveState
+     * @param int|null $id
+     */
+    public function createFromOptionalPrimitiveArrayShouldBeGood(
+        string $title,
+        string $description,
+        string $address,
+        string $lat,
+        string $lon,
+        int $categoryId,
+        array $images = [],
+        string $attachmentUrl = null,
+        bool $isVisible = true,
+        int $approveState = null,
+        int $id = null
+    )
+    {
+        $primitiveImages = [];
+        foreach($images AS $image)
+        {
+            $primitiveImages[] = $image->toPrimitiveArray();
+        }
+
+        $place = Place::fromPrimitiveArray(
+            [
+                'title' => $title,
+                'description' => $description,
+                'address' => $address,
+                'lat' => $lat,
+                'lon' => $lon,
+                'categoryId' => $categoryId,
+                'images' => $primitiveImages,
+                'attachmentUrl' => $attachmentUrl,
+                'isVisible' => $isVisible,
+                'approveState' => $approveState,
+                'id' => $id,
+            ]
+        );
+
+        $this->assertEquals($title, $place->getTitle());
+        $this->assertEquals($description, $place->getDescription());
+        $this->assertEquals($address, $place->getAddress());
+        $this->assertEquals($lat, $place->getLat());
+        $this->assertEquals($lon, $place->getLon());
+        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals($images, $place->getImages());
+        $this->assertEquals($attachmentUrl, $place->getAttachmentUrl());
+        $this->assertEquals($isVisible, $place->getIsVisible());
+        $this->assertEquals($approveState, $place->getApproveState());
+        $this->assertEquals($id, $place->getId());
+    }
+
+    /**
      * @return array
      */
     public function provideInvalidConstructorParameters(): array

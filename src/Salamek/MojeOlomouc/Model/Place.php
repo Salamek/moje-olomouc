@@ -287,4 +287,34 @@ class Place implements IPlace
             'approveState' => $this->approveState
         ];
     }
+
+    /**
+     * @param array $modelData
+     * @return Place
+     */
+    public static function fromPrimitiveArray(array $modelData): Place
+    {
+        $images = [];
+        if (array_key_exists('images', $modelData))
+        {
+            foreach($modelData['images'] AS $primitiveImage)
+            {
+                $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
+            }
+        }
+
+        return new Place(
+            $modelData['title'],
+            $modelData['description'],
+            $modelData['address'],
+            $modelData['lat'],
+            $modelData['lon'],
+            $modelData['categoryId'],
+            $images,
+            (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
+            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
+        );
+    }
 }

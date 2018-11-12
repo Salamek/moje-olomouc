@@ -121,6 +121,66 @@ class ArticleCategoryTest extends BaseTest
     }
 
     /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param int|null $consumerFlags
+     * @param bool $isImportant
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromRequiredPrimitiveArrayShouldBeGood(
+        string $title,
+        int $consumerFlags = null,
+        bool $isImportant = false,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $articleCategory = ArticleCategory::fromPrimitiveArray([
+            'title' => $title
+        ]);
+
+        $this->assertEquals($title, $articleCategory->getTitle());
+        $this->assertEquals(null, $articleCategory->getConsumerFlags());
+        $this->assertEquals(false, $articleCategory->getIsImportant());
+        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getId());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValidConstructorParameters
+     * @param string $title
+     * @param int|null $consumerFlags
+     * @param bool $isImportant
+     * @param bool $isVisible
+     * @param int|null $id
+     */
+    public function createFromOptionalPrimitiveArrayShouldBeGood(
+        string $title,
+        int $consumerFlags = null,
+        bool $isImportant = false,
+        bool $isVisible = true,
+        int $id = null
+    )
+    {
+        $articleCategory = ArticleCategory::fromPrimitiveArray([
+            'title' => $title,
+            'consumerFlags' => $consumerFlags,
+            'isImportant' => $isImportant,
+            'isVisible' => $isVisible,
+            'id' => $id
+        ]);
+
+        $this->assertEquals($title, $articleCategory->getTitle());
+        $this->assertEquals($consumerFlags, $articleCategory->getConsumerFlags());
+        $this->assertEquals($isImportant, $articleCategory->getIsImportant());
+        $this->assertEquals($isVisible, $articleCategory->getIsVisible());
+        $this->assertEquals($id, $articleCategory->getId());
+    }
+
+    /**
      * @return array
      */
     public function provideInvalidConstructorParameters(): array

@@ -68,4 +68,12 @@ abstract class BaseTest extends TestCase
 
         return $dataResponse;
     }
+
+    /**
+     * @return \DateTime
+     */
+    protected function getDateTime(): \DateTime
+    {
+        return \DateTime::createFromFormat(\DateTime::ISO8601, (new \DateTime())->format(\DateTime::ISO8601));
+    }
 }

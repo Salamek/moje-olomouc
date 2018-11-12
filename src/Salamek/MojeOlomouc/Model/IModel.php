@@ -23,4 +23,10 @@ interface IModel
      * @return array
      */
     public function toPrimitiveArray(): array;
+
+    /**
+     * @param array $modelData
+     * @return IModel
+     */
+    public static function fromPrimitiveArray(array $modelData);
 }
