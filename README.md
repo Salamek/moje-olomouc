@@ -32,20 +32,56 @@ $importantMessage = new ImportantMessage(
 
 // Create new important-message
 $response = $mojeOlomouc->importantMessages->create($importantMessage);
-$response->getData();
+if (!$response->isError())
+{
+    echo 'SUCCESS'.PHP_EOL;
+    print_r($response->getData());
+}
+else
+{
+    echo 'ERROR'.PHP_EOL;
+    echo $response->getMessage().PHP_EOL;
+}
 
 // Update important-message
 $importantMessage->setExpireAt(new \DateTime('2018-11-20'));
 $response = $mojeOlomouc->importantMessages->update($importantMessage);
-$response->getData();
+if (!$response->isError())
+{
+    echo 'SUCCESS'.PHP_EOL;
+    print_r($response->getData());
+}
+else
+{
+    echo 'ERROR'.PHP_EOL;
+    echo $response->getMessage().PHP_EOL;
+}
 
 // Delete important-message
 $response = $mojeOlomouc->importantMessages->delete($importantMessage);
-$response->getData();
+if (!$response->isError())
+{
+    echo 'SUCCESS'.PHP_EOL;
+    print_r($response->getData());
+}
+else
+{
+    echo 'ERROR'.PHP_EOL;
+    echo $response->getMessage().PHP_EOL;
+}
 
 // Or
 $response = $mojeOlomouc->importantMessages->delete(null, $importantMessage->getId());
-$response->getData();
+if (!$response->isError())
+{
+    echo 'SUCCESS'.PHP_EOL;
+    print_r($response->getData());
+}
+else
+{
+    echo 'ERROR'.PHP_EOL;
+    echo $response->getMessage().PHP_EOL;
+}
 
 ```
 
