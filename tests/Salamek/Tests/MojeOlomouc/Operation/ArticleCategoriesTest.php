@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
-use Salamek\MojeOlomouc\Enum\ArticleConsumerFlagEnum;
+use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
-use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\IArticleCategory;
 use Salamek\MojeOlomouc\Operation\ArticleCategories;
 use Salamek\MojeOlomouc\Request;
@@ -302,7 +301,7 @@ class ArticleCategoriesTest extends BaseTest
             )],
             [new ArticleCategory(
                 'title-'.mt_rand(),
-                ArticleConsumerFlagEnum::STUDENT,
+                ArticleCategoryConsumerFlagEnum::STUDENT,
                 true,
                 false,
                 mt_rand()

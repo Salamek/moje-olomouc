@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
-use Salamek\MojeOlomouc\Enum\PlaceConsumerFlagEnum;
+use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\MojeOlomouc\Model\IPlaceCategory;
@@ -293,7 +293,7 @@ class PlaceCategoriesTest extends BaseTest
             )],
             [new PlaceCategory(
                 'title-'.mt_rand(),
-                PlaceConsumerFlagEnum::STUDENT,
+                PlaceCategoryConsumerFlagEnum::STUDENT,
                 false,
                 mt_rand()
             )],

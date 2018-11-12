@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Enum\PlaceConsumerFlagEnum;
+use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
@@ -126,7 +126,7 @@ class PlaceCategoryTest extends BaseTest
     {
         return [
             ['title-'.mt_rand(), null, false, true, null],
-            ['title-'.mt_rand(), PlaceConsumerFlagEnum::CITIZEN, false, true, null],
+            ['title-'.mt_rand(), PlaceCategoryConsumerFlagEnum::CITIZEN, false, true, null],
             ['title-'.mt_rand(), null, true, true, null],
             ['title-'.mt_rand(), null, false, false, null],
             ['title-'.mt_rand(), null, false, false, mt_rand()],

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
-use Salamek\MojeOlomouc\Enum\ArticleConsumerFlagEnum;
+use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
@@ -138,7 +138,7 @@ class ArticleCategoryTest extends BaseTest
     {
         return [
             ['title-'.mt_rand(), null, false, true, null],
-            ['title-'.mt_rand(), ArticleConsumerFlagEnum::CITIZEN, false, true, null],
+            ['title-'.mt_rand(), ArticleCategoryConsumerFlagEnum::CITIZEN, false, true, null],
             ['title-'.mt_rand(), null, true, true, null],
             ['title-'.mt_rand(), null, false, false, null],
             ['title-'.mt_rand(), null, false, false, mt_rand()],
