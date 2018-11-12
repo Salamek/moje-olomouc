@@ -49,7 +49,7 @@ $response->getData();
 
 ```
 
-##License
+## License
 
 This project is licensed under the [LGPL-3.0 license](https://opensource.org/licenses/LGPL-3.0).
 
