@@ -17,13 +17,18 @@ class Articles implements IOperation
     /** @var Request */
     private $request;
 
+    /** @var null|string */
+    private $hydrator;
+
     /**
      * Articles constructor.
      * @param Request $request
+     * @param string|null $hydrator
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, string $hydrator = null)
     {
         $this->request = $request;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -50,7 +55,7 @@ class Articles implements IOperation
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/articles', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/articles', $data, ['articles' => $this->hydrator]);
     }
 
     /**

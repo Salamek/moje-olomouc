@@ -46,14 +46,15 @@ class Request
     /**
      * @param string $endpoint
      * @param array $arguments
+     * @param array $hydratorMapping
      * @return Response
      */
-    public function get(string $endpoint, array $arguments = []): Response
+    public function get(string $endpoint, array $arguments = [], array $hydratorMapping = []): Response
     {
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions = array_merge($defaultClientOptions, ['query' => $arguments]);
         $response = $this->client->request('GET', $endpoint, $defaultClientOptions);
-        return new Response($response);
+        return new Response($response, $hydratorMapping);
     }
 
     /**

@@ -17,13 +17,18 @@ class Events implements IOperation
     /** @var Request */
     private $request;
 
+    /** @var null|string */
+    private $hydrator;
+
     /**
      * Events constructor.
      * @param Request $request
+     * @param string|null $hydrator
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, string $hydrator = null)
     {
         $this->request = $request;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -50,7 +55,7 @@ class Events implements IOperation
             'extraFields' => $extraFields,
         ];
 
-        return $this->request->get('/api/export/events', $data); //@TODO HYDRATOR
+        return $this->request->get('/api/export/events', $data, ['events' => $this->hydrator]);
     }
 
     /**

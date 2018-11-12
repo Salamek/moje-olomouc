@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc;
 
 
+use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\MojeOlomouc\Response;
 
 class ResponseTest extends BaseTest
 {
     /**
+     * @test
      * @dataProvider provideInvalidResponseBody
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidJsonResponseException
      */
-    public function testConstructFailOnWrongData(string $responseContent): void
+    public function constructFailOnWrongData(string $responseContent): void
     {
         $responseMock = $this->getResponseMockWithBody($responseContent);
 
@@ -21,18 +23,68 @@ class ResponseTest extends BaseTest
     }
 
     /**
+     * @test
      * @dataProvider provideValidResponseBody
      */
-    public function testConstructOkOnGoodData(bool $isError, string $responseContent): void
+    public function constructOkOnGoodData(bool $isError, string $responseContent): void
     {
         $responseMock = $this->getResponseMockWithBody($responseContent);
+        $responseData = json_decode($responseContent);
 
         $response = new Response($responseMock);
         $this->assertEquals($isError, $response->isError());
-        $this->assertEquals($responseContent, json_encode($response->getData()));
-        $this->assertEquals($isError, !empty($response->getErrors()));
+        $this->assertEquals($responseContent, json_encode($response->getRawData()));
+        $this->assertEquals($responseData->data, $response->getData());
+        $this->assertEquals($responseData->message, $response->getMessage());
+        $this->assertEquals($responseData->code, $response->getCode());
+        $this->assertEquals(200, $response->getHttpCode());
     }
- 
+
+    /**
+     * @test
+     */
+    public function dataHydratorShouldHydrateData()
+    {
+        $title = 'title-'.mt_rand();
+        $consumerFlags = mt_rand();
+        $isVisible = true;
+        $id = mt_rand();
+        $responseContent = json_encode([
+            'isError' => false,
+            'message' => 'OK',
+            'code' => 0,
+            'data' => [
+                'tests' => [
+                    [
+                        'title' => $title,
+                        'consumerFlags' => $consumerFlags,
+                        'isVisible' => $isVisible,
+                        'id' => $id
+                    ]
+                ]
+            ]
+        ]);
+
+        $responseMock = $this->getResponseMockWithBody($responseContent);
+
+        $response = new Response($responseMock, ['tests' => PlaceCategory::class]);
+        $data = $response->getData();
+
+        $this->assertObjectHasAttribute('tests', $data);
+        $this->assertNotEmpty($data->tests);
+        $this->assertInstanceOf(PlaceCategory::class, $data->tests[0]);
+        $this->assertObjectHasAttribute('title', $data->tests[0]);
+        $this->assertObjectHasAttribute('consumerFlags', $data->tests[0]);
+        $this->assertObjectHasAttribute('isVisible', $data->tests[0]);
+        $this->assertObjectHasAttribute('id', $data->tests[0]);
+
+        $this->assertEquals($title, $data->tests[0]->getTitle());
+        $this->assertEquals($consumerFlags, $data->tests[0]->getConsumerFlags());
+        $this->assertEquals($isVisible, $data->tests[0]->getIsVisible());
+        $this->assertEquals($id, $data->tests[0]->getId());
+    }
+
+
     public function provideInvalidResponseBody(): array
     {
         return [
@@ -57,6 +109,13 @@ class ResponseTest extends BaseTest
                     'isError' => false,
                     'message' => 'Oi'
                 ])
+            ],
+            [
+                json_encode([
+                    'isError' => false,
+                    'message' => 'Oi',
+                    'code' => 0
+                ])
             ]
         ];
     }
@@ -69,7 +128,8 @@ class ResponseTest extends BaseTest
                 json_encode([
                     'isError' => false,
                     'message' => 'OK',
-                    'code' => 0
+                    'code' => 0,
+                    'data' => []
                 ])
             ],
             [
@@ -77,7 +137,8 @@ class ResponseTest extends BaseTest
                 json_encode([
                     'isError' => true,
                     'message' => 'ERR',
-                    'code' => -128
+                    'code' => -128,
+                    'data' => []
                 ])
             ]
         ];

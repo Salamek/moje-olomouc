@@ -17,13 +17,18 @@ class ImportantMessages implements IOperation
     /** @var Request */
     private $request;
 
+    /** @var null|string */
+    private $hydrator;
+
     /**
-     * ImportantMessage constructor.
+     * ImportantMessages constructor.
      * @param Request $request
+     * @param string|null $hydrator
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, string $hydrator = null)
     {
         $this->request = $request;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -33,7 +38,7 @@ class ImportantMessages implements IOperation
      */
     public function getAll(): Response
     {
-        return $this->request->get('/api/export/important-messages');
+        return $this->request->get('/api/export/important-messages', [], ['importantMessages' => $this->hydrator]);
     }
 
     /**

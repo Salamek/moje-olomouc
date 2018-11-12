@@ -31,7 +31,7 @@ abstract class BaseTest extends TestCase
         return hash('sha256', $input);
     }
 
-    protected function getResponseMockWithBody(string $responseContent): ResponseInterface
+    protected function getResponseMockWithBody(string $responseContent, int $responseCode = 200): ResponseInterface
     {
         $streamMock = $this->createMock('Psr\Http\Message\StreamInterface');
         $streamMock->expects($this->once())
@@ -43,6 +43,10 @@ abstract class BaseTest extends TestCase
             ->method('getBody')
             ->will($this->returnValue($streamMock));
 
+        $responseMock->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue($responseCode));
+
         return $responseMock;
     }
 
@@ -53,18 +57,14 @@ abstract class BaseTest extends TestCase
      * @param array $data
      * @return array
      */
-    protected function getFakeResponseData(bool $isError = false, string $message = 'OK', int $code = 0, array $data = null): array
+    protected function getFakeResponseData(bool $isError = false, string $message = 'OK', int $code = 0, array $data = []): array
     {
         $dataResponse = [
             'isError' => $isError,
             'message' => $message,
-            'code' => $code
+            'code' => $code,
+            'data' => $data
         ];
-
-        if ($data)
-        {
-            $dataResponse['data'] = $data;
-        }
 
         return $dataResponse;
     }

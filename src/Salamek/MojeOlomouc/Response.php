@@ -10,8 +10,6 @@ use Salamek\MojeOlomouc\Exception\InvalidJsonResponseException;
 /**
  * Class Response
  * @package Salamek\MojeOlomouc
- * @TODO THIS NEEDS MORE WORK
- * @TODO I DONT LIKE ERROR HANDLING HERE
  */
 class Response
 {
@@ -21,60 +19,72 @@ class Response
     /** @var int */
     private $httpCode;
 
-    /** @var array */
-    private $errors;
+    /** @var  */
+    private $rawData;
 
     /** @var object */
     private $data;
 
+    /** @var int */
+    private $code;
+
+    /** @var string */
+    private $message;
+
     /**
      * Response constructor.
      * @param ResponseInterface $response
-     * @param array $errors
+     * @param array $hydratorMapping
      */
-    public function __construct(ResponseInterface $response, array $errors = [])
+    public function __construct(ResponseInterface $response, array $hydratorMapping = [])
     {
         $this->httpCode = $response->getStatusCode();
         $rawContents = $response->getBody()->getContents();
-        $this->data = json_decode($rawContents);
-        if (!$this->data){
+        $this->rawData = json_decode($rawContents);
+        if (!$this->rawData){
             throw new InvalidJsonResponseException(sprintf('getContents returned malformed or none JSON string (%s)', $rawContents));
         }
 
-        if (!isset($this->data->isError))
+        if (!isset($this->rawData->isError))
         {
             throw new InvalidJsonResponseException(sprintf('isError is missing in JSON data (%s)', $rawContents));
         }
 
-        if (!isset($this->data->message))
+        if (!isset($this->rawData->message))
         {
             throw new InvalidJsonResponseException(sprintf('message is missing in JSON data (%s)', $rawContents));
         }
 
-        if (!isset($this->data->code))
+        if (!isset($this->rawData->code))
         {
             throw new InvalidJsonResponseException(sprintf('code is missing in JSON data (%s)', $rawContents));
         }
 
-        if ($this->data->isError)
+        if (!isset($this->rawData->data))
         {
-            $this->isError = true;
-            $errors[] = [ //@TODO convert to obj or data to array ?
-                'message' => $this->data->message,
-                'code' => $this->data->code
-            ];
-        }
-        else
-        {
-            $this->isError = false;
+            throw new InvalidJsonResponseException(sprintf('data is missing in JSON data (%s)', $rawContents));
         }
 
-        if (!$this->isError)
-        {
-            $this->isError = !empty($errors);
-        }
+        $this->isError = $this->rawData->isError;
+        $this->message = $this->rawData->message;
+        $this->code = $this->rawData->code;
+        $this->data = $this->rawData->data;
 
-        $this->errors = $errors;
+        //Use hydrator to modify data
+        foreach($hydratorMapping AS $itemKey => $hydrator)
+        {
+
+            if (isset($this->data->{$itemKey}))
+            {
+                $hydratedItems = [];
+                foreach ($this->data->{$itemKey} AS $item)
+                {
+                    $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), (array)$item);
+                }
+
+                $this->data->{$itemKey} = $hydratedItems;
+            }
+        }
     }
 
     /**
@@ -86,17 +96,41 @@ class Response
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getErrors(): array
+    public function getMessage(): string
     {
-        return $this->errors;
+        return $this->message;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCode(): int
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHttpCode()
+    {
+        return $this->httpCode;
     }
 
     /**
      * @return object
      */
-    public function getData(): object
+    public function getRawData()
+    {
+        return $this->rawData;
+    }
+
+    /**
+     * @return object
+     */
+    public function getData()
     {
         return $this->data;
     }
