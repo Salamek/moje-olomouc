@@ -11,7 +11,14 @@ use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\MojeOlomouc\Model\Event;
 use Salamek\MojeOlomouc\Model\EventCategory;
+use Salamek\MojeOlomouc\Model\IArticle;
+use Salamek\MojeOlomouc\Model\IArticleCategory;
+use Salamek\MojeOlomouc\Model\IEvent;
+use Salamek\MojeOlomouc\Model\IEventCategory;
+use Salamek\MojeOlomouc\Model\IImportantMessage;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
+use Salamek\MojeOlomouc\Model\IPlace;
+use Salamek\MojeOlomouc\Model\IPlaceCategory;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\MojeOlomouc\Operation\ArticleCategories;
@@ -37,26 +44,30 @@ class MojeOlomouc
     /** @var string */
     private $apiKey;
 
-    /** @var Request */
-    private $request;
-
-    /** @var array */
-    private $initiatedOperations = [];
-
-    /** @var array */
-    private $nameToOperation = [
-        'articleCategories' => ArticleCategories::class,
-        'articles' => Articles::class,
-        'eventCategories' => EventCategories::class,
-        'events' => Events::class,
-        'importantMessages' => ImportantMessages::class,
-        'placeCategories' => PlaceCategories::class,
-        'places' => Places::class
-    ];
-
     /** @var array */
     private $hydrationTable;
 
+    /** @var ArticleCategories */
+    public $articleCategories;
+
+    /** @var Articles */
+    public $articles;
+
+    /** @var EventCategories */
+    public $eventCategories;
+
+    /** @var Events */
+    public $events;
+
+    /** @var ImportantMessages */
+    public $importantMessages;
+
+    /** @var PlaceCategories */
+    public $placeCategories;
+
+    /** @var Places */
+    public $places;
+    
     /**
      * MojeOlomouc constructor.
      * @param ClientInterface $client
@@ -67,13 +78,13 @@ class MojeOlomouc
         ClientInterface $client,
         string $apiKey,
         array $hydrationTable = [
-            'articleCategories' => ArticleCategory::class,
-            'articles' => Article::class,
-            'eventCategories' => EventCategory::class,
-            'events' => Event::class,
-            'importantMessages' => ImportantMessage::class,
-            'placeCategories' => PlaceCategory::class,
-            'places' => Place::class
+            IArticleCategory::class => ArticleCategory::class,
+            IArticle::class => Article::class,
+            IEventCategory::class => EventCategory::class,
+            IEvent::class => Event::class,
+            IImportantMessage::class => ImportantMessage::class,
+            IPlaceCategory::class => PlaceCategory::class,
+            IPlace::class => Place::class
         ]
     )
     {
@@ -83,41 +94,43 @@ class MojeOlomouc
         $this->apiKey = $apiKey;
         $this->hydrationTable = $hydrationTable;
 
-        $this->request = new Request($client, $apiKey);
+        $request = new Request($client, $apiKey);
+
+        $this->articleCategories = new ArticleCategories($request, $this->getHydrator(IArticleCategory::class));
+        $this->articles = new Articles($request, $this->getHydrator(IArticle::class));
+        $this->eventCategories = new EventCategories($request, $this->getHydrator(IEventCategory::class));
+        $this->events = new Events($request, $this->getHydrator(IEvent::class));
+        $this->importantMessages = new ImportantMessages($request, $this->getHydrator(IImportantMessage::class));
+        $this->placeCategories = new PlaceCategories($request, $this->getHydrator(IPlaceCategory::class));
+        $this->places = new Places($request, $this->getHydrator(IPlace::class));
     }
 
     /**
-     * @param $name
-     * @return IOperation
+     * @param string $name
+     * @return string
      */
-    public function getOperation($name)
+    private function getHydrator(string $name): string
     {
-        if (!array_key_exists($name, $this->nameToOperation))
-        {
-            throw new InvalidArgumentException(sprintf('Operation %s not found', $name));
-        }
-
         if (!array_key_exists($name, $this->hydrationTable))
         {
             throw new InvalidArgumentException(sprintf('Hydrator for %s not found', $name));
         }
 
-        if (array_key_exists($name, $this->initiatedOperations))
-        {
-            return $this->initiatedOperations[$name];
-        }
-        $operation = new $this->nameToOperation[$name]($this->request, $this->hydrationTable[$name]);
-        $this->initiatedOperations[$name] = $operation;
-        return $operation;
+        return $this->hydrationTable[$name];
     }
 
     /**
-     * @param $name
-     * @return IOperation
+     * @param string $name
+     * @return mixed
      */
-    public function __get($name)
+    public function getOperation(string $name)
     {
-        return $this->getOperation($name);
+        if (!property_exists($this, $name))
+        {
+            throw new InvalidArgumentException(sprintf('Operation %s not found', $name));
+        }
+
+        return $this->{$name};
     }
 
     /**
