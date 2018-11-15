@@ -107,7 +107,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $places = new Places($request);
-        $response = $places->create($place);
+        $response = $places->create([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
@@ -150,7 +150,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($place->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -158,9 +158,8 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IPlace $place
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IPlace $place, int $id = null)
+    public function updateShouldBeGoodTest(IPlace $place)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -184,7 +183,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $places = new Places($request);
-        $response = $places->update($place, $id);
+        $response = $places->update([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
@@ -227,17 +226,16 @@ class PlacesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $place->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($place->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IPlace|null $place
-     * @param int|null $id
+     * @param IPlace $place
      */
-    public function deleteRequestShouldBeGoodTest(IPlace $place = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IPlace $place)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -261,7 +259,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $places = new Places($request);
-        $response = $places->delete($place, $id);
+        $response = $places->delete([$place]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -274,7 +272,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $place->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($place->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -282,10 +280,9 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IPlace|null $place
-     * @param int|null $id
+     * @param IPlace $place
      */
-    public function deleteRequestShouldFailTest(IPlace $place = null, int $id = null)
+    public function deleteRequestShouldFailTest(IPlace $place)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -293,7 +290,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $places = new Places($request);
-        $places->delete($place, $id);
+        $places->delete([$place]);
     }
 
     /**
@@ -302,7 +299,6 @@ class PlacesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new Place(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
@@ -315,7 +311,7 @@ class PlacesTest extends BaseTest
                 false,
                 PlaceApproveStateEnum::APPROVED,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -325,7 +321,6 @@ class PlacesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new Place(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
@@ -338,7 +333,7 @@ class PlacesTest extends BaseTest
                 false,
                 PlaceApproveStateEnum::APPROVED,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -348,14 +343,6 @@ class PlacesTest extends BaseTest
     public function provideUpdateConstructorParameters(): array
     {
         return [
-            [new Place(
-                'title-'.mt_rand(),
-                'description-'.mt_rand(),
-                'address-'.mt_rand(),
-                '12.'.mt_rand(),
-                '-12.'.mt_rand(),
-                mt_rand()
-            ), mt_rand()],
             [new Place(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),

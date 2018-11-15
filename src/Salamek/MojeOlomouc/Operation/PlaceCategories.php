@@ -57,55 +57,35 @@ class PlaceCategories implements IOperation
     }
 
     /**
-     * @param IPlaceCategory $placeCategory
+     * @param IPlaceCategory[] $placeCategories
      * @return Response
      */
     public function create(
-        IPlaceCategory $placeCategory
+        array $placeCategories
     ): Response
     {
-        $data = [
-            'placeCategory' => $placeCategory->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/place-categories', $data);
+        return $this->request->create('/api/import/place-categories', $placeCategories, 'placeCategory');
     }
 
     /**
-     * @param IPlaceCategory $placeCategory
-     * @param int|null $id
+     * @param IPlaceCategory[] $placeCategories
      * @return Response
      */
     public function update(
-        IPlaceCategory $placeCategory,
-        int $id = null
+        array $placeCategories
     ): Response
     {
-        $id = (is_null($id) ? $placeCategory->getId() : $id);
-        $data = [
-            'placeCategory' => $placeCategory->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/place-categories', $id, $data);
+        return $this->request->update('/api/import/place-categories', $placeCategories, 'placeCategory');
     }
 
     /**
-     * @param IPlaceCategory|null $placeCategory
-     * @param int|null $id
+     * @param IPlaceCategory[] $placeCategories
      * @return Response
      */
-    public function delete(IPlaceCategory $placeCategory = null, int $id = null): Response
+    public function delete(
+        array $placeCategories
+    ): Response
     {
-        if (is_null($placeCategory) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $placeCategory or $id must be provided');
-        }
-        $id = (is_null($id) ? $placeCategory->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/place-categories', $id);
+        return $this->request->delete('/api/import/place-categories', $placeCategories, 'placeCategory');
     }
 }

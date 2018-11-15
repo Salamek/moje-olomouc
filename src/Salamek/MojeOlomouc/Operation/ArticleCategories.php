@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
 use \Salamek\MojeOlomouc\Model\IArticleCategory;
@@ -57,55 +56,34 @@ class ArticleCategories implements IOperation
     }
 
     /**
-     * @param IArticleCategory $articleCategory
+     * @param IArticleCategory[] $articleCategories
      * @return Response
      */
     public function create(
-        IArticleCategory $articleCategory
+        array $articleCategories
     ): Response
     {
-        $data = [
-            'articleCategory' => $articleCategory->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/article-categories', $data);
+        return $this->request->create('/api/import/article-categories', $articleCategories, 'articleCategory');
     }
 
     /**
-     * @param IArticleCategory $articleCategory
-     * @param int|null $id
+     * @param IArticleCategory[] $articleCategories
      * @return Response
      */
     public function update(
-        IArticleCategory $articleCategory,
-        int $id = null
+        array $articleCategories
     ): Response
     {
-        $id = (is_null($id) ? $articleCategory->getId() : $id);
-        $data = [
-            'articleCategory' => $articleCategory->toPrimitiveArray()
-        ];
 
-        return $this->request->update('/api/import/article-categories', $id, $data);
+        return $this->request->update('/api/import/article-categories', $articleCategories, 'articleCategory');
     }
 
     /**
-     * @param IArticleCategory|null $articleCategory
-     * @param int|null $id
+     * @param IArticleCategory[] $articleCategories
      * @return Response
      */
-    public function delete(IArticleCategory $articleCategory = null, int $id = null): Response
+    public function delete(array $articleCategories = null): Response
     {
-        if (is_null($articleCategory) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $articleCategory or $id must be provided');
-        }
-        $id = (is_null($id) ? $articleCategory->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/article-categories', $id);
+        return $this->request->delete('/api/import/article-categories', $articleCategories, 'articleCategory');
     }
 }

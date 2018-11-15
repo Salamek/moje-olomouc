@@ -57,55 +57,33 @@ class EventCategories implements IOperation
     }
 
     /**
-     * @param IEventCategory $eventCategory
+     * @param IEventCategory[] $eventCategories
      * @return Response
      */
     public function create(
-        IEventCategory $eventCategory
+        array $eventCategories
     ): Response
     {
-        $data = [
-            'eventCategory' => $eventCategory->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/event-categories', $data);
+        return $this->request->create('/api/import/event-categories', $eventCategories, 'eventCategory');
     }
 
     /**
-     * @param IEventCategory $eventCategory
-     * @param int|null $id
+     * @param IEventCategory[] $eventCategories
      * @return Response
      */
     public function update(
-        IEventCategory $eventCategory,
-        int $id = null
+        array $eventCategories
     ): Response
     {
-        $id = (is_null($id) ? $eventCategory->getId() : $id);
-        $data = [
-            'eventCategory' => $eventCategory->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/event-categories', $id, $data);
+        return $this->request->update('/api/import/event-categories', $eventCategories, 'eventCategory');
     }
 
     /**
-     * @param IEventCategory|null $eventCategory
-     * @param int|null $id
+     * @param IEventCategory[] $eventCategories
      * @return Response
      */
-    public function delete(IEventCategory $eventCategory = null, int $id = null): Response
+    public function delete(array $eventCategories): Response
     {
-        if (is_null($eventCategory) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $articleCategory or $id must be provided');
-        }
-        $id = (is_null($id) ? $eventCategory->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/event-categories', $id);
+        return $this->request->delete('/api/import/event-categories', $eventCategories, 'eventCategory');
     }
 }

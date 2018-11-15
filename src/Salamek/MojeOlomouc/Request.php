@@ -7,6 +7,8 @@ namespace Salamek\MojeOlomouc;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Middleware;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Model\IModel;
+use Salamek\MojeOlomouc\Model\PayloadItem;
 
 /**
  * Class Request
@@ -60,71 +62,69 @@ class Request
 
     /**
      * @param string $endpoint
-     * @param array $data
+     * @param IModel[] $entities
+     * @param string $dataKey
      * @return Response
      */
-    public function create(string $endpoint, array $data): Response
+    public function create(string $endpoint, array $entities, string $dataKey): Response
     {
-        $defaultClientOptions = $this->buildDefaultClientOptions();
-
-        $payload = [
-            'action' => [
-                'code' => RequestActionCodeEnum::ACTION_CODE_CREATE,
-                'id' => null
-            ]
-        ];
-
-        $payload = array_merge_recursive($payload, $data);
-
-        $defaultClientOptions['json'] = [$payload];
-
-        $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
-        return new Response($response);
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_CREATE));
     }
 
     /**
      * @param string $endpoint
-     * @param int $id
-     * @param array $data
+     * @param IModel[] $entities
+     * @param string $dataKey
      * @return Response
      */
-    public function update(string $endpoint, int $id, array $data): Response
+    public function update(string $endpoint, array $entities, string $dataKey): Response
     {
-        $defaultClientOptions = $this->buildDefaultClientOptions();
-        $payload = [
-            'action' => [
-                'code' => RequestActionCodeEnum::ACTION_CODE_UPDATE,
-                'id' => $id
-            ]
-        ];
-
-        $payload = array_merge_recursive($payload, $data);
-
-        $defaultClientOptions['json'] = [$payload];
-
-        $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
-
-        return new Response($response);
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_UPDATE));
     }
 
     /**
      * @param string $endpoint
-     * @param int $id
+     * @param IModel[] $entities
+     * @param string $dataKey
      * @return Response
      */
-    public function delete(string $endpoint, int $id): Response
+    public function delete(string $endpoint, array $entities, string $dataKey): Response
     {
-        $defaultClientOptions = $this->buildDefaultClientOptions();
-        $payload = [
-            'action' => [
-                'code' => RequestActionCodeEnum::ACTION_CODE_DELETE,
-                'id' => $id
-            ]
-        ];
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_DELETE));
+    }
 
-        $defaultClientOptions['json'] = [$payload];
+    /**
+     * @param array $entities
+     * @param string $dataKey
+     * @param int $action
+     * @return \Generator
+     */
+    private function createPayloadItemGenerator(array $entities, string $dataKey, int $action)
+    {
+        foreach ($entities AS $entity)
+        {
+            yield new PayloadItem($entity, $dataKey, $action);
+        }
+    }
+
+    /**
+     * @param string $endpoint
+     * @param \Generator $payloadItems
+     * @return Response
+     * @internal
+     */
+    public function post(string $endpoint, \Generator $payloadItems)
+    {
+        $payloadArray = [];
+        foreach($payloadItems AS $payloadItem)
+        {
+            $payloadArray[] = $payloadItem->toPrimitiveArray();
+        }
+        $defaultClientOptions = $this->buildDefaultClientOptions();
+        $defaultClientOptions['json'] = $payloadArray;
 
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
+
         return new Response($response);
     }
 }

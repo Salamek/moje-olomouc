@@ -60,55 +60,33 @@ class Events implements IOperation
     }
 
     /**
-     * @param IEvent $event
+     * @param IEvent[] $events
      * @return Response
      */
     public function create(
-        IEvent $event
+        array $events
     ): Response
     {
-        $data = [
-            'event' => $event->toPrimitiveArray()
-        ];
-        
-        return $this->request->create('/api/import/events', $data);
+        return $this->request->create('/api/import/events', $events, 'event');
     }
 
     /**
-     * @param IEvent $event
-     * @param int|null $id
+     * @param IEvent[] $events
      * @return Response
      */
     public function update(
-        IEvent $event,
-        int $id = null
+        array $events
     ): Response
     {
-        $id = (is_null($id) ? $event->getId() : $id);
-        $data = [
-            'event' => $event->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/events', $id, $data);
+        return $this->request->update('/api/import/events', $events, 'event');
     }
 
     /**
-     * @param IEvent|null $event
-     * @param int|null $id
+     * @param IEvent[] $events
      * @return Response
      */
-    public function delete(IEvent $event = null, int $id = null): Response
+    public function delete(array $events): Response
     {
-        if (is_null($event) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $event or $id must be provided');
-        }
-        $id = (is_null($id) ? $event->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/events', $id);
+        return $this->request->delete('/api/import/events', $events, 'event');
     }
 }

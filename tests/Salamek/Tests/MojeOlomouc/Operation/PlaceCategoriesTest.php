@@ -101,7 +101,7 @@ class PlaceCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request);
-        $response = $placeCategories->create($placeCategory);
+        $response = $placeCategories->create([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -126,7 +126,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -134,9 +134,8 @@ class PlaceCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IPlaceCategory $placeCategory
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IPlaceCategory $placeCategory, int $id = null)
+    public function updateShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -160,7 +159,7 @@ class PlaceCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request);
-        $response = $placeCategories->update($placeCategory, $id);
+        $response = $placeCategories->update([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -185,17 +184,16 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IPlaceCategory|null $placeCategory
-     * @param int|null $id
+     * @param IPlaceCategory $placeCategory
      */
-    public function deleteRequestShouldBeGoodTest(IPlaceCategory $placeCategory = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -219,7 +217,7 @@ class PlaceCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request);
-        $response = $placeCategories->delete($placeCategory, $id);
+        $response = $placeCategories->delete([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -233,7 +231,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -241,10 +239,9 @@ class PlaceCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IPlaceCategory|null $placeCategory
-     * @param int|null $id
+     * @param IPlaceCategory $placeCategory
      */
-    public function deleteRequestShouldFailTest(IPlaceCategory $placeCategory = null, int $id = null)
+    public function deleteRequestShouldFailTest(IPlaceCategory $placeCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -252,7 +249,7 @@ class PlaceCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request);
-        $placeCategories->delete($placeCategory, $id);
+        $placeCategories->delete([$placeCategory]);
     }
 
     /**
@@ -261,13 +258,12 @@ class PlaceCategoriesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new PlaceCategory(
                 'title-'.mt_rand(),
                 null,
                 true,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -277,13 +273,12 @@ class PlaceCategoriesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new PlaceCategory(
                 'title-'.mt_rand(),
                 null,
                 true,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -297,14 +292,8 @@ class PlaceCategoriesTest extends BaseTest
                 'title-'.mt_rand(),
                 null,
                 true,
-                null
-            ), mt_rand()],
-            [new PlaceCategory(
-                'title-'.mt_rand(),
-                null,
-                true,
                 mt_rand()
-            ), null],
+            )],
         ];
     }
 

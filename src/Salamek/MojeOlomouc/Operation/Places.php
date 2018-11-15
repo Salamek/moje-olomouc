@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
 use \Salamek\MojeOlomouc\Model\IPlace;
@@ -60,55 +59,35 @@ class Places implements IOperation
     }
 
     /**
-     * @param IPlace $place
+     * @param IPlace[] $places
      * @return Response
      */
     public function create(
-        IPlace $place
+        array $places
     ): Response
     {
-        $data = [
-            'place' => $place->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/places', $data);
+        return $this->request->create('/api/import/places', $places, 'place');
     }
 
     /**
-     * @param IPlace $place
-     * @param int|null $id
+     * @param IPlace[] $places
      * @return Response
      */
     public function update(
-        IPlace $place,
-        int $id = null
+        array $places
     ): Response
     {
-        $id = (is_null($id) ? $place->getId() : $id);
-        $data = [
-            'place' => $place->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/places', $id, $data);
+        return $this->request->update('/api/import/places', $places, 'place');
     }
 
     /**
-     * @param IPlace|null $place
-     * @param int|null $id
+     * @param IPlace[] $places
      * @return Response
      */
-    public function delete(IPlace $place = null, int $id = null): Response
+    public function delete(
+        array $places
+    ): Response
     {
-        if (is_null($place) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $place or $id must be provided');
-        }
-        $id = (is_null($id) ? $place->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/places', $id);
+        return $this->request->delete('/api/import/places', $places, 'place');
     }
 }

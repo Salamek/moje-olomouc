@@ -85,7 +85,7 @@ class ImportantMessagesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request);
-        $response = $importantMessages->create($importantMessage);
+        $response = $importantMessages->create([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -115,7 +115,7 @@ class ImportantMessagesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($importantMessage->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -123,9 +123,8 @@ class ImportantMessagesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IImportantMessage $importantMessage
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IImportantMessage $importantMessage, int $id = null)
+    public function updateShouldBeGoodTest(IImportantMessage $importantMessage)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -149,7 +148,7 @@ class ImportantMessagesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request);
-        $response = $importantMessages->update($importantMessage, $id);
+        $response = $importantMessages->update([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -179,17 +178,16 @@ class ImportantMessagesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($importantMessage->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IImportantMessage|null $importantMessage
-     * @param int|null $id
+     * @param IImportantMessage $importantMessage
      */
-    public function deleteRequestShouldBeGoodTest(IImportantMessage $importantMessage = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IImportantMessage $importantMessage = null)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -213,7 +211,7 @@ class ImportantMessagesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request);
-        $response = $importantMessages->delete($importantMessage, $id);
+        $response = $importantMessages->delete([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -227,7 +225,7 @@ class ImportantMessagesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($importantMessage->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -235,10 +233,9 @@ class ImportantMessagesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IImportantMessage|null $importantMessage
-     * @param int|null $id
+     * @param IImportantMessage $importantMessage
      */
-    public function deleteRequestShouldFailTest(IImportantMessage $importantMessage = null, int $id = null)
+    public function deleteRequestShouldFailTest(IImportantMessage $importantMessage)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -246,7 +243,7 @@ class ImportantMessagesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request);
-        $importantMessages->delete($importantMessage, $id);
+        $importantMessages->delete([$importantMessage]);
     }
 
     /**
@@ -255,7 +252,6 @@ class ImportantMessagesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new ImportantMessage(
                 'text-'.mt_rand(),
                 $this->getDateTime(),
@@ -264,7 +260,7 @@ class ImportantMessagesTest extends BaseTest
                 $this->getDateTime(),
                 false,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -274,7 +270,6 @@ class ImportantMessagesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new ImportantMessage(
                 'text-'.mt_rand(),
                 $this->getDateTime(),
@@ -283,7 +278,7 @@ class ImportantMessagesTest extends BaseTest
                 $this->getDateTime(),
                 false,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -300,17 +295,8 @@ class ImportantMessagesTest extends BaseTest
                 ImportantMessageSeverityEnum::WARNING,
                 $this->getDateTime(),
                 false,
-                null
-            ), mt_rand()],
-            [new ImportantMessage(
-                'text-'.mt_rand(),
-                $this->getDateTime(),
-                ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-                ImportantMessageSeverityEnum::WARNING,
-                $this->getDateTime(),
-                false,
                 mt_rand()
-            ), null],
+            )],
         ];
     }
 

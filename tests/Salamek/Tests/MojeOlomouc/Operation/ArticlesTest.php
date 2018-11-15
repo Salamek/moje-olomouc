@@ -106,7 +106,7 @@ class ArticlesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request);
-        $response = $articles->create($article);
+        $response = $articles->create([$article]);
 
         $primitiveImages = [];
         foreach ($article->getImages() AS $image)
@@ -149,7 +149,7 @@ class ArticlesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($article->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -157,9 +157,8 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IArticle $article
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IArticle $article, int $id = null)
+    public function updateShouldBeGoodTest(IArticle $article)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -183,7 +182,7 @@ class ArticlesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request);
-        $response = $articles->update($article, $id);
+        $response = $articles->update([$article]);
 
         $primitiveImages = [];
         foreach ($article->getImages() AS $image)
@@ -227,7 +226,7 @@ class ArticlesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $article->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($article->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -235,9 +234,8 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IArticle|null $article
-     * @param int|null $id
      */
-    public function deleteRequestShouldBeGoodTest(IArticle $article = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IArticle $article = null)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -261,7 +259,7 @@ class ArticlesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request);
-        $response = $articles->delete($article, $id);
+        $response = $articles->delete([$article]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -275,7 +273,7 @@ class ArticlesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $article->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($article->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -283,10 +281,9 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IArticle|null $article
-     * @param int|null $id
+     * @param IArticle $article
      */
-    public function deleteRequestShouldFailTest(IArticle $article = null, int $id = null)
+    public function deleteRequestShouldFailTest(IArticle $article)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -294,7 +291,7 @@ class ArticlesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request);
-        $articles->delete($article, $id);
+        $articles->delete([$article]);
     }
 
     /**
@@ -303,7 +300,6 @@ class ArticlesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
@@ -316,7 +312,7 @@ class ArticlesTest extends BaseTest
                 true,
                 ArticleApproveStateEnum::WAITING_FOR_ADD,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -326,7 +322,6 @@ class ArticlesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
@@ -339,7 +334,7 @@ class ArticlesTest extends BaseTest
                 true,
                 ArticleApproveStateEnum::WAITING_FOR_ADD,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -354,13 +349,6 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                $this->getDateTime()
-            ), mt_rand()],
-            [new Article(
-                'title-'.mt_rand(),
-                'content-'.mt_rand(),
-                'author-'.mt_rand(),
-                mt_rand(),
                 $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
@@ -368,7 +356,7 @@ class ArticlesTest extends BaseTest
                 true,
                 ArticleApproveStateEnum::WAITING_FOR_ADD,
                 mt_rand()
-            ), null],
+            )],
         ];
     }
 

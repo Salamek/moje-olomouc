@@ -42,55 +42,33 @@ class ImportantMessages implements IOperation
     }
 
     /**
-     * @param IImportantMessage $importantMessage
+     * @param IImportantMessage[] $importantMessages
      * @return Response
      */
     public function create(
-        IImportantMessage $importantMessage
+        array $importantMessages
     ): Response
     {
-        $data = [
-            'importantMessage' => $importantMessage->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/important-messages', $data);
+        return $this->request->create('/api/import/important-messages', $importantMessages, 'importantMessage');
     }
 
     /**
-     * @param IImportantMessage $importantMessage
-     * @param int|null $id
+     * @param IImportantMessage[] $importantMessages
      * @return Response
      */
     public function update(
-        IImportantMessage $importantMessage,
-        int $id = null
+        array $importantMessages
     ): Response
     {
-        $id = (is_null($id) ? $importantMessage->getId() : $id);
-        $data = [
-            'importantMessage' => $importantMessage->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/important-messages', $id, $data);
+        return $this->request->update('/api/import/important-messages', $importantMessages, 'importantMessage');
     }
 
     /**
-     * @param IImportantMessage|null $importantMessage
-     * @param int|null $id
+     * @param IImportantMessage[] $importantMessages
      * @return Response
      */
-    public function delete(IImportantMessage $importantMessage = null, int $id = null): Response
+    public function delete(array $importantMessages): Response
     {
-        if (is_null($importantMessage) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $importantMessage or $id must be provided');
-        }
-        $id = (is_null($id) ? $importantMessage->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/important-messages', $id);
+        return $this->request->delete('/api/import/important-messages', $importantMessages, 'importantMessage');
     }
 }

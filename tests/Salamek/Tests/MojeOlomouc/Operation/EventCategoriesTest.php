@@ -100,7 +100,7 @@ class EventCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $eventCategories = new EventCategories($request);
-        $response = $eventCategories->create($eventCategory);
+        $response = $eventCategories->create([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -123,7 +123,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -131,9 +131,8 @@ class EventCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IEventCategory $eventCategory
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IEventCategory $eventCategory, int $id = null)
+    public function updateShouldBeGoodTest(IEventCategory $eventCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -157,7 +156,7 @@ class EventCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $eventCategories = new EventCategories($request);
-        $response = $eventCategories->update($eventCategory, $id);
+        $response = $eventCategories->update([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -180,17 +179,16 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IEventCategory|null $eventCategory
-     * @param int|null $id
+     * @param IEventCategory $eventCategory
      */
-    public function deleteRequestShouldBeGoodTest(IEventCategory $eventCategory = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IEventCategory $eventCategory = null)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -214,7 +212,7 @@ class EventCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $eventCategories = new EventCategories($request);
-        $response = $eventCategories->delete($eventCategory, $id);
+        $response = $eventCategories->delete([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -228,7 +226,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -236,10 +234,9 @@ class EventCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IEventCategory|null $eventCategory
-     * @param int|null $id
+     * @param IEventCategory $eventCategory
      */
-    public function deleteRequestShouldFailTest(IEventCategory $eventCategory = null, int $id = null)
+    public function deleteRequestShouldFailTest(IEventCategory $eventCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -247,7 +244,7 @@ class EventCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $eventCategories = new EventCategories($request);
-        $eventCategories->delete($eventCategory, $id);
+        $eventCategories->delete([$eventCategory]);
     }
 
     /**
@@ -256,12 +253,11 @@ class EventCategoriesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new EventCategory(
                 'title-'.mt_rand(),
                 true,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -271,12 +267,11 @@ class EventCategoriesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new EventCategory(
                 'title-'.mt_rand(),
                 true,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -289,13 +284,8 @@ class EventCategoriesTest extends BaseTest
             [new EventCategory(
                 'title-'.mt_rand(),
                 true,
-                null
-            ), mt_rand()],
-            [new EventCategory(
-                'title-'.mt_rand(),
-                true,
                 mt_rand()
-            ), null],
+            )],
         ];
     }
 

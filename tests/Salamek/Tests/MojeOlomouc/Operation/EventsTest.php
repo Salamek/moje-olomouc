@@ -109,7 +109,7 @@ class EventsTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $events = new Events($request);
-        $response = $events->create($event);
+        $response = $events->create([$event]);
 
         $primitiveImages = [];
         foreach ($event->getImages() AS $image)
@@ -166,7 +166,7 @@ class EventsTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($event->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -174,9 +174,8 @@ class EventsTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IEvent $event
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IEvent $event, int $id = null)
+    public function updateShouldBeGoodTest(IEvent $event)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -200,7 +199,7 @@ class EventsTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $events = new Events($request);
-        $response = $events->update($event, $id);
+        $response = $events->update([$event]);
 
         $primitiveImages = [];
         foreach ($event->getImages() AS $image)
@@ -257,17 +256,16 @@ class EventsTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $event->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($event->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IEvent|null $event
-     * @param int|null $id
+     * @param IEvent $event
      */
-    public function deleteRequestShouldBeGoodTest(IEvent $event = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IEvent $event)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -291,7 +289,7 @@ class EventsTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $events = new Events($request);
-        $response = $events->delete($event, $id);
+        $response = $events->delete([$event]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -305,7 +303,7 @@ class EventsTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $event->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($event->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -313,10 +311,9 @@ class EventsTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IEvent|null $event
-     * @param int|null $id
+     * @param IEvent $event
      */
-    public function deleteRequestShouldFailTest(IEvent $event = null, int $id = null)
+    public function deleteRequestShouldFailTest(IEvent $event)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -324,7 +321,7 @@ class EventsTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $events = new Events($request);
-        $events->delete($event, $id);
+        $events->delete([$event]);
     }
 
     /**
@@ -333,7 +330,6 @@ class EventsTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
@@ -343,7 +339,7 @@ class EventsTest extends BaseTest
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
                 [1, 2, 3, 4]
-            ), null]
+            )]
         ];
     }
 
@@ -353,7 +349,6 @@ class EventsTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
@@ -373,7 +368,7 @@ class EventsTest extends BaseTest
                 EventApproveStateEnum::APPROVED,
                 EventFeaturedLevelEnum::EDITORIAL_TIP,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -383,16 +378,6 @@ class EventsTest extends BaseTest
     public function provideUpdateConstructorParameters(): array
     {
         return [
-            [new Event(
-                'title-'.mt_rand(),
-                'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
-                'placeDesc-'.mt_rand(),
-                '12.'.mt_rand(),
-                '-12.'.mt_rand(),
-                [1, 2, 3, 4]
-            ), mt_rand()],
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),

@@ -101,7 +101,7 @@ class ArticleCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articleCategories = new ArticleCategories($request);
-        $response = $articleCategories->create($articleCategory);
+        $response = $articleCategories->create([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -128,7 +128,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals(null, $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -136,9 +136,8 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IArticleCategory $articleCategory
-     * @param int|null $id
      */
-    public function updateShouldBeGoodTest(IArticleCategory $articleCategory, int $id = null)
+    public function updateShouldBeGoodTest(IArticleCategory $articleCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -162,7 +161,7 @@ class ArticleCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articleCategories = new ArticleCategories($request);
-        $response = $articleCategories->update($articleCategory, $id);
+        $response = $articleCategories->update([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -189,7 +188,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -197,9 +196,8 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IArticleCategory|null $articleCategory
-     * @param int|null $id
      */
-    public function deleteRequestShouldBeGoodTest(IArticleCategory $articleCategory = null, int $id = null)
+    public function deleteRequestShouldBeGoodTest(IArticleCategory $articleCategory = null)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -223,7 +221,7 @@ class ArticleCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articleCategories = new ArticleCategories($request);
-        $response = $articleCategories->delete($articleCategory, $id);
+        $response = $articleCategories->delete([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -238,7 +236,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -246,10 +244,9 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
      * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     * @param IArticleCategory|null $articleCategory
-     * @param int|null $id
+     * @param IArticleCategory $articleCategory
      */
-    public function deleteRequestShouldFailTest(IArticleCategory $articleCategory = null, int $id = null)
+    public function deleteRequestShouldFailTest(IArticleCategory $articleCategory)
     {
         $apiKey = $this->getTestApiKey();
 
@@ -257,7 +254,7 @@ class ArticleCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $articleCategories = new ArticleCategories($request);
-        $articleCategories->delete($articleCategory, $id);
+        $articleCategories->delete([$articleCategory]);
     }
 
     /**
@@ -266,14 +263,13 @@ class ArticleCategoriesTest extends BaseTest
     public function provideInvalidDeleteConstructorParameters(): array
     {
         return [
-            [null, null],
             [new ArticleCategory(
                 'title-'.mt_rand(),
                 null,
                 false,
                 true,
                 null
-            ), null]
+            )]
         ];
     }
 
@@ -283,14 +279,13 @@ class ArticleCategoriesTest extends BaseTest
     public function provideValidDeleteConstructorParameters(): array
     {
         return [
-            [null, mt_rand()],
             [new ArticleCategory(
                 'title-'.mt_rand(),
                 null,
                 false,
                 true,
                 mt_rand()
-            ), null]
+            )]
         ];
     }
 
@@ -305,15 +300,8 @@ class ArticleCategoriesTest extends BaseTest
                 null,
                 false,
                 true,
-                null
-            ), mt_rand()],
-            [new ArticleCategory(
-                'title-'.mt_rand(),
-                null,
-                false,
-                true,
                 mt_rand()
-            ), null],
+            )],
         ];
     }
 

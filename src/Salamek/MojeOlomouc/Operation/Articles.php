@@ -60,55 +60,33 @@ class Articles implements IOperation
     }
 
     /**
-     * @param IArticle $article
+     * @param IArticle[] $articles
      * @return Response
      */
     public function create(
-        IArticle $article
+        array $articles
     ): Response
     {
-        $data = [
-            'article' => $article->toPrimitiveArray()
-        ];
-
-        return $this->request->create('/api/import/articles', $data);
+        return $this->request->create('/api/import/articles', $articles, 'article');
     }
 
     /**
-     * @param IArticle $article
-     * @param int|null $id
+     * @param IArticle[] $articles
      * @return Response
      */
     public function update(
-        IArticle $article,
-        int $id = null
+        array $articles
     ): Response
     {
-        $id = (is_null($id) ? $article->getId() : $id);
-        $data = [
-            'article' => $article->toPrimitiveArray()
-        ];
-
-        return $this->request->update('/api/import/articles', $id, $data);
+        return $this->request->update('/api/import/articles', $articles, 'article');
     }
 
     /**
-     * @param IArticle|null $article
-     * @param int|null $id
+     * @param IArticle[] $articles
      * @return Response
      */
-    public function delete(IArticle $article = null, int $id = null): Response
+    public function delete(array $articles): Response
     {
-        if (is_null($article) && is_null($id))
-        {
-            throw new InvalidArgumentException('arguments $article or $id must be provided');
-        }
-        $id = (is_null($id) ? $article->getId() : $id);
-
-        if (is_null($id))
-        {
-            throw new InvalidArgumentException('$id is not set');
-        }
-        return $this->request->delete('/api/import/articles', $id);
+        return $this->request->delete('/api/import/articles', $articles, 'article');
     }
 }
