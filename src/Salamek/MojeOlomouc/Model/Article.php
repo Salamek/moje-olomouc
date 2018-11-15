@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
 use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
@@ -54,8 +55,8 @@ class Article implements IArticle
      * @param \DateTimeInterface $dateTimeAt
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
-     * @param bool $isVisible
-     * @param bool $isImportant
+     * @param bool|null $isVisible
+     * @param bool|null $isImportant
      * @param int|null $approveState
      * @param int|null $id
      */
@@ -67,8 +68,8 @@ class Article implements IArticle
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -147,17 +148,17 @@ class Article implements IArticle
     }
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void
+    public function setIsVisible(bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
 
     /**
-     * @param boolean $isImportant
+     * @param boolean|null $isImportant
      */
-    public function setIsImportant(bool $isImportant): void
+    public function setIsImportant(bool $isImportant = null): void
     {
         $this->isImportant = $isImportant;
     }
@@ -228,7 +229,7 @@ class Article implements IArticle
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAttachmentUrl(): ?string
     {
@@ -236,23 +237,23 @@ class Article implements IArticle
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool
+    public function getIsVisible(): ?bool
     {
         return $this->isVisible;
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsImportant(): bool
+    public function getIsImportant(): ?bool
     {
         return $this->isImportant;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getApproveState(): ?int
     {
@@ -270,18 +271,21 @@ class Article implements IArticle
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        return [
+        $primitiveArray = [
             'title' => $this->title,
             'content' => $this->content,
             'author' => $this->author,
             'categoryId' => $this->categoryId,
-            'dateTimeAt' => $this->dateTimeAt->format(\DateTime::ISO8601),
-            'images' => $primitiveImages,
-            'attachmentUrl' => $this->attachmentUrl,
-            'isVisible' => $this->isVisible,
-            'isImportant' => $this->isImportant,
-            'approveState' => $this->approveState,
+            'dateTimeAt' => $this->dateTimeAt->format(DateTime::NOT_A_ISO8601),
+            'images' => $primitiveImages
         ];
+
+        if (!is_null($this->attachmentUrl)) $primitiveArray['attachmentUrl'] = $this->attachmentUrl;
+        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
+        if (!is_null($this->isImportant)) $primitiveArray['isImportant'] = $this->isImportant;
+        if (!is_null($this->approveState)) $primitiveArray['approveState'] = $this->approveState;
+
+        return $primitiveArray;
     }
 
     /**
@@ -296,7 +300,7 @@ class Article implements IArticle
             $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
         }
 
-        $dateTimeAt = \DateTime::createFromFormat(\DateTime::ISO8601, $modelData['dateTimeAt']);
+        $dateTimeAt = \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['dateTimeAt']);
 
         return new Article(
             $modelData['title'],
@@ -306,8 +310,8 @@ class Article implements IArticle
             $dateTimeAt,
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
-            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant'] : false),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
+            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant'] : null),
             (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
             (array_key_exists('id', $modelData) ? $modelData['id'] : null)
         );

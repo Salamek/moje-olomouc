@@ -21,9 +21,9 @@ interface IImportantMessage extends IModel
     public function setDateTimeAt(\DateTimeInterface $dateTimeAt): void;
 
     /**
-     * @param \DateTimeInterface $expireAt
+     * @param \DateTimeInterface|null $expireAt
      */
-    public function setExpireAt(\DateTimeInterface $expireAt): void;
+    public function setExpireAt(\DateTimeInterface $expireAt = null): void;
 
     /**
      * @param int $type
@@ -51,9 +51,9 @@ interface IImportantMessage extends IModel
     public function getDateTimeAt(): \DateTimeInterface;
 
     /**
-     * @return \DateTimeInterface
+     * @return \DateTimeInterface|null
      */
-    public function getExpireAt(): \DateTimeInterface;
+    public function getExpireAt(): ?\DateTimeInterface;
 
     /**
      * @return int

@@ -20,14 +20,14 @@ interface IArticleCategory extends IModel
     public function setConsumerFlags(int $consumerFlags = null): void;
 
     /**
-     * @param boolean $isImportant
+     * @param boolean|null $isImportant
      */
-    public function setIsImportant(bool $isImportant): void;
+    public function setIsImportant(bool $isImportant = null): void;
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void;
+    public function setIsVisible(bool $isVisible = null): void;
     
     /**
      * @return string
@@ -40,12 +40,12 @@ interface IArticleCategory extends IModel
     public function getConsumerFlags(): ?int;
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsImportant(): bool;
+    public function getIsImportant(): ?bool;
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool;
+    public function getIsVisible(): ?bool;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\Place;
@@ -65,7 +66,7 @@ class PlacesTest extends BaseTest
         $this->assertArrayHasKey('onlyApproved', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyApproved, $catchRequestInfo['query']['onlyApproved']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
@@ -114,33 +115,42 @@ class PlacesTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('place', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('description', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('address', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('lat', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('lon', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('categoryId', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['place']);
-        $this->assertEquals($place->getTitle(), $catchRequestInfo['json']['place']['title']);
-        $this->assertEquals($place->getDescription(), $catchRequestInfo['json']['place']['description']);
-        $this->assertEquals($place->getAddress(), $catchRequestInfo['json']['place']['address']);
-        $this->assertEquals($place->getLat(), $catchRequestInfo['json']['place']['lat']);
-        $this->assertEquals($place->getLon(), $catchRequestInfo['json']['place']['lon']);
-        $this->assertEquals($place->getCategoryId(), $catchRequestInfo['json']['place']['categoryId']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['place']['images']);
-        $this->assertEquals($place->getAttachmentUrl(), $catchRequestInfo['json']['place']['attachmentUrl']);
-        $this->assertEquals($place->getIsVisible(), $catchRequestInfo['json']['place']['isVisible']);
-        $this->assertEquals($place->getApproveState(), $catchRequestInfo['json']['place']['approveState']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('place', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitivePlace = $primitivePayloadItem['place'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitivePlace);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitivePlace);
+        $this->assertArrayHasKey('description', $primitivePlace);
+        $this->assertArrayHasKey('address', $primitivePlace);
+        $this->assertArrayHasKey('lat', $primitivePlace);
+        $this->assertArrayHasKey('lon', $primitivePlace);
+        $this->assertArrayHasKey('categoryId', $primitivePlace);
+        $this->assertArrayHasKey('images', $primitivePlace);
+        if (!is_null($place->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitivePlace);
+        if (!is_null($place->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlace);
+        if (!is_null($place->getApproveState())) $this->assertArrayHasKey('approveState', $primitivePlace);
+        $this->assertEquals($place->getTitle(), $primitivePlace['title']);
+        $this->assertEquals($place->getDescription(), $primitivePlace['description']);
+        $this->assertEquals($place->getAddress(), $primitivePlace['address']);
+        $this->assertEquals($place->getLat(), $primitivePlace['lat']);
+        $this->assertEquals($place->getLon(), $primitivePlace['lon']);
+        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($primitiveImages, $primitivePlace['images']);
+        if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
+        if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
+        if (!is_null($place->getApproveState())) $this->assertEquals($place->getApproveState(), $primitivePlace['approveState']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -182,33 +192,42 @@ class PlacesTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('place', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('description', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('address', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('lat', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('lon', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('categoryId', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['place']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['place']);
-        $this->assertEquals($place->getTitle(), $catchRequestInfo['json']['place']['title']);
-        $this->assertEquals($place->getDescription(), $catchRequestInfo['json']['place']['description']);
-        $this->assertEquals($place->getAddress(), $catchRequestInfo['json']['place']['address']);
-        $this->assertEquals($place->getLat(), $catchRequestInfo['json']['place']['lat']);
-        $this->assertEquals($place->getLon(), $catchRequestInfo['json']['place']['lon']);
-        $this->assertEquals($place->getCategoryId(), $catchRequestInfo['json']['place']['categoryId']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['place']['images']);
-        $this->assertEquals($place->getAttachmentUrl(), $catchRequestInfo['json']['place']['attachmentUrl']);
-        $this->assertEquals($place->getIsVisible(), $catchRequestInfo['json']['place']['isVisible']);
-        $this->assertEquals($place->getApproveState(), $catchRequestInfo['json']['place']['approveState']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('place', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitivePlace = $primitivePayloadItem['place'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitivePlace);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitivePlace);
+        $this->assertArrayHasKey('description', $primitivePlace);
+        $this->assertArrayHasKey('address', $primitivePlace);
+        $this->assertArrayHasKey('lat', $primitivePlace);
+        $this->assertArrayHasKey('lon', $primitivePlace);
+        $this->assertArrayHasKey('categoryId', $primitivePlace);
+        $this->assertArrayHasKey('images', $primitivePlace);
+        if (!is_null($place->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitivePlace);
+        if (!is_null($place->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlace);
+        if (!is_null($place->getApproveState())) $this->assertArrayHasKey('approveState', $primitivePlace);
+        $this->assertEquals($place->getTitle(), $primitivePlace['title']);
+        $this->assertEquals($place->getDescription(), $primitivePlace['description']);
+        $this->assertEquals($place->getAddress(), $primitivePlace['address']);
+        $this->assertEquals($place->getLat(), $primitivePlace['lat']);
+        $this->assertEquals($place->getLon(), $primitivePlace['lon']);
+        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($primitiveImages, $primitivePlace['images']);
+        if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
+        if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
+        if (!is_null($place->getApproveState())) $this->assertEquals($place->getApproveState(), $primitivePlace['approveState']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $place->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $place->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -244,12 +263,18 @@ class PlacesTest extends BaseTest
         $places = new Places($request);
         $response = $places->delete($place, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/places', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $place->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $place->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -391,7 +416,7 @@ class PlacesTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 true,

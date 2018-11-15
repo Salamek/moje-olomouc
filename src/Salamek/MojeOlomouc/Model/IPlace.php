@@ -50,9 +50,9 @@ interface IPlace extends IModel
     public function setAttachmentUrl(string $attachmentUrl = null): void;
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void;
+    public function setIsVisible(bool $isVisible = null): void;
 
     /**
      * @param int|null $approveState
@@ -100,9 +100,9 @@ interface IPlace extends IModel
     public function getAttachmentUrl(): ?string;
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool;
+    public function getIsVisible(): ?bool;
 
     /**
      * @return int|null

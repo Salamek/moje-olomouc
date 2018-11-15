@@ -18,7 +18,7 @@ class EventCategoryTest extends BaseTest
      */
     public function createRequiredShouldBeGoodTest(
         string $title,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -27,14 +27,13 @@ class EventCategoryTest extends BaseTest
         );
 
         $this->assertEquals($title, $eventCategory->getTitle());
-        $this->assertEquals(true, $eventCategory->getIsVisible());
+        $this->assertEquals(null, $eventCategory->getIsVisible());
         $this->assertEquals(null, $eventCategory->getId());
         $this->assertInternalType('array', $eventCategory->toPrimitiveArray());
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'isVisible' => $eventCategory->getIsVisible()
+            'title' => $title
         ];
 
         $this->assertEquals($primitiveArrayTest, $eventCategory->toPrimitiveArray());
@@ -50,7 +49,7 @@ class EventCategoryTest extends BaseTest
      */
     public function createOptionalShouldBeGoodTest(
         string $title,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -67,9 +66,10 @@ class EventCategoryTest extends BaseTest
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'isVisible' => $isVisible
+            'title' => $title
         ];
+
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
 
         $this->assertEquals($primitiveArrayTest, $eventCategory->toPrimitiveArray());
     }
@@ -104,7 +104,7 @@ class EventCategoryTest extends BaseTest
      */
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -113,7 +113,7 @@ class EventCategoryTest extends BaseTest
         ]);
 
         $this->assertEquals($title, $articleCategory->getTitle());
-        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getIsVisible());
         $this->assertEquals(null, $articleCategory->getId());
     }
 
@@ -126,7 +126,7 @@ class EventCategoryTest extends BaseTest
      */
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {

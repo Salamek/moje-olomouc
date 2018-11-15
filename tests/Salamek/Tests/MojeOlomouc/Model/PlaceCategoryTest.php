@@ -31,15 +31,13 @@ class PlaceCategoryTest extends BaseTest
 
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
-        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getIsVisible());
         $this->assertEquals(null, $articleCategory->getId());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'consumerFlags' => $articleCategory->getConsumerFlags(),
-            'isVisible' => $articleCategory->getIsVisible()
+            'title' => $title
         ];
 
         $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
@@ -57,7 +55,7 @@ class PlaceCategoryTest extends BaseTest
     public function createOptionalShouldBeGoodTest(
         string $title,
         int $consumerFlags = null,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -76,10 +74,11 @@ class PlaceCategoryTest extends BaseTest
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'consumerFlags' => $consumerFlags,
-            'isVisible' => $isVisible
+            'title' => $title
         ];
+
+        if (!is_null($consumerFlags)) $primitiveArrayTest['consumerFlags'] = $consumerFlags;
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
 
         $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
     }
@@ -129,7 +128,7 @@ class PlaceCategoryTest extends BaseTest
 
         $this->assertEquals($title, $placeCategory->getTitle());
         $this->assertEquals(null, $placeCategory->getConsumerFlags());
-        $this->assertEquals(true, $placeCategory->getIsVisible());
+        $this->assertEquals(null, $placeCategory->getIsVisible());
         $this->assertEquals(null, $placeCategory->getId());
     }
 
@@ -144,7 +143,7 @@ class PlaceCategoryTest extends BaseTest
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
         int $consumerFlags = null,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $id = null
     )
     {

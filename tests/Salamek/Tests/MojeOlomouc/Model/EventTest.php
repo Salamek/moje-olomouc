@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\EventConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
@@ -81,7 +82,7 @@ class EventTest extends BaseTest
         $this->assertEquals(null, $event->getWebUrl());
         $this->assertEquals(null, $event->getFacebookUrl());
         $this->assertEquals(null, $event->getConsumerFlags());
-        $this->assertEquals(true, $event->getIsVisible());
+        $this->assertEquals(null, $event->getIsVisible());
         $this->assertEquals(null, $event->getApproveState());
         $this->assertEquals(null, $event->getFeaturedLevel());
         $this->assertEquals(null, $event->getId());
@@ -97,21 +98,13 @@ class EventTest extends BaseTest
         $primitiveArrayTest = [
             'title' => $title,
             'description' => $description,
-            'startAt' => $startAt->format(\DateTime::ISO8601),
-            'endAt' => $endAt->format(\DateTime::ISO8601),
+            'startAt' => $startAt->format(DateTime::NOT_A_ISO8601),
+            'endAt' => $endAt->format(DateTime::NOT_A_ISO8601),
             'placeDesc' => $placeDesc,
             'placeLat' => $placeLat,
             'placeLon' => $placeLon,
             'categoryIdsArr' => $categoryIdsArr,
-            'images'   => $primitiveImages,
-            'attachmentUrl'  => $event->getAttachmentUrl(),
-            'fee'   => $event->getFee(),
-            'webUrl'   => $event->getWebUrl(),
-            'facebookUrl'   => $event->getFacebookUrl(),
-            'consumerFlags'   => $event->getConsumerFlags(),
-            'isVisible'   => $event->getIsVisible(),
-            'approveState'   => $event->getApproveState(),
-            'featuredLevel'   => $event->getFeaturedLevel()
+            'images'   => $primitiveImages
         ];
 
         $this->assertEquals($primitiveArrayTest, $event->toPrimitiveArray());
@@ -212,22 +205,23 @@ class EventTest extends BaseTest
         $primitiveArrayTest = [
             'title' => $title,
             'description' => $description,
-            'startAt' => $startAt->format(\DateTime::ISO8601),
-            'endAt' => $endAt->format(\DateTime::ISO8601),
+            'startAt' => $startAt->format(DateTime::NOT_A_ISO8601),
+            'endAt' => $endAt->format(DateTime::NOT_A_ISO8601),
             'placeDesc' => $placeDesc,
             'placeLat' => $placeLat,
             'placeLon' => $placeLon,
             'categoryIdsArr' => $categoryIdsArr,
-            'images'   => $primitiveImages,
-            'attachmentUrl'  => $attachmentUrl,
-            'fee'   => $fee,
-            'webUrl'   => $webUrl,
-            'facebookUrl'   => $facebookUrl,
-            'consumerFlags'   => $consumerFlags,
-            'isVisible'   => $isVisible,
-            'approveState'   => $approveState,
-            'featuredLevel'   => $featuredLevel
+            'images'   => $primitiveImages
         ];
+
+        if (!is_null($attachmentUrl)) $primitiveArrayTest['attachmentUrl'] = $attachmentUrl;
+        if (!is_null($fee)) $primitiveArrayTest['fee'] = $fee;
+        if (!is_null($webUrl)) $primitiveArrayTest['webUrl'] = $webUrl;
+        if (!is_null($facebookUrl)) $primitiveArrayTest['facebookUrl'] = $facebookUrl;
+        if (!is_null($consumerFlags)) $primitiveArrayTest['consumerFlags'] = $consumerFlags;
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
+        if (!is_null($approveState)) $primitiveArrayTest['approveState'] = $approveState;
+        if (!is_null($featuredLevel)) $primitiveArrayTest['featuredLevel'] = $featuredLevel;
 
         $this->assertEquals($primitiveArrayTest, $event->toPrimitiveArray());
     }
@@ -345,8 +339,8 @@ class EventTest extends BaseTest
             [
                 'title' => $title,
                 'description' => $description,
-                'startAt' => $startAt->format(\DateTime::ISO8601),
-                'endAt' => $endAt->format(\DateTime::ISO8601),
+                'startAt' => $startAt->format(DateTime::NOT_A_ISO8601),
+                'endAt' => $endAt->format(DateTime::NOT_A_ISO8601),
                 'placeDesc' => $placeDesc,
                 'placeLat' => $placeLat,
                 'placeLon' => $placeLon,
@@ -368,7 +362,7 @@ class EventTest extends BaseTest
         $this->assertEquals(null, $event->getWebUrl());
         $this->assertEquals(null, $event->getFacebookUrl());
         $this->assertEquals(null, $event->getConsumerFlags());
-        $this->assertEquals(true, $event->getIsVisible());
+        $this->assertEquals(null, $event->getIsVisible());
         $this->assertEquals(null, $event->getApproveState());
         $this->assertEquals(null, $event->getFeaturedLevel());
         $this->assertEquals(null, $event->getId());
@@ -427,8 +421,8 @@ class EventTest extends BaseTest
             [
                 'title' => $title,
                 'description' => $description,
-                'startAt' => $startAt->format(\DateTime::ISO8601),
-                'endAt' => $endAt->format(\DateTime::ISO8601),
+                'startAt' => $startAt->format(DateTime::NOT_A_ISO8601),
+                'endAt' => $endAt->format(DateTime::NOT_A_ISO8601),
                 'placeDesc' => $placeDesc,
                 'placeLat' => $placeLat,
                 'placeLon' => $placeLon,
@@ -561,7 +555,7 @@ class EventTest extends BaseTest
                 '12.5467678',
                 '-202.5467678',
                 [],
-                [new \DateTime()],
+                [$this->getDateTime()],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
                 'webUrl-'.mt_rand(),

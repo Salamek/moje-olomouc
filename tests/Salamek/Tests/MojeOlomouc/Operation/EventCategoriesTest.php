@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\EventCategory;
 use Salamek\MojeOlomouc\Model\IEventCategory;
@@ -59,7 +60,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertArrayHasKey('showDeleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
         $this->assertEquals($extraFields, $catchRequestInfo['query']['extraFields']);
@@ -101,19 +102,28 @@ class EventCategoriesTest extends BaseTest
         $eventCategories = new EventCategories($request);
         $response = $eventCategories->create($eventCategory);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('eventCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['eventCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['eventCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($eventCategory->getTitle(), $catchRequestInfo['json']['eventCategory']['title']);
-        $this->assertEquals($eventCategory->getIsVisible(), $catchRequestInfo['json']['eventCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('eventCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveEventCategory = $primitivePayloadItem['eventCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+        
+        $this->assertInternalType('array', $primitiveEventCategory);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveEventCategory);
+        if (!is_null($eventCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveEventCategory);
+
+        $this->assertEquals($eventCategory->getTitle(), $primitiveEventCategory['title']);
+        if (!is_null($eventCategory->getIsVisible())) $this->assertEquals($eventCategory->getIsVisible(), $primitiveEventCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -149,19 +159,28 @@ class EventCategoriesTest extends BaseTest
         $eventCategories = new EventCategories($request);
         $response = $eventCategories->update($eventCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('eventCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['eventCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['eventCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($eventCategory->getTitle(), $catchRequestInfo['json']['eventCategory']['title']);
-        $this->assertEquals($eventCategory->getIsVisible(), $catchRequestInfo['json']['eventCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('eventCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveEventCategory = $primitivePayloadItem['eventCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveEventCategory);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveEventCategory);
+        if (!is_null($eventCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveEventCategory);
+
+        $this->assertEquals($eventCategory->getTitle(), $primitiveEventCategory['title']);
+        if (!is_null($eventCategory->getIsVisible())) $this->assertEquals($eventCategory->getIsVisible(), $primitiveEventCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -197,12 +216,19 @@ class EventCategoriesTest extends BaseTest
         $eventCategories = new EventCategories($request);
         $response = $eventCategories->delete($eventCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $eventCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -303,7 +329,7 @@ class EventCategoriesTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 false,

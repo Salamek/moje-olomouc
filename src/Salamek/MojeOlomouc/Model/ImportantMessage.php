@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
 use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
@@ -22,7 +23,7 @@ class ImportantMessage implements IImportantMessage
     /** @var \DateTimeInterface */
     private $dateTimeAt;
 
-    /** @var \DateTimeInterface */
+    /** @var \DateTimeInterface|null */
     private $expireAt;
 
     /** @var int */
@@ -38,18 +39,18 @@ class ImportantMessage implements IImportantMessage
      * ImportantMessage constructor.
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
-     * @param \DateTimeInterface $expireAt
      * @param int $type
      * @param int $severity
+     * @param \DateTimeInterface|null $expireAt
      * @param bool $isVisible
      * @param int|null $id
      */
     public function __construct(
         string $text,
         \DateTimeInterface $dateTimeAt,
-        \DateTimeInterface $expireAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
+        \DateTimeInterface $expireAt = null,
         bool $isVisible = true,
         int $id = null
     )
@@ -81,9 +82,9 @@ class ImportantMessage implements IImportantMessage
     }
 
     /**
-     * @param \DateTimeInterface $expireAt
+     * @param \DateTimeInterface|null $expireAt
      */
-    public function setExpireAt(\DateTimeInterface $expireAt): void
+    public function setExpireAt(\DateTimeInterface $expireAt = null): void
     {
         $this->expireAt = $expireAt;
     }
@@ -138,9 +139,9 @@ class ImportantMessage implements IImportantMessage
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return \DateTimeInterface|null
      */
-    public function getExpireAt(): \DateTimeInterface
+    public function getExpireAt(): ?\DateTimeInterface
     {
         return $this->expireAt;
     }
@@ -174,14 +175,17 @@ class ImportantMessage implements IImportantMessage
      */
     public function toPrimitiveArray(): array
     {
-        return [
+        $primitiveArray = [
             'text' => $this->text,
-            'dateTimeAt'   => $this->dateTimeAt->format(\DateTime::ISO8601),
-            'expireAt'  => $this->expireAt->format(\DateTime::ISO8601),
+            'dateTimeAt'   => $this->dateTimeAt->format(DateTime::NOT_A_ISO8601),
             'type'   => $this->type,
             'severity'   => $this->severity,
             'isVisible'   => $this->isVisible
         ];
+
+        if (!is_null($this->expireAt)) $primitiveArray['expireAt'] = $this->expireAt->format(DateTime::NOT_A_ISO8601);
+
+        return $primitiveArray;
     }
 
     /**
@@ -192,10 +196,10 @@ class ImportantMessage implements IImportantMessage
     {
         return new ImportantMessage(
             $modelData['text'],
-            new \DateTime($modelData['dateTimeAt']),
-            new \DateTime($modelData['expireAt']),
+            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['dateTimeAt']),
             (array_key_exists('type', $modelData) ? $modelData['type'] : ImportantMessageTypeEnum::TRAFFIC_SITUATION),
             (array_key_exists('severity', $modelData) ? $modelData['severity'] : ImportantMessageSeverityEnum::WARNING),
+            (array_key_exists('expireAt', $modelData) ? \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['expireAt']) : null),
             (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
             (array_key_exists('id', $modelData) ? $modelData['id'] : null)
         );

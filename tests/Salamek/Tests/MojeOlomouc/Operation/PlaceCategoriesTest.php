@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
@@ -60,7 +61,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertArrayHasKey('showDeleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
         $this->assertEquals($extraFields, $catchRequestInfo['query']['extraFields']);
@@ -102,21 +103,30 @@ class PlaceCategoriesTest extends BaseTest
         $placeCategories = new PlaceCategories($request);
         $response = $placeCategories->create($placeCategory);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('placeCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['placeCategory']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['placeCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['placeCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($placeCategory->getTitle(), $catchRequestInfo['json']['placeCategory']['title']);
-        $this->assertEquals($placeCategory->getConsumerFlags(), $catchRequestInfo['json']['placeCategory']['consumerFlags']);
-        $this->assertEquals($placeCategory->getIsVisible(), $catchRequestInfo['json']['placeCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('placeCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitivePlaceCategory = $primitivePayloadItem['placeCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitivePlaceCategory);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitivePlaceCategory);
+        if (!is_null($placeCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitivePlaceCategory);
+        if (!is_null($placeCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlaceCategory);
+
+        $this->assertEquals($placeCategory->getTitle(), $primitivePlaceCategory['title']);
+        if (!is_null($placeCategory->getConsumerFlags())) $this->assertEquals($placeCategory->getConsumerFlags(), $primitivePlaceCategory['consumerFlags']);
+        if (!is_null($placeCategory->getIsVisible())) $this->assertEquals($placeCategory->getIsVisible(), $primitivePlaceCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -152,21 +162,30 @@ class PlaceCategoriesTest extends BaseTest
         $placeCategories = new PlaceCategories($request);
         $response = $placeCategories->update($placeCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('placeCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['placeCategory']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['placeCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['placeCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($placeCategory->getTitle(), $catchRequestInfo['json']['placeCategory']['title']);
-        $this->assertEquals($placeCategory->getConsumerFlags(), $catchRequestInfo['json']['placeCategory']['consumerFlags']);
-        $this->assertEquals($placeCategory->getIsVisible(), $catchRequestInfo['json']['placeCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('placeCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitivePlaceCategory = $primitivePayloadItem['placeCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitivePlaceCategory);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitivePlaceCategory);
+        if (!is_null($placeCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitivePlaceCategory);
+        if (!is_null($placeCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlaceCategory);
+
+        $this->assertEquals($placeCategory->getTitle(), $primitivePlaceCategory['title']);
+        if (!is_null($placeCategory->getConsumerFlags())) $this->assertEquals($placeCategory->getConsumerFlags(), $primitivePlaceCategory['consumerFlags']);
+        if (!is_null($placeCategory->getIsVisible())) $this->assertEquals($placeCategory->getIsVisible(), $primitivePlaceCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -202,12 +221,19 @@ class PlaceCategoriesTest extends BaseTest
         $placeCategories = new PlaceCategories($request);
         $response = $placeCategories->delete($placeCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $placeCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -313,7 +339,7 @@ class PlaceCategoriesTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 false,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc;
 
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\EntityImage;
@@ -64,7 +65,7 @@ class ArticlesTest extends BaseTest
         $this->assertArrayHasKey('onlyApproved', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyApproved, $catchRequestInfo['query']['onlyApproved']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
@@ -113,33 +114,42 @@ class ArticlesTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('article', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('content', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('author', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('categoryId', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('dateTimeAt', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('isImportant', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['article']);
-        $this->assertEquals($article->getTitle(), $catchRequestInfo['json']['article']['title']);
-        $this->assertEquals($article->getContent(), $catchRequestInfo['json']['article']['content']);
-        $this->assertEquals($article->getAuthor(), $catchRequestInfo['json']['article']['author']);
-        $this->assertEquals($article->getCategoryId(), $catchRequestInfo['json']['article']['categoryId']);
-        $this->assertEquals($article->getDateTimeAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['article']['dateTimeAt']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['article']['images']);
-        $this->assertEquals($article->getAttachmentUrl(), $catchRequestInfo['json']['article']['attachmentUrl']);
-        $this->assertEquals($article->getIsVisible(), $catchRequestInfo['json']['article']['isVisible']);
-        $this->assertEquals($article->getIsImportant(), $catchRequestInfo['json']['article']['isImportant']);
-        $this->assertEquals($article->getApproveState(), $catchRequestInfo['json']['article']['approveState']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('article', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveArticle = $primitivePayloadItem['article'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveArticle);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveArticle);
+        $this->assertArrayHasKey('content', $primitiveArticle);
+        $this->assertArrayHasKey('author', $primitiveArticle);
+        $this->assertArrayHasKey('categoryId', $primitiveArticle);
+        $this->assertArrayHasKey('dateTimeAt', $primitiveArticle);
+        $this->assertArrayHasKey('images', $primitiveArticle);
+        if (!is_null($article->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitiveArticle);
+        if (!is_null($article->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveArticle);
+        if (!is_null($article->getIsImportant())) $this->assertArrayHasKey('isImportant', $primitiveArticle);
+        if (!is_null($article->getApproveState())) $this->assertArrayHasKey('approveState', $primitiveArticle);
+        $this->assertEquals($article->getTitle(), $primitiveArticle['title']);
+        $this->assertEquals($article->getContent(), $primitiveArticle['content']);
+        $this->assertEquals($article->getAuthor(), $primitiveArticle['author']);
+        $this->assertEquals($article->getCategoryId(), $primitiveArticle['categoryId']);
+        $this->assertEquals($article->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveArticle['dateTimeAt']);
+        $this->assertEquals($primitiveImages, $primitiveArticle['images']);
+        if (!is_null($article->getAttachmentUrl())) $this->assertEquals($article->getAttachmentUrl(), $primitiveArticle['attachmentUrl']);
+        if (!is_null($article->getIsVisible())) $this->assertEquals($article->getIsVisible(), $primitiveArticle['isVisible']);
+        if (!is_null($article->getIsImportant())) $this->assertEquals($article->getIsImportant(), $primitiveArticle['isImportant']);
+        if (!is_null($article->getApproveState())) $this->assertEquals($article->getApproveState(), $primitiveArticle['approveState']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -181,33 +191,43 @@ class ArticlesTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('article', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('content', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('author', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('categoryId', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('dateTimeAt', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('isImportant', $catchRequestInfo['json']['article']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['article']);
-        $this->assertEquals($article->getTitle(), $catchRequestInfo['json']['article']['title']);
-        $this->assertEquals($article->getContent(), $catchRequestInfo['json']['article']['content']);
-        $this->assertEquals($article->getAuthor(), $catchRequestInfo['json']['article']['author']);
-        $this->assertEquals($article->getCategoryId(), $catchRequestInfo['json']['article']['categoryId']);
-        $this->assertEquals($article->getDateTimeAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['article']['dateTimeAt']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['article']['images']);
-        $this->assertEquals($article->getAttachmentUrl(), $catchRequestInfo['json']['article']['attachmentUrl']);
-        $this->assertEquals($article->getIsVisible(), $catchRequestInfo['json']['article']['isVisible']);
-        $this->assertEquals($article->getIsImportant(), $catchRequestInfo['json']['article']['isImportant']);
-        $this->assertEquals($article->getApproveState(), $catchRequestInfo['json']['article']['approveState']);
+
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('article', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveArticle = $primitivePayloadItem['article'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveArticle);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveArticle);
+        $this->assertArrayHasKey('content', $primitiveArticle);
+        $this->assertArrayHasKey('author', $primitiveArticle);
+        $this->assertArrayHasKey('categoryId', $primitiveArticle);
+        $this->assertArrayHasKey('dateTimeAt', $primitiveArticle);
+        $this->assertArrayHasKey('images', $primitiveArticle);
+        if (!is_null($article->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitiveArticle);
+        if (!is_null($article->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveArticle);
+        if (!is_null($article->getIsImportant())) $this->assertArrayHasKey('isImportant', $primitiveArticle);
+        if (!is_null($article->getApproveState())) $this->assertArrayHasKey('approveState', $primitiveArticle);
+        $this->assertEquals($article->getTitle(), $primitiveArticle['title']);
+        $this->assertEquals($article->getContent(), $primitiveArticle['content']);
+        $this->assertEquals($article->getAuthor(), $primitiveArticle['author']);
+        $this->assertEquals($article->getCategoryId(), $primitiveArticle['categoryId']);
+        $this->assertEquals($article->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveArticle['dateTimeAt']);
+        $this->assertEquals($primitiveImages, $primitiveArticle['images']);
+        if (!is_null($article->getAttachmentUrl())) $this->assertEquals($article->getAttachmentUrl(), $primitiveArticle['attachmentUrl']);
+        if (!is_null($article->getIsVisible())) $this->assertEquals($article->getIsVisible(), $primitiveArticle['isVisible']);
+        if (!is_null($article->getIsImportant())) $this->assertEquals($article->getIsImportant(), $primitiveArticle['isImportant']);
+        if (!is_null($article->getApproveState())) $this->assertEquals($article->getApproveState(), $primitiveArticle['approveState']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $article->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $article->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -243,12 +263,19 @@ class ArticlesTest extends BaseTest
         $articles = new Articles($request);
         $response = $articles->delete($article, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/articles', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $article->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $article->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -282,7 +309,7 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime(),
+                $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -305,7 +332,7 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime(),
+                $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -327,14 +354,14 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime()
+                $this->getDateTime()
             ), mt_rand()],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime(),
+                $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -356,14 +383,14 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime()
+                $this->getDateTime()
             )],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 mt_rand(),
-                new \DateTime(),
+                $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -388,7 +415,7 @@ class ArticlesTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 true,

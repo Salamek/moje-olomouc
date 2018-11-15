@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
@@ -48,7 +49,7 @@ class Articles implements IOperation
     ): Response
     {
         $data = [
-            'fromUpdatedAt' => ($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null),
+            'fromUpdatedAt' => ($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null),
             'showDeleted' => $showDeleted,
             'onlyApproved' => $onlyApproved,
             'onlyVisible' => $onlyVisible,

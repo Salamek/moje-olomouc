@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc;
 
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\EventConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
@@ -67,7 +68,7 @@ class EventsTest extends BaseTest
         $this->assertArrayHasKey('onlyApproved', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyApproved, $catchRequestInfo['query']['onlyApproved']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
@@ -116,47 +117,56 @@ class EventsTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('event', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('description', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('startAt', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('endAt', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeDesc', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeLat', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeLon', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('categoryIdsArr', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('fee', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('webUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('facebookUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('featuredLevel', $catchRequestInfo['json']['event']);
-        $this->assertEquals($event->getTitle(), $catchRequestInfo['json']['event']['title']);
-        $this->assertEquals($event->getDescription(), $catchRequestInfo['json']['event']['description']);
-        $this->assertEquals($event->getStartAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['event']['startAt']);
-        $this->assertEquals($event->getEndAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['event']['endAt']);
-        $this->assertEquals($event->getPlaceDesc(), $catchRequestInfo['json']['event']['placeDesc']);
-        $this->assertEquals($event->getPlaceLat(), $catchRequestInfo['json']['event']['placeLat']);
-        $this->assertEquals($event->getPlaceLon(), $catchRequestInfo['json']['event']['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $catchRequestInfo['json']['event']['categoryIdsArr']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['event']['images']);
-        $this->assertEquals($event->getAttachmentUrl(), $catchRequestInfo['json']['event']['attachmentUrl']);
-        $this->assertEquals($event->getFee(), $catchRequestInfo['json']['event']['fee']);
-        $this->assertEquals($event->getWebUrl(), $catchRequestInfo['json']['event']['webUrl']);
-        $this->assertEquals($event->getFacebookUrl(), $catchRequestInfo['json']['event']['facebookUrl']);
-        $this->assertEquals($event->getConsumerFlags(), $catchRequestInfo['json']['event']['consumerFlags']);
-        $this->assertEquals($event->getIsVisible(), $catchRequestInfo['json']['event']['isVisible']);
-        $this->assertEquals($event->getApproveState(), $catchRequestInfo['json']['event']['approveState']);
-        $this->assertEquals($event->getFeaturedLevel(), $catchRequestInfo['json']['event']['featuredLevel']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('event', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveEvent = $primitivePayloadItem['event'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveEvent);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveEvent);
+        $this->assertArrayHasKey('description', $primitiveEvent);
+        $this->assertArrayHasKey('startAt', $primitiveEvent);
+        $this->assertArrayHasKey('endAt', $primitiveEvent);
+        $this->assertArrayHasKey('placeDesc', $primitiveEvent);
+        $this->assertArrayHasKey('placeLat', $primitiveEvent);
+        $this->assertArrayHasKey('placeLon', $primitiveEvent);
+        $this->assertArrayHasKey('categoryIdsArr', $primitiveEvent);
+        $this->assertArrayHasKey('images', $primitiveEvent);
+        if (!is_null($event->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitiveEvent);
+        if (!is_null($event->getFee())) $this->assertArrayHasKey('fee', $primitiveEvent);
+        if (!is_null($event->getWebUrl())) $this->assertArrayHasKey('webUrl', $primitiveEvent);
+        if (!is_null($event->getFacebookUrl())) $this->assertArrayHasKey('facebookUrl', $primitiveEvent);
+        if (!is_null($event->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitiveEvent);
+        if (!is_null($event->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveEvent);
+        if (!is_null($event->getApproveState())) $this->assertArrayHasKey('approveState', $primitiveEvent);
+        if (!is_null($event->getFeaturedLevel())) $this->assertArrayHasKey('featuredLevel', $primitiveEvent);
+        $this->assertEquals($event->getTitle(), $primitiveEvent['title']);
+        $this->assertEquals($event->getDescription(), $primitiveEvent['description']);
+        $this->assertEquals($event->getStartAt()->format(DateTime::NOT_A_ISO8601), $primitiveEvent['startAt']);
+        $this->assertEquals($event->getEndAt()->format(DateTime::NOT_A_ISO8601), $primitiveEvent['endAt']);
+        $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
+        $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
+        $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
+        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($primitiveImages, $primitiveEvent['images']);
+        if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
+        if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
+        if (!is_null($event->getWebUrl())) $this->assertEquals($event->getWebUrl(), $primitiveEvent['webUrl']);
+        if (!is_null($event->getFacebookUrl())) $this->assertEquals($event->getFacebookUrl(), $primitiveEvent['facebookUrl']);
+        if (!is_null($event->getConsumerFlags())) $this->assertEquals($event->getConsumerFlags(), $primitiveEvent['consumerFlags']);
+        if (!is_null($event->getIsVisible())) $this->assertEquals($event->getIsVisible(), $primitiveEvent['isVisible']);
+        if (!is_null($event->getApproveState())) $this->assertEquals($event->getApproveState(), $primitiveEvent['approveState']);
+        if (!is_null($event->getFeaturedLevel())) $this->assertEquals($event->getFeaturedLevel(), $primitiveEvent['featuredLevel']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -198,47 +208,56 @@ class EventsTest extends BaseTest
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('event', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('description', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('startAt', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('endAt', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeDesc', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeLat', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('placeLon', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('categoryIdsArr', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('images', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('attachmentUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('fee', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('webUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('facebookUrl', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('approveState', $catchRequestInfo['json']['event']);
-        $this->assertArrayHasKey('featuredLevel', $catchRequestInfo['json']['event']);
-        $this->assertEquals($event->getTitle(), $catchRequestInfo['json']['event']['title']);
-        $this->assertEquals($event->getDescription(), $catchRequestInfo['json']['event']['description']);
-        $this->assertEquals($event->getStartAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['event']['startAt']);
-        $this->assertEquals($event->getEndAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['event']['endAt']);
-        $this->assertEquals($event->getPlaceDesc(), $catchRequestInfo['json']['event']['placeDesc']);
-        $this->assertEquals($event->getPlaceLat(), $catchRequestInfo['json']['event']['placeLat']);
-        $this->assertEquals($event->getPlaceLon(), $catchRequestInfo['json']['event']['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $catchRequestInfo['json']['event']['categoryIdsArr']);
-        $this->assertEquals($primitiveImages, $catchRequestInfo['json']['event']['images']);
-        $this->assertEquals($event->getAttachmentUrl(), $catchRequestInfo['json']['event']['attachmentUrl']);
-        $this->assertEquals($event->getFee(), $catchRequestInfo['json']['event']['fee']);
-        $this->assertEquals($event->getWebUrl(), $catchRequestInfo['json']['event']['webUrl']);
-        $this->assertEquals($event->getFacebookUrl(), $catchRequestInfo['json']['event']['facebookUrl']);
-        $this->assertEquals($event->getConsumerFlags(), $catchRequestInfo['json']['event']['consumerFlags']);
-        $this->assertEquals($event->getIsVisible(), $catchRequestInfo['json']['event']['isVisible']);
-        $this->assertEquals($event->getApproveState(), $catchRequestInfo['json']['event']['approveState']);
-        $this->assertEquals($event->getFeaturedLevel(), $catchRequestInfo['json']['event']['featuredLevel']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('event', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveEvent = $primitivePayloadItem['event'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveEvent);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveEvent);
+        $this->assertArrayHasKey('description', $primitiveEvent);
+        $this->assertArrayHasKey('startAt', $primitiveEvent);
+        $this->assertArrayHasKey('endAt', $primitiveEvent);
+        $this->assertArrayHasKey('placeDesc', $primitiveEvent);
+        $this->assertArrayHasKey('placeLat', $primitiveEvent);
+        $this->assertArrayHasKey('placeLon', $primitiveEvent);
+        $this->assertArrayHasKey('categoryIdsArr', $primitiveEvent);
+        $this->assertArrayHasKey('images', $primitiveEvent);
+        if (!is_null($event->getAttachmentUrl())) $this->assertArrayHasKey('attachmentUrl', $primitiveEvent);
+        if (!is_null($event->getFee())) $this->assertArrayHasKey('fee', $primitiveEvent);
+        if (!is_null($event->getWebUrl())) $this->assertArrayHasKey('webUrl', $primitiveEvent);
+        if (!is_null($event->getFacebookUrl())) $this->assertArrayHasKey('facebookUrl', $primitiveEvent);
+        if (!is_null($event->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitiveEvent);
+        if (!is_null($event->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveEvent);
+        if (!is_null($event->getApproveState())) $this->assertArrayHasKey('approveState', $primitiveEvent);
+        if (!is_null($event->getFeaturedLevel())) $this->assertArrayHasKey('featuredLevel', $primitiveEvent);
+        $this->assertEquals($event->getTitle(), $primitiveEvent['title']);
+        $this->assertEquals($event->getDescription(), $primitiveEvent['description']);
+        $this->assertEquals($event->getStartAt()->format(DateTime::NOT_A_ISO8601), $primitiveEvent['startAt']);
+        $this->assertEquals($event->getEndAt()->format(DateTime::NOT_A_ISO8601), $primitiveEvent['endAt']);
+        $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
+        $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
+        $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
+        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($primitiveImages, $primitiveEvent['images']);
+        if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
+        if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
+        if (!is_null($event->getWebUrl())) $this->assertEquals($event->getWebUrl(), $primitiveEvent['webUrl']);
+        if (!is_null($event->getFacebookUrl())) $this->assertEquals($event->getFacebookUrl(), $primitiveEvent['facebookUrl']);
+        if (!is_null($event->getConsumerFlags())) $this->assertEquals($event->getConsumerFlags(), $primitiveEvent['consumerFlags']);
+        if (!is_null($event->getIsVisible())) $this->assertEquals($event->getIsVisible(), $primitiveEvent['isVisible']);
+        if (!is_null($event->getApproveState())) $this->assertEquals($event->getApproveState(), $primitiveEvent['approveState']);
+        if (!is_null($event->getFeaturedLevel())) $this->assertEquals($event->getFeaturedLevel(), $primitiveEvent['featuredLevel']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $event->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $event->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -274,12 +293,19 @@ class EventsTest extends BaseTest
         $events = new Events($request);
         $response = $events->delete($event, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/events', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $event->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $event->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -311,8 +337,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -331,8 +357,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -360,8 +386,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -370,8 +396,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -399,8 +425,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -409,8 +435,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
+                $this->getDateTime(),
                 'placeDesc-'.mt_rand(),
                 '12.'.mt_rand(),
                 '-12.'.mt_rand(),
@@ -443,7 +469,7 @@ class EventsTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 true,

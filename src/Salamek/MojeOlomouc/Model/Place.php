@@ -70,7 +70,7 @@ class Place implements IPlace
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $approveState = null,
         int $id = null
     )
@@ -159,9 +159,9 @@ class Place implements IPlace
     }
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void
+    public function setIsVisible(bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -248,9 +248,9 @@ class Place implements IPlace
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool
+    public function getIsVisible(): ?bool
     {
         return $this->isVisible;
     }
@@ -274,7 +274,8 @@ class Place implements IPlace
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        return [
+        // Required
+        $primitiveArray = [
             'title' => $this->title,
             'description' => $this->description,
             'address' => $this->address,
@@ -282,10 +283,14 @@ class Place implements IPlace
             'lon' => $this->lon,
             'categoryId' => $this->categoryId,
             'images' => $primitiveImages,
-            'attachmentUrl' => $this->attachmentUrl,
-            'isVisible' => $this->isVisible,
-            'approveState' => $this->approveState
         ];
+
+        // Optional
+        if (!is_null($this->attachmentUrl)) $primitiveArray['attachmentUrl'] = $this->attachmentUrl;
+        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
+        if (!is_null($this->approveState)) $primitiveArray['approveState'] = $this->approveState;
+
+        return $primitiveArray;
     }
 
     /**
@@ -312,7 +317,7 @@ class Place implements IPlace
             $modelData['categoryId'],
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
             (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
             (array_key_exists('id', $modelData) ? $modelData['id'] : null)
         );

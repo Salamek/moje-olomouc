@@ -15,15 +15,15 @@ class ArticleCategoryTest extends BaseTest
      * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
-     * @param bool $isImportant
-     * @param bool $isVisible
+     * @param bool|null $isImportant
+     * @param bool|null $isVisible
      * @param int|null $id
      */
     public function createRequiredShouldBeGoodTest(
         string $title,
         int $consumerFlags = null,
-        bool $isImportant = false,
-        bool $isVisible = true,
+        bool $isImportant = null,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -33,17 +33,14 @@ class ArticleCategoryTest extends BaseTest
 
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
-        $this->assertEquals(false, $articleCategory->getIsImportant());
-        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getIsImportant());
+        $this->assertEquals(null, $articleCategory->getIsVisible());
         $this->assertEquals(null, $articleCategory->getId());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'consumerFlags' => $articleCategory->getConsumerFlags(),
-            'isImportant' => $articleCategory->getIsImportant(),
-            'isVisible' => $articleCategory->getIsVisible()
+            'title' => $title
         ];
 
         $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
@@ -62,8 +59,8 @@ class ArticleCategoryTest extends BaseTest
     public function createOptionalShouldBeGoodTest(
         string $title,
         int $consumerFlags = null,
-        bool $isImportant = false,
-        bool $isVisible = true,
+        bool $isImportant = null,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -84,11 +81,12 @@ class ArticleCategoryTest extends BaseTest
 
 
         $primitiveArrayTest = [
-            'title' => $title,
-            'consumerFlags' => $consumerFlags,
-            'isImportant' => $isImportant,
-            'isVisible' => $isVisible
+            'title' => $title
         ];
+
+        if (!is_null($consumerFlags)) $primitiveArrayTest['consumerFlags'] = $consumerFlags;
+        if (!is_null($isImportant)) $primitiveArrayTest['isImportant'] = $isImportant;
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
 
         $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
     }
@@ -106,8 +104,8 @@ class ArticleCategoryTest extends BaseTest
     public function createOptionalShouldFailOnBadData(
         string $title,
         int $consumerFlags = null,
-        bool $isImportant = false,
-        bool $isVisible = true,
+        bool $isImportant = null,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -132,8 +130,8 @@ class ArticleCategoryTest extends BaseTest
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
         int $consumerFlags = null,
-        bool $isImportant = false,
-        bool $isVisible = true,
+        bool $isImportant = null,
+        bool $isVisible = null,
         int $id = null
     )
     {
@@ -143,8 +141,8 @@ class ArticleCategoryTest extends BaseTest
 
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
-        $this->assertEquals(false, $articleCategory->getIsImportant());
-        $this->assertEquals(true, $articleCategory->getIsVisible());
+        $this->assertEquals(null, $articleCategory->getIsImportant());
+        $this->assertEquals(null, $articleCategory->getIsVisible());
         $this->assertEquals(null, $articleCategory->getId());
     }
 
@@ -160,8 +158,8 @@ class ArticleCategoryTest extends BaseTest
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
         int $consumerFlags = null,
-        bool $isImportant = false,
-        bool $isVisible = true,
+        bool $isImportant = null,
+        bool $isVisible = null,
         int $id = null
     )
     {

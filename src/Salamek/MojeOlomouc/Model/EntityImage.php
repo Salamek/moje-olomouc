@@ -127,8 +127,7 @@ class EntityImage implements IEntityImage
             'title' => $this->title,
             'imageUrl' => $this->imageUrl,
             'contentType' => $this->contentType,
-            'isFeatured' => $this->isFeatured,
-            /*'id' => $this->id*/
+            'isFeatured' => $this->isFeatured
         ];
     }
 

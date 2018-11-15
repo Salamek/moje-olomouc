@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
 use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
@@ -86,26 +87,35 @@ class ImportantMessagesTest extends BaseTest
         $importantMessages = new ImportantMessages($request);
         $response = $importantMessages->create($importantMessage);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('importantMessage', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('text', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('dateTimeAt', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('expireAt', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('type', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('severity', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['importantMessage']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($importantMessage->getText(), $catchRequestInfo['json']['importantMessage']['text']);
-        $this->assertEquals($importantMessage->getDateTimeAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['importantMessage']['dateTimeAt']);
-        $this->assertEquals($importantMessage->getExpireAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['importantMessage']['expireAt']);
-        $this->assertEquals($importantMessage->getType(), $catchRequestInfo['json']['importantMessage']['type']);
-        $this->assertEquals($importantMessage->getSeverity(), $catchRequestInfo['json']['importantMessage']['severity']);
-        $this->assertEquals($importantMessage->getIsVisible(), $catchRequestInfo['json']['importantMessage']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('importantMessage', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveImportantMessage = $primitivePayloadItem['importantMessage'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveImportantMessage);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('text', $primitiveImportantMessage);
+        $this->assertArrayHasKey('dateTimeAt', $primitiveImportantMessage);
+        $this->assertArrayHasKey('type', $primitiveImportantMessage);
+        $this->assertArrayHasKey('severity', $primitiveImportantMessage);
+        if (!is_null($importantMessage->getExpireAt())) $this->assertArrayHasKey('expireAt', $primitiveImportantMessage);
+        if (!is_null($importantMessage->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveImportantMessage);
+
+        $this->assertEquals($importantMessage->getText(), $primitiveImportantMessage['text']);
+        $this->assertEquals($importantMessage->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveImportantMessage['dateTimeAt']);
+        $this->assertEquals($importantMessage->getType(), $primitiveImportantMessage['type']);
+        $this->assertEquals($importantMessage->getSeverity(), $primitiveImportantMessage['severity']);
+        if (!is_null($importantMessage->getExpireAt())) $this->assertEquals($importantMessage->getExpireAt()->format(DateTime::NOT_A_ISO8601), $primitiveImportantMessage['expireAt']);
+        if (!is_null($importantMessage->getIsVisible())) $this->assertEquals($importantMessage->getIsVisible(), $primitiveImportantMessage['isVisible']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -141,26 +151,35 @@ class ImportantMessagesTest extends BaseTest
         $importantMessages = new ImportantMessages($request);
         $response = $importantMessages->update($importantMessage, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('importantMessage', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('text', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('dateTimeAt', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('expireAt', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('type', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('severity', $catchRequestInfo['json']['importantMessage']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['importantMessage']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($importantMessage->getText(), $catchRequestInfo['json']['importantMessage']['text']);
-        $this->assertEquals($importantMessage->getDateTimeAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['importantMessage']['dateTimeAt']);
-        $this->assertEquals($importantMessage->getExpireAt()->format(\DateTime::ISO8601), $catchRequestInfo['json']['importantMessage']['expireAt']);
-        $this->assertEquals($importantMessage->getType(), $catchRequestInfo['json']['importantMessage']['type']);
-        $this->assertEquals($importantMessage->getSeverity(), $catchRequestInfo['json']['importantMessage']['severity']);
-        $this->assertEquals($importantMessage->getIsVisible(), $catchRequestInfo['json']['importantMessage']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('importantMessage', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveImportantMessage = $primitivePayloadItem['importantMessage'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveImportantMessage);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('text', $primitiveImportantMessage);
+        $this->assertArrayHasKey('dateTimeAt', $primitiveImportantMessage);
+        $this->assertArrayHasKey('type', $primitiveImportantMessage);
+        $this->assertArrayHasKey('severity', $primitiveImportantMessage);
+        if (!is_null($importantMessage->getExpireAt())) $this->assertArrayHasKey('expireAt', $primitiveImportantMessage);
+        if (!is_null($importantMessage->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveImportantMessage);
+
+        $this->assertEquals($importantMessage->getText(), $primitiveImportantMessage['text']);
+        $this->assertEquals($importantMessage->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveImportantMessage['dateTimeAt']);
+        $this->assertEquals($importantMessage->getType(), $primitiveImportantMessage['type']);
+        $this->assertEquals($importantMessage->getSeverity(), $primitiveImportantMessage['severity']);
+        if (!is_null($importantMessage->getExpireAt())) $this->assertEquals($importantMessage->getExpireAt()->format(DateTime::NOT_A_ISO8601), $primitiveImportantMessage['expireAt']);
+        if (!is_null($importantMessage->getIsVisible())) $this->assertEquals($importantMessage->getIsVisible(), $primitiveImportantMessage['isVisible']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -196,12 +215,19 @@ class ImportantMessagesTest extends BaseTest
         $importantMessages = new ImportantMessages($request);
         $response = $importantMessages->delete($importantMessage, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/important-messages', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $importantMessage->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -232,10 +258,10 @@ class ImportantMessagesTest extends BaseTest
             [null, null],
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
+                $this->getDateTime(),
                 false,
                 null
             ), null]
@@ -251,10 +277,10 @@ class ImportantMessagesTest extends BaseTest
             [null, mt_rand()],
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
+                $this->getDateTime(),
                 false,
                 mt_rand()
             ), null]
@@ -269,19 +295,19 @@ class ImportantMessagesTest extends BaseTest
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
+                $this->getDateTime(),
                 false,
                 null
             ), mt_rand()],
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
+                $this->getDateTime(),
                 false,
                 mt_rand()
             ), null],
@@ -296,15 +322,16 @@ class ImportantMessagesTest extends BaseTest
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime()
+                $this->getDateTime(),
+                ImportantMessageTypeEnum::TRAFFIC_SITUATION,
+                ImportantMessageSeverityEnum::WARNING
             )],
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                new \DateTime(),
-                new \DateTime(),
+                $this->getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
+                $this->getDateTime(),
                 false,
                 mt_rand()
             )],

@@ -67,7 +67,7 @@ class MojeOlomouc
 
     /** @var Places */
     public $places;
-    
+
     /**
      * MojeOlomouc constructor.
      * @param ClientInterface $client

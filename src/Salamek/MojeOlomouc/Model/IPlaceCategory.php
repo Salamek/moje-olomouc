@@ -20,9 +20,9 @@ interface IPlaceCategory extends IModel
     public function setConsumerFlags(int $consumerFlags = null): void;
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void;
+    public function setIsVisible(bool $isVisible = null): void;
 
     /**
      * @return string
@@ -35,7 +35,7 @@ interface IPlaceCategory extends IModel
     public function getConsumerFlags(): ?int;
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool;
+    public function getIsVisible(): ?bool;
 }

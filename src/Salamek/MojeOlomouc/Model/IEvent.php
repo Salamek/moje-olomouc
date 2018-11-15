@@ -55,44 +55,44 @@ interface IEvent extends IModel
     public function setImages(array $images): void;
 
     /**
-     * @param string $attachmentUrl
+     * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl): void;
+    public function setAttachmentUrl(string $attachmentUrl = null): void;
 
     /**
-     * @param string $fee
+     * @param string|null $fee
      */
-    public function setFee(string $fee): void;
+    public function setFee(string $fee = null): void;
 
     /**
-     * @param string $webUrl
+     * @param string|null $webUrl
      */
-    public function setWebUrl(string $webUrl): void;
+    public function setWebUrl(string $webUrl = null): void;
 
     /**
-     * @param string $facebookUrl
+     * @param string|null $facebookUrl
      */
-    public function setFacebookUrl(string $facebookUrl): void;
+    public function setFacebookUrl(string $facebookUrl = null): void;
 
     /**
-     * @param int $consumerFlags
+     * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags): void;
+    public function setConsumerFlags(int $consumerFlags = null): void;
 
     /**
-     * @param bool $isVisible
+     * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void;
+    public function setIsVisible(bool $isVisible = null): void;
 
     /**
-     * @param int $approveState
+     * @param int|null $approveState
      */
-    public function setApproveState(int $approveState): void;
+    public function setApproveState(int $approveState = null): void;
 
     /**
-     * @param int $featuredLevel
+     * @param int|null $featuredLevel
      */
-    public function setFeaturedLevel(int $featuredLevel): void;
+    public function setFeaturedLevel(int $featuredLevel = null): void;
     
     /**
      * @return string
@@ -140,42 +140,42 @@ interface IEvent extends IModel
     public function getImages(): array;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getAttachmentUrl(): ?string;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFee(): ?string;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWebUrl(): ?string;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFacebookUrl(): ?string;
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getConsumerFlags(): ?int;
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function getIsVisible(): bool;
+    public function getIsVisible(): ?bool;
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getApproveState(): ?int;
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getFeaturedLevel(): ?int;
 }

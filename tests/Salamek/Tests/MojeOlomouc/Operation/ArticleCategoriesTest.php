@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc;
 
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\MojeOlomouc\Model\IArticleCategory;
@@ -60,7 +61,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertArrayHasKey('showDeleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(\DateTime::ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
+        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
         $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
         $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
         $this->assertEquals($extraFields, $catchRequestInfo['query']['extraFields']);
@@ -102,23 +103,32 @@ class ArticleCategoriesTest extends BaseTest
         $articleCategories = new ArticleCategories($request);
         $response = $articleCategories->create($articleCategory);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('articleCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('isImportant', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['articleCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($articleCategory->getTitle(), $catchRequestInfo['json']['articleCategory']['title']);
-        $this->assertEquals($articleCategory->getConsumerFlags(), $catchRequestInfo['json']['articleCategory']['consumerFlags']);
-        $this->assertEquals($articleCategory->getIsImportant(), $catchRequestInfo['json']['articleCategory']['isImportant']);
-        $this->assertEquals($articleCategory->getIsVisible(), $catchRequestInfo['json']['articleCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('articleCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveArticleCategory = $primitivePayloadItem['articleCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveArticleCategory);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('title', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getIsImportant())) $this->assertArrayHasKey('isImportant', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveArticleCategory);
+
+        $this->assertEquals($articleCategory->getTitle(), $primitiveArticleCategory['title']);
+        if (!is_null($articleCategory->getConsumerFlags())) $this->assertEquals($articleCategory->getConsumerFlags(), $primitiveArticleCategory['consumerFlags']);
+        if (!is_null($articleCategory->getIsImportant())) $this->assertEquals($articleCategory->getIsImportant(), $primitiveArticleCategory['isImportant']);
+        if (!is_null($articleCategory->getIsVisible())) $this->assertEquals($articleCategory->getIsVisible(), $primitiveArticleCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals(null, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
+        $this->assertEquals(null, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -154,23 +164,32 @@ class ArticleCategoriesTest extends BaseTest
         $articleCategories = new ArticleCategories($request);
         $response = $articleCategories->update($articleCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('articleCategory', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('title', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('consumerFlags', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('isImportant', $catchRequestInfo['json']['articleCategory']);
-        $this->assertArrayHasKey('isVisible', $catchRequestInfo['json']['articleCategory']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertEquals($articleCategory->getTitle(), $catchRequestInfo['json']['articleCategory']['title']);
-        $this->assertEquals($articleCategory->getConsumerFlags(), $catchRequestInfo['json']['articleCategory']['consumerFlags']);
-        $this->assertEquals($articleCategory->getIsImportant(), $catchRequestInfo['json']['articleCategory']['isImportant']);
-        $this->assertEquals($articleCategory->getIsVisible(), $catchRequestInfo['json']['articleCategory']['isVisible']);
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('articleCategory', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveArticleCategory = $primitivePayloadItem['articleCategory'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertInternalType('array', $primitiveArticleCategory);
+        $this->assertArrayHasKey('title', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getIsImportant())) $this->assertArrayHasKey('isImportant', $primitiveArticleCategory);
+        if (!is_null($articleCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitiveArticleCategory);
+
+        $this->assertEquals($articleCategory->getTitle(), $primitiveArticleCategory['title']);
+        if (!is_null($articleCategory->getConsumerFlags())) $this->assertEquals($articleCategory->getConsumerFlags(), $primitiveArticleCategory['consumerFlags']);
+        if (!is_null($articleCategory->getIsImportant())) $this->assertEquals($articleCategory->getIsImportant(), $primitiveArticleCategory['isImportant']);
+        if (!is_null($articleCategory->getIsVisible())) $this->assertEquals($articleCategory->getIsVisible(), $primitiveArticleCategory['isVisible']);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -206,12 +225,20 @@ class ArticleCategoriesTest extends BaseTest
         $articleCategories = new ArticleCategories($request);
         $response = $articleCategories->delete($articleCategory, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals((is_null($id) ? $articleCategory->getId() : $id), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -322,7 +349,7 @@ class ArticleCategoriesTest extends BaseTest
                 false,
             ],
             [
-                new \DateTime(),
+                $this->getDateTime(),
                 false,
                 true,
                 false,

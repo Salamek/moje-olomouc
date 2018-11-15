@@ -57,7 +57,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($categoryId, $place->getCategoryId());
         $this->assertEquals([], $place->getImages());
         $this->assertEquals(null, $place->getAttachmentUrl());
-        $this->assertEquals(true, $place->getIsVisible());
+        $this->assertEquals(null, $place->getIsVisible());
         $this->assertEquals(null, $place->getApproveState());
         $this->assertEquals(null, $place->getId());
         $this->assertInternalType('array', $place->toPrimitiveArray());
@@ -76,10 +76,7 @@ class PlaceTest extends BaseTest
             'lat' => $lat,
             'lon' => $lon,
             'categoryId' => $categoryId,
-            'images' => $primitiveImages,
-            'attachmentUrl' => $place->getAttachmentUrl(),
-            'isVisible' => $place->getIsVisible(),
-            'approveState' => $place->getApproveState()
+            'images' => $primitiveImages
         ];
 
         $this->assertEquals($primitiveArrayTest, $place->toPrimitiveArray());
@@ -156,11 +153,12 @@ class PlaceTest extends BaseTest
             'lat' => $lat,
             'lon' => $lon,
             'categoryId' => $categoryId,
-            'images' => $primitiveImages,
-            'attachmentUrl' => $attachmentUrl,
-            'isVisible' => $isVisible,
-            'approveState' => $approveState
+            'images' => $primitiveImages
         ];
+
+        if (!is_null($attachmentUrl)) $primitiveArrayTest['attachmentUrl'] = $attachmentUrl;
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
+        if (!is_null($approveState)) $primitiveArrayTest['approveState'] = $approveState;
 
         $this->assertEquals($primitiveArrayTest, $place->toPrimitiveArray());
     }
@@ -258,7 +256,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($categoryId, $place->getCategoryId());
         $this->assertEquals([], $place->getImages());
         $this->assertEquals(null, $place->getAttachmentUrl());
-        $this->assertEquals(true, $place->getIsVisible());
+        $this->assertEquals(null, $place->getIsVisible());
         $this->assertEquals(null, $place->getApproveState());
         $this->assertEquals(null, $place->getId());
     }
@@ -336,7 +334,7 @@ class PlaceTest extends BaseTest
             [str_repeat('title-'.mt_rand(), 128), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '12.16477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
             ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '1216477', '12.16477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
             ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '1sdf6477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '1sdf6477', mt_rand(), [new \DateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '1sdf6477', mt_rand(), [$this->getDateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
         ];
     }
 

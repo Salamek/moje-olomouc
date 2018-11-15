@@ -17,7 +17,7 @@ class PlaceCategory implements IPlaceCategory
     /** @var string */
     private $title;
 
-    /** @var int */
+    /** @var int|null */
     private $consumerFlags;
 
     /** @var bool */
@@ -27,10 +27,10 @@ class PlaceCategory implements IPlaceCategory
      * PlaceCategory constructor.
      * @param string $title
      * @param int|null $consumerFlags
-     * @param bool $isVisible
+     * @param bool|null $isVisible
      * @param int|null $id
      */
-    public function __construct(string $title, int $consumerFlags = null, $isVisible = true, int $id = null)
+    public function __construct(string $title, int $consumerFlags = null, bool $isVisible = null, int $id = null)
     {
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
@@ -56,9 +56,9 @@ class PlaceCategory implements IPlaceCategory
     }
 
     /**
-     * @param boolean $isVisible
+     * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void
+    public function setIsVisible(bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -80,9 +80,9 @@ class PlaceCategory implements IPlaceCategory
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool
+    public function getIsVisible(): ?bool
     {
         return $this->isVisible;
     }
@@ -92,11 +92,16 @@ class PlaceCategory implements IPlaceCategory
      */
     public function toPrimitiveArray(): array
     {
-        return [
+        // Required
+        $primitiveArray = [
             'title' => $this->title,
-            'consumerFlags' => $this->consumerFlags,
-            'isVisible' => $this->isVisible
         ];
+
+        // Optional
+        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
+        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
+
+        return $primitiveArray;
     }
 
     /**
@@ -108,7 +113,7 @@ class PlaceCategory implements IPlaceCategory
         return new PlaceCategory(
             $modelData['title'],
             (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
             (array_key_exists('id', $modelData) ? $modelData['id'] : null)
         );
     }

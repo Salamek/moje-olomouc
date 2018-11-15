@@ -78,8 +78,10 @@ class RequestTest extends BaseTest
 
         $uri = 'uri-'.mt_rand();
         $arguments = [
-            'a' => 'b',
-            'foo' => 'bar'
+            'test' => [
+                'a' => 'b',
+                'foo' => 'bar'
+            ]
         ];
 
         $catchType = null;
@@ -103,15 +105,25 @@ class RequestTest extends BaseTest
         $request = new Request($client, $apiKey);
         $response = $request->create($uri, $arguments);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('a', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('foo', $catchRequestInfo['json']);
-        $this->assertEquals('b', $catchRequestInfo['json']['a']);
-        $this->assertEquals('bar', $catchRequestInfo['json']['foo']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('test', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveTest = $primitivePayloadItem['test'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveTest);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('a', $primitiveTest);
+        $this->assertArrayHasKey('foo', $primitiveTest);
+        $this->assertEquals('b', $primitiveTest['a']);
+        $this->assertEquals('bar', $primitiveTest['foo']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $catchRequestInfo['json']['action']['code']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -125,8 +137,10 @@ class RequestTest extends BaseTest
         $id = mt_rand();
         $uri = 'uri-'.mt_rand();
         $arguments = [
-            'a' => 'b',
-            'foo' => 'bar'
+            'test' => [
+                'a' => 'b',
+                'foo' => 'bar'
+            ]
         ];
 
         $catchType = null;
@@ -150,16 +164,26 @@ class RequestTest extends BaseTest
         $request = new Request($client, $apiKey);
         $response = $request->update($uri, $id, $arguments);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('a', $catchRequestInfo['json']);
-        $this->assertArrayHasKey('foo', $catchRequestInfo['json']);
-        $this->assertEquals('b', $catchRequestInfo['json']['a']);
-        $this->assertEquals('bar', $catchRequestInfo['json']['foo']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('test', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveTest = $primitivePayloadItem['test'];
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveTest);
+        $this->assertInternalType('array', $primitiveAction);
+        $this->assertArrayHasKey('a', $primitiveTest);
+        $this->assertArrayHasKey('foo', $primitiveTest);
+        $this->assertEquals('b', $primitiveTest['a']);
+        $this->assertEquals('bar', $primitiveTest['foo']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals($id, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
+        $this->assertEquals($id, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -194,12 +218,19 @@ class RequestTest extends BaseTest
         $request = new Request($client, $apiKey);
         $response = $request->delete($uri, $id);
 
-        $this->assertInternalType('array', $catchRequestInfo['json']);
+        $primitivePayloadItem = $catchRequestInfo['json'][0];
+        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertArrayHasKey('action', $primitivePayloadItem);
+
+        $primitiveAction = $primitivePayloadItem['action'];
+
+        $this->assertInternalType('array', $primitiveAction);
+
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
-        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $catchRequestInfo['json']['action']['code']);
-        $this->assertEquals($id, $catchRequestInfo['json']['action']['id']);
+        $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
+        $this->assertEquals($id, $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 }

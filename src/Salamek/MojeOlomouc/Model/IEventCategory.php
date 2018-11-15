@@ -15,9 +15,9 @@ interface IEventCategory extends IModel
     public function setTitle(string $title): void;
 
     /**
-     * @param bool $isVisible
+     * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible): void;
+    public function setIsVisible(bool $isVisible = null): void;
     
     /**
      * @return string
@@ -25,7 +25,7 @@ interface IEventCategory extends IModel
     public function getTitle(): string;
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function getIsVisible(): bool;
+    public function getIsVisible(): ?bool;
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Model;
 
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
 use Salamek\MojeOlomouc\Validator\GpsStringValidator;
@@ -59,7 +60,7 @@ class Event implements IEvent
     /** @var int|null */
     private $consumerFlags;
 
-    /** @var bool */
+    /** @var bool|null */
     private $isVisible;
 
     /** @var int|null */
@@ -84,7 +85,7 @@ class Event implements IEvent
      * @param string|null $webUrl
      * @param string|null $facebookUrl
      * @param int|null $consumerFlags
-     * @param bool $isVisible
+     * @param bool|null $isVisible
      * @param int|null $approveState
      * @param int|null $featuredLevel
      * @param int|null $id
@@ -104,7 +105,7 @@ class Event implements IEvent
         string $webUrl = null,
         string $facebookUrl = null,
         int $consumerFlags = null,
-        bool $isVisible = true,
+        bool $isVisible = null,
         int $approveState = null,
         int $featuredLevel = null,
         int $id = null
@@ -264,9 +265,9 @@ class Event implements IEvent
     }
 
     /**
-     * @param bool $isVisible
+     * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = true): void
+    public function setIsVisible(bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -416,9 +417,9 @@ class Event implements IEvent
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function getIsVisible(): bool
+    public function getIsVisible(): ?bool
     {
         return $this->isVisible;
     }
@@ -450,25 +451,30 @@ class Event implements IEvent
             $primitiveImages[] = $image->toPrimitiveArray();
         }
 
-        return [
+        // Required
+        $primitiveArray = [
             'title' => $this->title,
             'description' => $this->description,
-            'startAt' => ($this->startAt ? $this->startAt->format(\DateTime::ISO8601): null),
-            'endAt' => ($this->endAt ? $this->endAt->format(\DateTime::ISO8601): null),
+            'startAt' => ($this->startAt ? $this->startAt->format(DateTime::NOT_A_ISO8601): null),
+            'endAt' => ($this->endAt ? $this->endAt->format(DateTime::NOT_A_ISO8601): null),
             'placeDesc' => $this->placeDesc,
             'placeLat' => $this->placeLat,
             'placeLon' => $this->placeLon,
             'categoryIdsArr' => $this->categoryIdsArr,
-            'images'   => $primitiveImages,
-            'attachmentUrl'  => $this->attachmentUrl,
-            'fee'   => $this->fee,
-            'webUrl'   => $this->webUrl,
-            'facebookUrl'   => $this->facebookUrl,
-            'consumerFlags'   => $this->consumerFlags,
-            'isVisible'   => $this->isVisible,
-            'approveState'   => $this->approveState,
-            'featuredLevel'   => $this->featuredLevel
+            'images'   => $primitiveImages
         ];
+
+        // Optional
+        if (!is_null($this->attachmentUrl)) $primitiveArray['attachmentUrl'] = $this->attachmentUrl;
+        if (!is_null($this->fee)) $primitiveArray['fee'] = $this->fee;
+        if (!is_null($this->webUrl)) $primitiveArray['webUrl'] = $this->webUrl;
+        if (!is_null($this->facebookUrl)) $primitiveArray['facebookUrl'] = $this->facebookUrl;
+        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
+        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
+        if (!is_null($this->approveState)) $primitiveArray['approveState'] = $this->approveState;
+        if (!is_null($this->featuredLevel)) $primitiveArray['featuredLevel'] = $this->featuredLevel;
+
+        return $primitiveArray;
     }
 
     /**
@@ -489,8 +495,8 @@ class Event implements IEvent
         return new Event(
             $modelData['title'],
             $modelData['description'],
-            new \DateTime($modelData['startAt']),
-            new \DateTime($modelData['endAt']),
+            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['startAt']),
+            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['endAt']),
             $modelData['placeDesc'],
             $modelData['placeLat'],
             $modelData['placeLon'],
@@ -501,7 +507,7 @@ class Event implements IEvent
             (array_key_exists('webUrl', $modelData) ? $modelData['webUrl'] : null),
             (array_key_exists('facebookUrl', $modelData) ? $modelData['facebookUrl'] : null),
             (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
             (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
             (array_key_exists('featuredLevel', $modelData) ? $modelData['featuredLevel'] : null),
             (array_key_exists('id', $modelData) ? $modelData['id'] : null)

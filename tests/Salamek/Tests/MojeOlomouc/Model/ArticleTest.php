@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc\Model;
 
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -34,8 +35,8 @@ class ArticleTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -55,8 +56,8 @@ class ArticleTest extends BaseTest
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals([], $article->getImages());
         $this->assertEquals(null, $article->getAttachmentUrl());
-        $this->assertEquals(true, $article->getIsVisible());
-        $this->assertEquals(false, $article->getIsImportant());
+        $this->assertEquals(null, $article->getIsVisible());
+        $this->assertEquals(null, $article->getIsImportant());
         $this->assertEquals(null, $article->getApproveState());
         $this->assertEquals(null, $article->getId());
         $this->assertInternalType('array', $article->toPrimitiveArray());
@@ -73,12 +74,8 @@ class ArticleTest extends BaseTest
             'content' => $content,
             'author' => $author,
             'categoryId' => $categoryId,
-            'dateTimeAt' => $dateTimeAt->format(\DATE_ISO8601),
+            'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
             'images' => $primitiveImages,
-            'attachmentUrl' => $article->getAttachmentUrl(),
-            'isVisible' => $article->getIsVisible(),
-            'isImportant' => $article->getIsImportant(),
-            'approveState' => $article->getApproveState(),
         ];
 
         $this->assertEquals($primitiveArrayTest, $article->toPrimitiveArray());
@@ -108,8 +105,8 @@ class ArticleTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -152,13 +149,14 @@ class ArticleTest extends BaseTest
             'content' => $content,
             'author' => $author,
             'categoryId' => $categoryId,
-            'dateTimeAt' => $dateTimeAt->format(\DATE_ISO8601),
-            'images' => $primitiveImages,
-            'attachmentUrl' => $attachmentUrl,
-            'isVisible' => $isVisible,
-            'isImportant' => $isImportant,
-            'approveState' => $approveState,
+            'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
+            'images' => $primitiveImages
         ];
+
+        if (!is_null($attachmentUrl)) $primitiveArrayTest['attachmentUrl'] = $attachmentUrl;
+        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
+        if (!is_null($isImportant)) $primitiveArrayTest['isImportant'] = $isImportant;
+        if (!is_null($approveState)) $primitiveArrayTest['approveState'] = $approveState;
 
         $this->assertEquals($primitiveArrayTest, $article->toPrimitiveArray());
     }
@@ -187,8 +185,8 @@ class ArticleTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -231,8 +229,8 @@ class ArticleTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -249,7 +247,7 @@ class ArticleTest extends BaseTest
                 'content' => $content,
                 'author' => $author,
                 'categoryId' => $categoryId,
-                'dateTimeAt' => $dateTimeAt->format(\DateTime::ISO8601),
+                'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
                 'images' => $primitiveImages,
             ]
         );
@@ -261,8 +259,8 @@ class ArticleTest extends BaseTest
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals($images, $article->getImages());
         $this->assertEquals(null, $article->getAttachmentUrl());
-        $this->assertEquals(true, $article->getIsVisible());
-        $this->assertEquals(false, $article->getIsImportant());
+        $this->assertEquals(null, $article->getIsVisible());
+        $this->assertEquals(null, $article->getIsImportant());
         $this->assertEquals(null, $article->getApproveState());
         $this->assertEquals(null, $article->getId());
     }
@@ -290,8 +288,8 @@ class ArticleTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
-        bool $isVisible = true,
-        bool $isImportant = false,
+        bool $isVisible = null,
+        bool $isImportant = null,
         int $approveState = null,
         int $id = null
     )
@@ -308,7 +306,7 @@ class ArticleTest extends BaseTest
                 'content' => $content,
                 'author' => $author,
                 'categoryId' => $categoryId,
-                'dateTimeAt' => $dateTimeAt->format(\DateTime::ISO8601),
+                'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
                 'images' => $primitiveImages,
                 'attachmentUrl' => $attachmentUrl,
                 'isVisible' => $isVisible,

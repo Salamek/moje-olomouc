@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Middleware;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 
 /**
@@ -65,14 +66,17 @@ class Request
     public function create(string $endpoint, array $data): Response
     {
         $defaultClientOptions = $this->buildDefaultClientOptions();
-        $defaultClientOptions['json'] = [
+
+        $payload = [
             'action' => [
                 'code' => RequestActionCodeEnum::ACTION_CODE_CREATE,
                 'id' => null
             ]
         ];
 
-        $defaultClientOptions = array_merge_recursive($defaultClientOptions, ['json' => $data]);
+        $payload = array_merge_recursive($payload, $data);
+
+        $defaultClientOptions['json'] = [$payload];
 
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
         return new Response($response);
@@ -87,14 +91,17 @@ class Request
     public function update(string $endpoint, int $id, array $data): Response
     {
         $defaultClientOptions = $this->buildDefaultClientOptions();
-        $defaultClientOptions['json'] = [
+        $payload = [
             'action' => [
                 'code' => RequestActionCodeEnum::ACTION_CODE_UPDATE,
                 'id' => $id
             ]
         ];
 
-        $defaultClientOptions = array_merge_recursive($defaultClientOptions, ['json' => $data]);
+        $payload = array_merge_recursive($payload, $data);
+
+        $defaultClientOptions['json'] = [$payload];
+
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
 
         return new Response($response);
@@ -108,12 +115,14 @@ class Request
     public function delete(string $endpoint, int $id): Response
     {
         $defaultClientOptions = $this->buildDefaultClientOptions();
-        $defaultClientOptions['json'] = [
+        $payload = [
             'action' => [
                 'code' => RequestActionCodeEnum::ACTION_CODE_DELETE,
                 'id' => $id
             ]
         ];
+
+        $defaultClientOptions['json'] = [$payload];
 
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
         return new Response($response);

@@ -30,11 +30,11 @@ class ArticleCategory implements IArticleCategory
      * ArticleCategory constructor.
      * @param string $title
      * @param int|null $consumerFlags
-     * @param bool $isImportant
-     * @param bool $isVisible
+     * @param bool|null $isImportant
+     * @param bool|null $isVisible
      * @param int|null $id
      */
-    public function __construct(string $title, int $consumerFlags = null, bool $isImportant = false, bool $isVisible = true, int $id = null)
+    public function __construct(string $title, int $consumerFlags = null, bool $isImportant = null, bool $isVisible = null, int $id = null)
     {
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
@@ -63,7 +63,7 @@ class ArticleCategory implements IArticleCategory
     /**
      * @param boolean $isImportant
      */
-    public function setIsImportant(bool $isImportant): void
+    public function setIsImportant(bool $isImportant = null): void
     {
         $this->isImportant = $isImportant;
     }
@@ -71,7 +71,7 @@ class ArticleCategory implements IArticleCategory
     /**
      * @param boolean $isVisible
      */
-    public function setIsVisible(bool $isVisible): void
+    public function setIsVisible(bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -93,17 +93,17 @@ class ArticleCategory implements IArticleCategory
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsImportant(): bool
+    public function getIsImportant(): ?bool
     {
         return $this->isImportant;
     }
 
     /**
-     * @return boolean
+     * @return boolean|null
      */
-    public function getIsVisible(): bool
+    public function getIsVisible(): ?bool
     {
         return $this->isVisible;
     }
@@ -113,12 +113,17 @@ class ArticleCategory implements IArticleCategory
      */
     public function toPrimitiveArray(): array
     {
-        return [
+        // Required
+        $primitiveArray = [
             'title' => $this->title,
-            'consumerFlags' => $this->consumerFlags,
-            'isImportant' => $this->isImportant,
-            'isVisible' => $this->isVisible
         ];
+
+        // Optional
+        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
+        if (!is_null($this->isImportant)) $primitiveArray['isImportant'] = $this->isImportant;
+        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
+
+        return $primitiveArray;
     }
 
     /**
@@ -130,8 +135,8 @@ class ArticleCategory implements IArticleCategory
         return new ArticleCategory(
             $modelData['title'],
             (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags']: null),
-            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant']: false),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: true),
+            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant']: null),
+            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: null),
             (array_key_exists('id', $modelData) ? $modelData['id']: null)
         );
     }
