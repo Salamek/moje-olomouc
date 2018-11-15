@@ -43,11 +43,12 @@ $importantMessage = new ImportantMessage(
 );
 
 // Create new important-message
-$response = $mojeOlomouc->importantMessages->create($importantMessage);
+$response = $mojeOlomouc->importantMessages->create([$importantMessage]);
 if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
     print_r($response->getData());
+    $importantMessage->setId($response->getData()[0]->getId()); //Set id to currently created object
 }
 else
 {
@@ -57,7 +58,7 @@ else
 
 // Update important-message
 $importantMessage->setExpireAt(new \DateTime('2018-11-20'));
-$response = $mojeOlomouc->importantMessages->update($importantMessage);
+$response = $mojeOlomouc->importantMessages->update([$importantMessage]);
 if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
@@ -70,7 +71,7 @@ else
 }
 
 // Delete important-message
-$response = $mojeOlomouc->importantMessages->delete($importantMessage);
+$response = $mojeOlomouc->importantMessages->delete([$importantMessage]);
 if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
@@ -83,7 +84,7 @@ else
 }
 
 // Or
-$response = $mojeOlomouc->importantMessages->delete(null, $importantMessage->getId());
+$response = $mojeOlomouc->importantMessages->delete([new Identifier($id)]);
 if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
