@@ -31,6 +31,9 @@ Usage is as fallows:
 ```php
 use Salamek\MojeOlomouc\MojeOlomouc;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
+use Salamek\MojeOlomouc\Model\Identifier;
+use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
+use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
 
 $apiKey = 'YOUR_API_KEY';
 $isProduction = false;
@@ -39,6 +42,8 @@ $mojeOlomouc = new MojeOlomouc($apiKey, $isProduction);
 $importantMessage = new ImportantMessage(
     'Warning',
     new \DateTime('2018-11-10'),
+    ImportantMessageTypeEnum::TRAFFIC_SITUATION,
+    ImportantMessageSeverityEnum::WARNING,
     new \DateTime('2018-11-12')
 );
 
