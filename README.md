@@ -89,7 +89,8 @@ else
 }
 
 // Or
-$response = $mojeOlomouc->importantMessages->delete([new Identifier($id)]);
+$idToDelete = 10;
+$response = $mojeOlomouc->importantMessages->delete([new Identifier($idToDelete)]);
 if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
