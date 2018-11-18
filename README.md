@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/Salamek/moje-olomouc.png?branch=master)](https://travis-ci.org/Salamek/moje-olomouc)
 [![Coverage](https://codecov.io/gh/Salamek/moje-olomouc/branch/master/graph/badge.svg)](https://codecov.io/gh/Salamek/moje-olomouc)
 
-It's been designed to be object oriented and testable and uses [Guzzle](http://guzzlephp.org) as a
+It's been designed to be object oriented, testable and uses [Guzzle](http://guzzlephp.org) as a
 transport layer.
 
 ## Install
