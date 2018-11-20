@@ -40,51 +40,52 @@ class Response
     {
         $this->httpCode = $response->getStatusCode();
         $rawContents = $response->getBody()->getContents();
-        $this->rawData = json_decode($rawContents);
+        $this->rawData = json_decode($rawContents, true);
+
         if (!$this->rawData){
             throw new InvalidJsonResponseException(sprintf('getContents returned malformed or none JSON string (%s)', $rawContents));
         }
 
-        if (!isset($this->rawData->message))
+        if (!array_key_exists('message', $this->rawData))
         {
             throw new InvalidJsonResponseException(sprintf('message is missing in JSON data (%s)', $rawContents));
         }
 
-        if (!isset($this->rawData->code))
+        if (!array_key_exists('code', $this->rawData))
         {
             throw new InvalidJsonResponseException(sprintf('code is missing in JSON data (%s)', $rawContents));
         }
 
-        if (isset($this->rawData->isError))
+        if (array_key_exists('isError', $this->rawData))
         {
-            $this->isError = $this->rawData->isError;
+            $this->isError = $this->rawData['isError'];
         }
 
-        if (!$this->isError && !isset($this->rawData->data))
+        if (!$this->isError && !array_key_exists('data', $this->rawData))
         {
             throw new InvalidJsonResponseException(sprintf('data is missing in success JSON data (%s)', $rawContents));
         }
 
-        $this->message = $this->rawData->message;
-        $this->code = $this->rawData->code;
+        $this->message = $this->rawData['message'];
+        $this->code = $this->rawData['code'];
 
-        if (isset($this->rawData->data))
+        if (array_key_exists('data', $this->rawData))
         {
-            $this->data = $this->rawData->data;
+            $this->data = $this->rawData['data'];
 
             //Use hydrator to modify data
             foreach($hydratorMapping AS $itemKey => $hydrator)
             {
 
-                if (isset($this->data->{$itemKey}))
+                if (isset($this->data[$itemKey]))
                 {
                     $hydratedItems = [];
-                    foreach ($this->data->{$itemKey} AS $item)
+                    foreach ($this->data[$itemKey] AS $item)
                     {
-                        $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), (array)$item);
+                        $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), $item);
                     }
 
-                    $this->data->{$itemKey} = $hydratedItems;
+                    $this->data[$itemKey] = $hydratedItems;
                 }
             }
         }
@@ -123,7 +124,7 @@ class Response
     }
 
     /**
-     * @return object
+     * @return array
      */
     public function getRawData()
     {
@@ -131,7 +132,7 @@ class Response
     }
 
     /**
-     * @return object
+     * @return array
      */
     public function getData()
     {

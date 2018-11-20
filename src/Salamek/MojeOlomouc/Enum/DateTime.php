@@ -11,4 +11,5 @@ namespace Salamek\MojeOlomouc\Enum;
 class DateTime
 {
     const NOT_A_ISO8601 = 'Y-m-d H:i:s';
+    const A_ISO8601 = 'Y-m-d\TH:i:s';
 }

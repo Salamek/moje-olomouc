@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
+use Salamek\MojeOlomouc\Enum\ArticleCategorySourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
@@ -32,24 +33,27 @@ class ArticleCategories implements IOperation
     }
 
     /**
-     * @param \DateTimeInterface|null $fromUpdatedAt
-     * @param bool $showDeleted
-     * @param bool $onlyVisible
-     * @param bool $extraFields
+     * @param \DateTimeInterface|null $from
+     * @param bool $deleted
+     * @param bool $invisible
+     * @param bool $withExtraFields
+     * @param string $source
      * @return Response
      */
     public function getAll(
-        \DateTimeInterface $fromUpdatedAt = null,
-        bool $showDeleted = false,
-        bool $onlyVisible = true,
-        bool $extraFields = false
+        \DateTimeInterface $from = null,
+        bool $deleted = false,
+        bool $invisible = false,
+        bool $withExtraFields = false,
+        string $source = ArticleCategorySourceEnum::PUBLISHED
     ): Response
     {
         $data = [
-            'fromUpdatedAt' => ($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null),
-            'showDeleted' => $showDeleted,
-            'onlyVisible' => $onlyVisible,
-            'extraFields' => $extraFields,
+            'from' => ($from ? $from->format(DateTime::A_ISO8601) : null),
+            'deleted' => $deleted,
+            'invisible' => $invisible,
+            'withExtraFields' => $withExtraFields,
+            'source' => $source
         ];
 
         return $this->request->get('/api/export/article-categories', $data, ['articleCategories' => $this->hydrator]);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use Salamek\MojeOlomouc\Enum\ArticleCategorySourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
@@ -18,12 +19,19 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
-     * @param \DateTimeInterface|null $fromUpdatedAt
-     * @param bool $showDeleted
-     * @param bool $onlyVisible
-     * @param bool $extraFields
+     * @param \DateTimeInterface|null $from
+     * @param bool $deleted
+     * @param bool $invisible
+     * @param bool $withExtraFields
+     * @param string $source
      */
-    public function getAllShouldBeGoodTest(\DateTimeInterface $fromUpdatedAt = null, bool $showDeleted = false, bool $onlyVisible = true, bool $extraFields = false): void
+    public function getAllShouldBeGoodTest(
+        \DateTimeInterface $from = null,
+        bool $deleted = false,
+        bool $invisible = false,
+        bool $withExtraFields = false,
+        string $source = ArticleCategorySourceEnum::PUBLISHED
+    ): void
     {
         $apiKey = $this->getTestApiKey();
 
@@ -50,21 +58,24 @@ class PlaceCategoriesTest extends BaseTest
 
         $articleCategories = new PlaceCategories($request);
         $response = $articleCategories->getAll(
-            $fromUpdatedAt,
-            $showDeleted,
-            $onlyVisible,
-            $extraFields
+            $from,
+            $deleted,
+            $invisible,
+            $withExtraFields,
+            $source
         );
 
         $this->assertInternalType('array', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('fromUpdatedAt', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('showDeleted', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
-        $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
-        $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
-        $this->assertEquals($extraFields, $catchRequestInfo['query']['extraFields']);
+        $this->assertArrayHasKey('from', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('deleted', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('invisible', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('withExtraFields', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('source', $catchRequestInfo['query']);
+        $this->assertEquals(($from ? $from->format(DateTime::A_ISO8601) : null), $catchRequestInfo['query']['from']);
+        $this->assertEquals($this->boolToString($deleted), $catchRequestInfo['query']['deleted']);
+        $this->assertEquals($this->boolToString($invisible), $catchRequestInfo['query']['invisible']);
+        $this->assertEquals($this->boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
+        $this->assertEquals($source, $catchRequestInfo['query']['source']);
         $this->assertEquals('GET', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/export/place-categories', $catchUri);

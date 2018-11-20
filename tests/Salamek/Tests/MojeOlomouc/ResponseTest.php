@@ -70,18 +70,18 @@ class ResponseTest extends BaseTest
         $response = new Response($responseMock, ['tests' => PlaceCategory::class]);
         $data = $response->getData();
 
-        $this->assertObjectHasAttribute('tests', $data);
-        $this->assertNotEmpty($data->tests);
-        $this->assertInstanceOf(PlaceCategory::class, $data->tests[0]);
-        $this->assertObjectHasAttribute('title', $data->tests[0]);
-        $this->assertObjectHasAttribute('consumerFlags', $data->tests[0]);
-        $this->assertObjectHasAttribute('isVisible', $data->tests[0]);
-        $this->assertObjectHasAttribute('id', $data->tests[0]);
+        $this->assertArrayHasKey('tests', $data);
+        $this->assertNotEmpty($data['tests']);
+        $this->assertInstanceOf(PlaceCategory::class, $data['tests'][0]);
+        $this->assertObjectHasAttribute('title', $data['tests'][0]);
+        $this->assertObjectHasAttribute('consumerFlags', $data['tests'][0]);
+        $this->assertObjectHasAttribute('isVisible', $data['tests'][0]);
+        $this->assertObjectHasAttribute('id', $data['tests'][0]);
 
-        $this->assertEquals($title, $data->tests[0]->getTitle());
-        $this->assertEquals($consumerFlags, $data->tests[0]->getConsumerFlags());
-        $this->assertEquals($isVisible, $data->tests[0]->getIsVisible());
-        $this->assertEquals($id, $data->tests[0]->getId());
+        $this->assertEquals($title, $data['tests'][0]->getTitle());
+        $this->assertEquals($consumerFlags, $data['tests'][0]->getConsumerFlags());
+        $this->assertEquals($isVisible, $data['tests'][0]->getIsVisible());
+        $this->assertEquals($id, $data['tests'][0]->getId());
     }
 
 

@@ -76,4 +76,13 @@ abstract class BaseTest extends TestCase
     {
         return \DateTime::createFromFormat(\DateTime::ISO8601, (new \DateTime())->format(\DateTime::ISO8601));
     }
+
+    /**
+     * @param bool $boolean
+     * @return string
+     */
+    protected function boolToString(bool $boolean): string
+    {
+        return $boolean ? 'true': 'false';
+    }
 }

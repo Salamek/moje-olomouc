@@ -6,6 +6,7 @@ namespace Salamek\Tests\MojeOlomouc;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
+use Salamek\MojeOlomouc\Enum\PlaceSourceEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\EntityImage;
@@ -20,13 +21,21 @@ class PlacesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
-     * @param \DateTimeInterface|null $fromUpdatedAt
-     * @param bool $showDeleted
-     * @param bool $onlyApproved
-     * @param bool $onlyVisible
-     * @param bool $extraFields
+     * @param \DateTimeInterface|null $from
+     * @param bool $deleted
+     * @param bool $invisible
+     * @param bool $withExtraFields
+     * @param string $source
+     * @param bool $own
      */
-    public function getAllShouldBeGoodTest(\DateTimeInterface $fromUpdatedAt = null, bool $showDeleted = false, bool $onlyApproved = true, bool $onlyVisible = true, bool $extraFields = false): void
+    public function getAllShouldBeGoodTest(
+        \DateTimeInterface $from = null,
+        bool $deleted = false,
+        bool $invisible = false,
+        bool $withExtraFields = false,
+        string $source = PlaceSourceEnum::PUBLISHED,
+        bool $own = false
+    ): void
     {
         $apiKey = $this->getTestApiKey();
 
@@ -53,24 +62,27 @@ class PlacesTest extends BaseTest
 
         $places = new Places($request);
         $response = $places->getAll(
-            $fromUpdatedAt,
-            $showDeleted,
-            $onlyApproved,
-            $onlyVisible,
-            $extraFields
+            $from,
+            $deleted,
+            $invisible,
+            $withExtraFields,
+            $source,
+            $own
         );
 
         $this->assertInternalType('array', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('fromUpdatedAt', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('showDeleted', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('onlyApproved', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('onlyVisible', $catchRequestInfo['query']);
-        $this->assertArrayHasKey('extraFields', $catchRequestInfo['query']);
-        $this->assertEquals(($fromUpdatedAt ? $fromUpdatedAt->format(DateTime::NOT_A_ISO8601) : null), $catchRequestInfo['query']['fromUpdatedAt']);
-        $this->assertEquals($showDeleted, $catchRequestInfo['query']['showDeleted']);
-        $this->assertEquals($onlyApproved, $catchRequestInfo['query']['onlyApproved']);
-        $this->assertEquals($onlyVisible, $catchRequestInfo['query']['onlyVisible']);
-        $this->assertEquals($extraFields, $catchRequestInfo['query']['extraFields']);
+        $this->assertArrayHasKey('from', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('deleted', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('invisible', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('withExtraFields', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('source', $catchRequestInfo['query']);
+        $this->assertArrayHasKey('own', $catchRequestInfo['query']);
+        $this->assertEquals(($from ? $from->format(DateTime::A_ISO8601) : null), $catchRequestInfo['query']['from']);
+        $this->assertEquals($this->boolToString($deleted), $catchRequestInfo['query']['deleted']);
+        $this->assertEquals($this->boolToString($invisible), $catchRequestInfo['query']['invisible']);
+        $this->assertEquals($this->boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
+        $this->assertEquals($source, $catchRequestInfo['query']['source']);
+        $this->assertEquals($this->boolToString($own), $catchRequestInfo['query']['own']);
         $this->assertEquals('GET', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/export/places', $catchUri);

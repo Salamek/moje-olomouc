@@ -54,6 +54,16 @@ class Request
      */
     public function get(string $endpoint, array $arguments = [], array $hydratorMapping = []): Response
     {
+        // Process GET arguments
+        array_walk ($arguments, function(&$item, $key){
+            // Convert bool to strings, (default is to int==1)
+            // Not sure if this is a best solution... (i mean using 'true' as true)
+            if (is_bool($item))
+            {
+                $item = $item ? 'true': 'false';
+            }
+        });
+
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions = array_merge($defaultClientOptions, ['query' => $arguments]);
         $response = $this->client->request('GET', $endpoint, $defaultClientOptions);
