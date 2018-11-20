@@ -35,14 +35,14 @@ interface IEvent extends IModel
     public function setPlaceDesc(string $placeDesc): void;
 
     /**
-     * @param string $placeLat
+     * @param float $placeLat
      */
-    public function setPlaceLat(string $placeLat): void;
+    public function setPlaceLat(float $placeLat): void;
 
     /**
-     * @param string $placeLon
+     * @param float $placeLon
      */
-    public function setPlaceLon(string $placeLon): void;
+    public function setPlaceLon(float $placeLon): void;
 
     /**
      * @param array $categoryIdsArr
@@ -120,14 +120,14 @@ interface IEvent extends IModel
     public function getPlaceDesc(): string;
 
     /**
-     * @return string
+     * @return float
      */
-    public function getPlaceLat(): string;
+    public function getPlaceLat(): float;
 
     /**
-     * @return string
+     * @return float
      */
-    public function getPlaceLon(): string;
+    public function getPlaceLon(): float;
 
     /**
      * @return array

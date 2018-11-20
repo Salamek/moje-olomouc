@@ -25,14 +25,14 @@ interface IPlace extends IModel
     public function setAddress(string $address): void;
 
     /**
-     * @param string $lat
+     * @param float $lat
      */
-    public function setLat(string $lat): void;
+    public function setLat(float $lat): void;
 
     /**
-     * @param string $lon
+     * @param float $lon
      */
-    public function setLon(string $lon): void;
+    public function setLon(float $lon): void;
 
     /**
      * @param int $categoryId
@@ -75,14 +75,14 @@ interface IPlace extends IModel
     public function getAddress(): string;
 
     /**
-     * @return string
+     * @return float
      */
-    public function getLat(): string;
+    public function getLat(): float;
 
     /**
-     * @return string
+     * @return float
      */
-    public function getLon(): string;
+    public function getLon(): float;
 
     /**
      * @return int

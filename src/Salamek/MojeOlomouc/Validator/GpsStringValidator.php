@@ -14,7 +14,7 @@ class GpsStringValidator
 {
     public static function validate(string $value): void
     {
-        $regex = '/^-?\d{2}\.\d{3,}$/';
+        $regex = '/^-?\d{1,3}\.\d{4,}$/';
         if (preg_match($regex, $value) === 0) {
             throw new InvalidArgumentException(sprintf('GPS value (%s) has incorrect format, only %s is allowed', $value, $regex));
         }

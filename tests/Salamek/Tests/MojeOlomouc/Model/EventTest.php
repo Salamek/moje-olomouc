@@ -22,8 +22,8 @@ class EventTest extends BaseTest
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param array $images
      * @param string|null $attachmentUrl
@@ -42,8 +42,8 @@ class EventTest extends BaseTest
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -119,8 +119,8 @@ class EventTest extends BaseTest
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param array $images
      * @param string|null $attachmentUrl
@@ -139,8 +139,8 @@ class EventTest extends BaseTest
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -235,8 +235,8 @@ class EventTest extends BaseTest
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param array $images
      * @param string|null $attachmentUrl
@@ -255,8 +255,8 @@ class EventTest extends BaseTest
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -300,8 +300,8 @@ class EventTest extends BaseTest
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param array $images
      * @param string|null $attachmentUrl
@@ -320,8 +320,8 @@ class EventTest extends BaseTest
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -376,8 +376,8 @@ class EventTest extends BaseTest
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param array $images
      * @param string|null $attachmentUrl
@@ -396,8 +396,8 @@ class EventTest extends BaseTest
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -472,8 +472,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-22.5467678',
+                12.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -492,8 +492,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '102.5467678',
-                '-22.5467678',
+                102.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -512,8 +512,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [1, 2, 3],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -532,8 +532,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -552,8 +552,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [],
                 [$this->getDateTime()],
                 'attachmentUrl-'.mt_rand(),
@@ -572,8 +572,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -592,8 +592,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -611,8 +611,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-202.5467678',
+                12.5467678,
+                -202.5467678,
                 [],
                 [],
                 'attachmentUrl-'.mt_rand(),
@@ -642,8 +642,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-22.5467678',
+                12.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
@@ -662,8 +662,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-22.5467678',
+                12.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
@@ -682,8 +682,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-22.5467678',
+                12.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
@@ -702,8 +702,8 @@ class EventTest extends BaseTest
                 $this->getDateTime(),
                 $this->getDateTime(),
                 'placeDesc'.mt_rand(),
-                '12.5467678',
-                '-22.5467678',
+                12.5467678,
+                -22.5467678,
                 [1, 2, 3],
                 [$image],
                 'attachmentUrl-'.mt_rand(),

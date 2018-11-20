@@ -6,9 +6,12 @@ namespace Salamek\MojeOlomouc\Model;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
-use Salamek\MojeOlomouc\Validator\GpsStringValidator;
+use Salamek\MojeOlomouc\Validator\GpsFloatValidator;
+use Salamek\MojeOlomouc\Validator\GpsLatitudeFloatValidator;
+use Salamek\MojeOlomouc\Validator\GpsLongitudeFloatValidator;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
+use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
 
 /**
  * Class Event
@@ -33,10 +36,10 @@ class Event implements IEvent
     /** @var string */
     private $placeDesc;
 
-    /** @var string */
+    /** @var float */
     private $placeLat;
 
-    /** @var string */
+    /** @var float */
     private $placeLon;
 
     /** @var array */
@@ -76,8 +79,8 @@ class Event implements IEvent
      * @param \DateTimeInterface $startAt
      * @param \DateTimeInterface $endAt
      * @param string $placeDesc
-     * @param string $placeLat
-     * @param string $placeLon
+     * @param float $placeLat
+     * @param float $placeLon
      * @param array $categoryIdsArr
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
@@ -96,8 +99,8 @@ class Event implements IEvent
         \DateTimeInterface $startAt,
         \DateTimeInterface $endAt,
         string $placeDesc,
-        string $placeLat,
-        string $placeLon,
+        float $placeLat,
+        float $placeLon,
         array $categoryIdsArr,
         array $images = [],
         string $attachmentUrl = null,
@@ -175,20 +178,22 @@ class Event implements IEvent
     }
 
     /**
-     * @param string $placeLat
+     * @param float $placeLat
      */
-    public function setPlaceLat(string $placeLat): void
+    public function setPlaceLat(float $placeLat): void
     {
-        GpsStringValidator::validate($placeLat);
+        GpsLatitudeFloatValidator::validate($placeLat);
+        GpsFloatValidator::validate($placeLat);
         $this->placeLat = $placeLat;
     }
 
     /**
-     * @param string $placeLon
+     * @param float $placeLon
      */
-    public function setPlaceLon(string $placeLon): void
+    public function setPlaceLon(float $placeLon): void
     {
-        GpsStringValidator::validate($placeLon);
+        GpsLongitudeFloatValidator::validate($placeLon);
+        GpsFloatValidator::validate($placeLon);
         $this->placeLon = $placeLon;
     }
 
@@ -201,10 +206,11 @@ class Event implements IEvent
     }
 
     /**
-     * @param array $images
+     * @param EntityImage[] $images
      */
     public function setImages(array $images): void
     {
+        ObjectArrayValidator::validate($images, EntityImage::class);
         $this->images = $images;
     }
 
@@ -345,17 +351,17 @@ class Event implements IEvent
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getPlaceLat(): string
+    public function getPlaceLat(): float
     {
         return $this->placeLat;
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getPlaceLon(): string
+    public function getPlaceLon(): float
     {
         return $this->placeLon;
     }
@@ -498,8 +504,8 @@ class Event implements IEvent
             \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['startAt']),
             \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['endAt']),
             $modelData['placeDesc'],
-            $modelData['placeLat'],
-            $modelData['placeLon'],
+            floatval($modelData['placeLat']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
+            floatval($modelData['placeLon']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
             $modelData['categoryIdsArr'],
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),

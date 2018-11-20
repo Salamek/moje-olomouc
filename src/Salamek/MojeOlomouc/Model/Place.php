@@ -5,9 +5,12 @@ namespace Salamek\MojeOlomouc\Model;
 
 
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
-use Salamek\MojeOlomouc\Validator\GpsStringValidator;
+use Salamek\MojeOlomouc\Validator\GpsFloatValidator;
+use Salamek\MojeOlomouc\Validator\GpsLatitudeFloatValidator;
+use Salamek\MojeOlomouc\Validator\GpsLongitudeFloatValidator;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
+use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
 
 /**
  * Class Place
@@ -26,10 +29,10 @@ class Place implements IPlace
     /** @var string */
     private $address;
 
-    /** @var string */
+    /** @var float */
     private $lat;
 
-    /** @var string */
+    /** @var float */
     private $lon;
 
     /** @var int */
@@ -52,8 +55,8 @@ class Place implements IPlace
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
@@ -65,8 +68,8 @@ class Place implements IPlace
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -117,20 +120,22 @@ class Place implements IPlace
     }
 
     /**
-     * @param string $lat
+     * @param float $lat
      */
-    public function setLat(string $lat): void
+    public function setLat(float $lat): void
     {
-        GpsStringValidator::validate($lat);
+        GpsLatitudeFloatValidator::validate($lat);
+        GpsFloatValidator::validate($lat);
         $this->lat = $lat;
     }
 
     /**
-     * @param string $lon
+     * @param float $lon
      */
-    public function setLon(string $lon): void
+    public function setLon(float $lon): void
     {
-        GpsStringValidator::validate($lon);
+        GpsLongitudeFloatValidator::validate($lon);
+        GpsFloatValidator::validate($lon);
         $this->lon = $lon;
     }
 
@@ -147,6 +152,7 @@ class Place implements IPlace
      */
     public function setImages(array $images): void
     {
+        ObjectArrayValidator::validate($images, EntityImage::class);
         $this->images = $images;
     }
 
@@ -208,17 +214,17 @@ class Place implements IPlace
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getLat(): string
+    public function getLat(): float
     {
         return $this->lat;
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getLon(): string
+    public function getLon(): float
     {
         return $this->lon;
     }

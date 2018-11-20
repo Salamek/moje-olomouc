@@ -17,8 +17,8 @@ class PlaceTest extends BaseTest
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param array $images
      * @param string|null $attachmentUrl
@@ -30,8 +30,8 @@ class PlaceTest extends BaseTest
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -89,8 +89,8 @@ class PlaceTest extends BaseTest
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param array $images
      * @param string|null $attachmentUrl
@@ -102,8 +102,8 @@ class PlaceTest extends BaseTest
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -170,8 +170,8 @@ class PlaceTest extends BaseTest
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param array $images
      * @param string|null $attachmentUrl
@@ -183,8 +183,8 @@ class PlaceTest extends BaseTest
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -214,8 +214,8 @@ class PlaceTest extends BaseTest
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param array $images
      * @param string|null $attachmentUrl
@@ -227,8 +227,8 @@ class PlaceTest extends BaseTest
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -267,8 +267,8 @@ class PlaceTest extends BaseTest
      * @param string $title
      * @param string $description
      * @param string $address
-     * @param string $lat
-     * @param string $lon
+     * @param float $lat
+     * @param float $lon
      * @param int $categoryId
      * @param array $images
      * @param string|null $attachmentUrl
@@ -280,8 +280,8 @@ class PlaceTest extends BaseTest
         string $title,
         string $description,
         string $address,
-        string $lat,
-        string $lon,
+        float $lat,
+        float $lon,
         int $categoryId,
         array $images = [],
         string $attachmentUrl = null,
@@ -331,10 +331,10 @@ class PlaceTest extends BaseTest
     public function provideInvalidConstructorParameters(): array
     {
         return [
-            [str_repeat('title-'.mt_rand(), 128), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '12.16477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '1216477', '12.16477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '1sdf6477', mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '1sdf6477', mt_rand(), [$this->getDateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
+            [str_repeat('title-'.mt_rand(), 128), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 1216477, 12.16477, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 1646845646, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [$this->getDateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
         ];
     }
 
@@ -346,9 +346,9 @@ class PlaceTest extends BaseTest
     {
         $image = new EntityImage('url');
         return [
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '12.16477', '12.16477', mt_rand(), [$image], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '-12.16477', '-12.16477', mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), '-12.16477', '-12.16477', mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [$image], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
         ];
     }
 }
