@@ -53,7 +53,7 @@ if (!$response->isError())
 {
     echo 'SUCCESS'.PHP_EOL;
     print_r($response->getData());
-    $importantMessage->setId($response->getData()[0]->getId()); //Set id to currently created object
+    echo 'New important message have ID: '.$importantMessage->getId();
 }
 else
 {
