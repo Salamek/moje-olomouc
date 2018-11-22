@@ -78,7 +78,7 @@ class Request
      */
     public function create(string $endpoint, array $entities, string $dataKey): Response
     {
-        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_CREATE));
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_CREATE), true);
     }
 
     /**
@@ -120,21 +120,27 @@ class Request
     /**
      * @param string $endpoint
      * @param \Generator $payloadItems
+     * @param bool $setIds
      * @return Response
      * @internal
      */
-    public function post(string $endpoint, \Generator $payloadItems)
+    public function post(string $endpoint, \Generator $payloadItems, bool $setIds = false)
     {
         $payloadArray = [];
+        $idHydrators = [];
         foreach($payloadItems AS $payloadItem)
         {
             $payloadArray[] = $payloadItem->toPrimitiveArray();
+            if ($setIds)
+            {
+                $idHydrators[] = $payloadItem->getEntity();
+            }
         }
         $defaultClientOptions = $this->buildDefaultClientOptions();
         $defaultClientOptions['json'] = $payloadArray;
 
         $response = $this->client->request('POST', $endpoint, $defaultClientOptions);
 
-        return new Response($response);
+        return new Response($response, [], $idHydrators);
     }
 }

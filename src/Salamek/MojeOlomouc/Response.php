@@ -6,6 +6,7 @@ namespace Salamek\MojeOlomouc;
 
 use Psr\Http\Message\ResponseInterface;
 use Salamek\MojeOlomouc\Exception\InvalidJsonResponseException;
+use Salamek\MojeOlomouc\Model\IModel;
 
 /**
  * Class Response
@@ -35,8 +36,9 @@ class Response
      * Response constructor.
      * @param ResponseInterface $response
      * @param array $hydratorMapping
+     * @param IModel[] $idHydrators
      */
-    public function __construct(ResponseInterface $response, array $hydratorMapping = [])
+    public function __construct(ResponseInterface $response, array $hydratorMapping = [], array $idHydrators = [])
     {
         $this->httpCode = $response->getStatusCode();
         $rawContents = $response->getBody()->getContents();
@@ -86,6 +88,21 @@ class Response
                     }
 
                     $this->data[$itemKey] = $hydratedItems;
+                }
+            }
+
+            //Append IDs
+            foreach ($idHydrators AS $k => $idHydrator)
+            {
+                // Lets hope that is returned in correct order
+                if (array_key_exists($k, $this->data))
+                {
+                    $modelResponse = $this->data[$k];
+                    // Error codes are <0
+                    if ($modelResponse['code'] > -1 && array_key_exists('data', $modelResponse) && array_key_exists('id', $modelResponse['data']))
+                    {
+                        $idHydrator->setId($modelResponse['data']['id']);
+                    }
                 }
             }
         }

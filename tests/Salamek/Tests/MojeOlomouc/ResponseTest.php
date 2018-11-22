@@ -85,6 +85,38 @@ class ResponseTest extends BaseTest
     }
 
 
+    /**
+     * @test
+     */
+    public function idHydratorShouldHydrateId()
+    {
+        $title = 'title-'.mt_rand();
+        $id = mt_rand();
+        $responseContent = json_encode([
+            'isError' => false,
+            'message' => 'OK',
+            'code' => 0,
+            'data' => [
+                [
+                    'data' => [
+                        'id' => $id
+                    ],
+                    'code' => 4,
+                    'message' => 'OK'
+                ]
+            ]
+        ]);
+
+        $responseMock = $this->getResponseMockWithBody($responseContent);
+
+        $placeCategory = new PlaceCategory($title);
+
+        new Response($responseMock, [], [$placeCategory]);
+        $this->assertEquals($id, $placeCategory->getId());
+    }
+    
+
+
     public function provideInvalidResponseBody(): array
     {
         return [
