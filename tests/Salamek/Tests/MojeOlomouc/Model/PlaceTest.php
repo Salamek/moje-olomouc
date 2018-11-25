@@ -59,7 +59,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals(null, $place->getAttachmentUrl());
         $this->assertEquals(null, $place->getIsVisible());
         $this->assertEquals(null, $place->getApproveState());
-        $this->assertEquals(null, $place->getId());
+        $this->assertEquals(null, $place->getEntityIdentifier());
         $this->assertInternalType('array', $place->toPrimitiveArray());
 
 
@@ -136,7 +136,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($attachmentUrl, $place->getAttachmentUrl());
         $this->assertEquals($isVisible, $place->getIsVisible());
         $this->assertEquals($approveState, $place->getApproveState());
-        $this->assertEquals($id, $place->getId());
+        $this->assertEquals($id, $place->getEntityIdentifier());
         $this->assertInternalType('array', $place->toPrimitiveArray());
 
 
@@ -258,7 +258,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals(null, $place->getAttachmentUrl());
         $this->assertEquals(null, $place->getIsVisible());
         $this->assertEquals(null, $place->getApproveState());
-        $this->assertEquals(null, $place->getId());
+        $this->assertEquals(null, $place->getEntityIdentifier());
     }
 
     /**
@@ -322,7 +322,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($attachmentUrl, $place->getAttachmentUrl());
         $this->assertEquals($isVisible, $place->getIsVisible());
         $this->assertEquals($approveState, $place->getApproveState());
-        $this->assertEquals($id, $place->getId());
+        $this->assertEquals($id, $place->getEntityIdentifier());
     }
 
     /**

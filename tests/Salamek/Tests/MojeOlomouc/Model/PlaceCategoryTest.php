@@ -32,7 +32,7 @@ class PlaceCategoryTest extends BaseTest
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
         $this->assertEquals(null, $articleCategory->getIsVisible());
-        $this->assertEquals(null, $articleCategory->getId());
+        $this->assertEquals(null, $articleCategory->getEntityIdentifier());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
@@ -69,7 +69,7 @@ class PlaceCategoryTest extends BaseTest
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals($consumerFlags, $articleCategory->getConsumerFlags());
         $this->assertEquals($isVisible, $articleCategory->getIsVisible());
-        $this->assertEquals($id, $articleCategory->getId());
+        $this->assertEquals($id, $articleCategory->getEntityIdentifier());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
@@ -129,7 +129,7 @@ class PlaceCategoryTest extends BaseTest
         $this->assertEquals($title, $placeCategory->getTitle());
         $this->assertEquals(null, $placeCategory->getConsumerFlags());
         $this->assertEquals(null, $placeCategory->getIsVisible());
-        $this->assertEquals(null, $placeCategory->getId());
+        $this->assertEquals(null, $placeCategory->getEntityIdentifier());
     }
 
     /**
@@ -157,7 +157,7 @@ class PlaceCategoryTest extends BaseTest
         $this->assertEquals($title, $placeCategory->getTitle());
         $this->assertEquals($consumerFlags, $placeCategory->getConsumerFlags());
         $this->assertEquals($isVisible, $placeCategory->getIsVisible());
-        $this->assertEquals($id, $placeCategory->getId());
+        $this->assertEquals($id, $placeCategory->getEntityIdentifier());
     }
 
     /**

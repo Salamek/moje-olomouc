@@ -10,7 +10,7 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class EventCategory implements IEventCategory
 {
-    use TIdentifier;
+    use TEntityIdentifier;
     
     /** @var string */
     private $title;
@@ -28,7 +28,7 @@ class EventCategory implements IEventCategory
     {
         $this->setTitle($title);
         $this->setIsVisible($isVisible);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
     /**

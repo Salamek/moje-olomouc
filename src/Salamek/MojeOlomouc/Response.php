@@ -101,7 +101,7 @@ class Response
                     // Error codes are <0
                     if ($modelResponse['code'] > -1 && array_key_exists('data', $modelResponse) && array_key_exists('id', $modelResponse['data']))
                     {
-                        $idHydrator->setId($modelResponse['data']['id']);
+                        $idHydrator->setEntityIdentifier($modelResponse['data']['id']);
                     }
                 }
             }

@@ -15,7 +15,7 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class ImportantMessage implements IImportantMessage
 {
-    use TIdentifier;
+    use TEntityIdentifier;
 
     /** @var string */
     private $text;
@@ -61,7 +61,7 @@ class ImportantMessage implements IImportantMessage
         $this->setType($type);
         $this->setSeverity($severity);
         $this->setIsVisible($isVisible);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
     /**

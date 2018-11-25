@@ -19,7 +19,7 @@ use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
  */
 class Event implements IEvent
 {
-    use TIdentifier;
+    use TEntityIdentifier;
     
     /** @var string */
     private $title;
@@ -131,7 +131,7 @@ class Event implements IEvent
         $this->setIsVisible($isVisible);
         $this->setApproveState($approveState);
         $this->setFeaturedLevel($featuredLevel);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
     /**

@@ -139,7 +139,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -199,7 +199,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -247,7 +247,7 @@ class ArticleCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/article-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals($articleCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($articleCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 

@@ -137,7 +137,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -195,7 +195,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -242,7 +242,7 @@ class PlaceCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/place-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals($placeCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($placeCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 

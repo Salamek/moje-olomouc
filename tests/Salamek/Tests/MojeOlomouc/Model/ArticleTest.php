@@ -59,7 +59,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals(null, $article->getIsVisible());
         $this->assertEquals(null, $article->getIsImportant());
         $this->assertEquals(null, $article->getApproveState());
-        $this->assertEquals(null, $article->getId());
+        $this->assertEquals(null, $article->getEntityIdentifier());
         $this->assertInternalType('array', $article->toPrimitiveArray());
 
 
@@ -135,7 +135,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals($isVisible, $article->getIsVisible());
         $this->assertEquals($isImportant, $article->getIsImportant());
         $this->assertEquals($approveState, $article->getApproveState());
-        $this->assertEquals($id, $article->getId());
+        $this->assertEquals($id, $article->getEntityIdentifier());
         $this->assertInternalType('array', $article->toPrimitiveArray());
         $primitiveImages = [];
 
@@ -262,7 +262,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals(null, $article->getIsVisible());
         $this->assertEquals(null, $article->getIsImportant());
         $this->assertEquals(null, $article->getApproveState());
-        $this->assertEquals(null, $article->getId());
+        $this->assertEquals(null, $article->getEntityIdentifier());
     }
 
     /**
@@ -326,7 +326,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals($isVisible, $article->getIsVisible());
         $this->assertEquals($isImportant, $article->getIsImportant());
         $this->assertEquals($approveState, $article->getApproveState());
-        $this->assertEquals($id, $article->getId());
+        $this->assertEquals($id, $article->getEntityIdentifier());
     }
 
     /**

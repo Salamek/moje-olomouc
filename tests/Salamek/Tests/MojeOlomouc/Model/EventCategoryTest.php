@@ -28,7 +28,7 @@ class EventCategoryTest extends BaseTest
 
         $this->assertEquals($title, $eventCategory->getTitle());
         $this->assertEquals(null, $eventCategory->getIsVisible());
-        $this->assertEquals(null, $eventCategory->getId());
+        $this->assertEquals(null, $eventCategory->getEntityIdentifier());
         $this->assertInternalType('array', $eventCategory->toPrimitiveArray());
 
 
@@ -61,7 +61,7 @@ class EventCategoryTest extends BaseTest
 
         $this->assertEquals($title, $eventCategory->getTitle());
         $this->assertEquals($isVisible, $eventCategory->getIsVisible());
-        $this->assertEquals($id, $eventCategory->getId());
+        $this->assertEquals($id, $eventCategory->getEntityIdentifier());
         $this->assertInternalType('array', $eventCategory->toPrimitiveArray());
 
 
@@ -114,7 +114,7 @@ class EventCategoryTest extends BaseTest
 
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals(null, $articleCategory->getIsVisible());
-        $this->assertEquals(null, $articleCategory->getId());
+        $this->assertEquals(null, $articleCategory->getEntityIdentifier());
     }
 
     /**
@@ -138,7 +138,7 @@ class EventCategoryTest extends BaseTest
 
         $this->assertEquals($title, $articleCategory->getTitle());
         $this->assertEquals($isVisible, $articleCategory->getIsVisible());
-        $this->assertEquals($id, $articleCategory->getId());
+        $this->assertEquals($id, $articleCategory->getEntityIdentifier());
     }
 
     /**

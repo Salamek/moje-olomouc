@@ -134,7 +134,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -190,7 +190,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -237,7 +237,7 @@ class EventCategoriesTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/import/event-categories', $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals($eventCategory->getId(), $primitiveAction['id']);
+        $this->assertEquals($eventCategory->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 

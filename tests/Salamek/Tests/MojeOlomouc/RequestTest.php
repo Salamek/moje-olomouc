@@ -115,12 +115,12 @@ class RequestTest extends BaseTest
         $this->assertInternalType('array', $primitiveTest);
         $this->assertInternalType('array', $primitiveAction);
         $this->assertArrayHasKey('id', $primitiveTest);
-        $this->assertEquals($testingModel->getId(), $primitiveTest['id']);
+        $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveTest['id']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_CREATE, $primitiveAction['code']);
-        $this->assertEquals($testingModel->getId(), $primitiveAction['id']);
+        $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -167,12 +167,12 @@ class RequestTest extends BaseTest
         $this->assertInternalType('array', $primitiveTest);
         $this->assertInternalType('array', $primitiveAction);
         $this->assertArrayHasKey('id', $primitiveTest);
-        $this->assertEquals($testingModel->getId(), $primitiveTest['id']);
+        $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveTest['id']);
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_UPDATE, $primitiveAction['code']);
-        $this->assertEquals($testingModel->getId(), $primitiveAction['id']);
+        $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -219,7 +219,7 @@ class RequestTest extends BaseTest
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals($uri, $catchUri);
         $this->assertEquals(RequestActionCodeEnum::ACTION_CODE_DELETE, $primitiveAction['code']);
-        $this->assertEquals($testingModel->getId(), $primitiveAction['id']);
+        $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveAction['id']);
         $this->assertInstanceOf(Response::class, $response);
     }
 }

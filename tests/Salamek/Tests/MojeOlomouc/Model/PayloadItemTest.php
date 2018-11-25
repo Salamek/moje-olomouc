@@ -37,7 +37,7 @@ class PayloadItemTest extends BaseTest
         $this->assertEquals($entity, $payloadItem->getEntity());
         $this->assertEquals($dataKey, $payloadItem->getDataKey());
         $this->assertEquals($action, $payloadItem->getAction());
-        $this->assertEquals($entity->getId(), $payloadItem->getId());
+        $this->assertEquals($entity->getEntityIdentifier(), $payloadItem->getId());
         $this->assertInternalType('array', $payloadItem->toPrimitiveArray());
 
         $primitiveArrayTest = [

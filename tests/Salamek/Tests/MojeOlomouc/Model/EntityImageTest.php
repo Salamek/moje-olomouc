@@ -36,7 +36,7 @@ class EntityImageTest extends BaseTest
         $this->assertEquals(EntityImageContentTypeEnum::GRAPHICS_POSTER, $entityImage->getContentType());
         $this->assertEquals(null, $entityImage->getTitle());
         $this->assertEquals(false, $entityImage->getIsFeatured());
-        $this->assertEquals(null, $entityImage->getId());
+        $this->assertEquals(null, $entityImage->getEntityIdentifier());
 
         $this->assertInternalType('array', $entityImage->toPrimitiveArray());
 
@@ -82,7 +82,7 @@ class EntityImageTest extends BaseTest
         $this->assertEquals($contentType, $entityImage->getContentType());
         $this->assertEquals($title, $entityImage->getTitle());
         $this->assertEquals($isFeatured, $entityImage->getIsFeatured());
-        $this->assertEquals($id, $entityImage->getId());
+        $this->assertEquals($id, $entityImage->getEntityIdentifier());
 
         $this->assertInternalType('array', $entityImage->toPrimitiveArray());
 
@@ -152,7 +152,7 @@ class EntityImageTest extends BaseTest
         $this->assertEquals(EntityImageContentTypeEnum::GRAPHICS_POSTER, $entityImage->getContentType());
         $this->assertEquals(null, $entityImage->getTitle());
         $this->assertEquals(false, $entityImage->getIsFeatured());
-        $this->assertEquals(null, $entityImage->getId());
+        $this->assertEquals(null, $entityImage->getEntityIdentifier());
     }
 
     /**
@@ -187,7 +187,7 @@ class EntityImageTest extends BaseTest
         $this->assertEquals($contentType, $entityImage->getContentType());
         $this->assertEquals($title, $entityImage->getTitle());
         $this->assertEquals($isFeatured, $entityImage->getIsFeatured());
-        $this->assertEquals($id, $entityImage->getId());
+        $this->assertEquals($id, $entityImage->getEntityIdentifier());
     }
 
     /**

@@ -14,7 +14,7 @@ use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
  */
 class Article implements IArticle
 {
-    use TIdentifier;
+    use TEntityIdentifier;
     
     /** @var string */
     private $title;
@@ -84,7 +84,7 @@ class Article implements IArticle
         $this->setIsVisible($isVisible);
         $this->setIsImportant($isImportant);
         $this->setApproveState($approveState);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
     
     /**

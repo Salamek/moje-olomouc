@@ -85,7 +85,7 @@ class EventTest extends BaseTest
         $this->assertEquals(null, $event->getIsVisible());
         $this->assertEquals(null, $event->getApproveState());
         $this->assertEquals(null, $event->getFeaturedLevel());
-        $this->assertEquals(null, $event->getId());
+        $this->assertEquals(null, $event->getEntityIdentifier());
         $this->assertInternalType('array', $event->toPrimitiveArray());
 
 
@@ -192,7 +192,7 @@ class EventTest extends BaseTest
         $this->assertEquals($isVisible, $event->getIsVisible());
         $this->assertEquals($approveState, $event->getApproveState());
         $this->assertEquals($featuredLevel, $event->getFeaturedLevel());
-        $this->assertEquals($id, $event->getId());
+        $this->assertEquals($id, $event->getEntityIdentifier());
         $this->assertInternalType('array', $event->toPrimitiveArray());
 
 
@@ -365,7 +365,7 @@ class EventTest extends BaseTest
         $this->assertEquals(null, $event->getIsVisible());
         $this->assertEquals(null, $event->getApproveState());
         $this->assertEquals(null, $event->getFeaturedLevel());
-        $this->assertEquals(null, $event->getId());
+        $this->assertEquals(null, $event->getEntityIdentifier());
     }
 
     /**
@@ -457,7 +457,7 @@ class EventTest extends BaseTest
         $this->assertEquals($isVisible, $event->getIsVisible());
         $this->assertEquals($approveState, $event->getApproveState());
         $this->assertEquals($featuredLevel, $event->getFeaturedLevel());
-        $this->assertEquals($id, $event->getId());
+        $this->assertEquals($id, $event->getEntityIdentifier());
     }
 
     /**

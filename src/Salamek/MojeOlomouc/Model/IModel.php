@@ -10,14 +10,14 @@ namespace Salamek\MojeOlomouc\Model;
 interface IModel
 {
     /**
-     * @param int|null $id
+     * @param int|null $entityIdentifier
      */
-    public function setId(int $id = null): void;
+    public function setEntityIdentifier(int $entityIdentifier = null): void;
 
     /**
      * @return int
      */
-    public function getId(): ?int;
+    public function getEntityIdentifier(): ?int;
 
     /**
      * @return array

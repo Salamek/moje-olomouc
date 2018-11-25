@@ -13,7 +13,7 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class EntityImage implements IEntityImage
 {
-    use TIdentifier;
+    use TEntityIdentifier;
 
     /** @var string|null */
     private $title;
@@ -41,7 +41,7 @@ class EntityImage implements IEntityImage
         $this->setContentType($contentType);
         $this->setTitle($title);
         $this->setIsFeatured($isFeatured);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
     /**

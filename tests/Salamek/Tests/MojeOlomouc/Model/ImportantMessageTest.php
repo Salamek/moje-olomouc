@@ -47,7 +47,7 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals($severity, $importantMessage->getSeverity());
         $this->assertEquals(null, $importantMessage->getExpireAt());
         $this->assertEquals(true, $importantMessage->getIsVisible());
-        $this->assertEquals(null, $importantMessage->getId());
+        $this->assertEquals(null, $importantMessage->getEntityIdentifier());
         $this->assertInternalType('array', $importantMessage->toPrimitiveArray());
 
         $primitiveArrayTest = [
@@ -99,7 +99,7 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals($type, $importantMessage->getType());
         $this->assertEquals($severity, $importantMessage->getSeverity());
         $this->assertEquals($isVisible, $importantMessage->getIsVisible());
-        $this->assertEquals($id, $importantMessage->getId());
+        $this->assertEquals($id, $importantMessage->getEntityIdentifier());
         $this->assertInternalType('array', $importantMessage->toPrimitiveArray());
 
 
@@ -184,7 +184,7 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals($severity, $place->getSeverity());
         $this->assertEquals(null, $place->getExpireAt());
         $this->assertEquals(true, $place->getIsVisible());
-        $this->assertEquals(null, $place->getId());
+        $this->assertEquals(null, $place->getEntityIdentifier());
     }
 
     /**
@@ -226,7 +226,7 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals($severity, $place->getSeverity());
         $this->assertEquals($expireAt, $place->getExpireAt());
         $this->assertEquals($isVisible, $place->getIsVisible());
-        $this->assertEquals($id, $place->getId());
+        $this->assertEquals($id, $place->getEntityIdentifier());
     }
 
     /**

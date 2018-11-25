@@ -12,7 +12,7 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class PlaceCategory implements IPlaceCategory
 {
-    use TIdentifier;
+    use TEntityIdentifier;
 
     /** @var string */
     private $title;
@@ -35,7 +35,7 @@ class PlaceCategory implements IPlaceCategory
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
         $this->setIsVisible($isVisible);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
     /**

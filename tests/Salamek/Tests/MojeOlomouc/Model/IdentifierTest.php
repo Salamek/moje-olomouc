@@ -24,7 +24,7 @@ class IdentifierTest extends BaseTest
             $id
         );
 
-        $this->assertEquals($id, $identifier->getId());
+        $this->assertEquals($id, $identifier->getEntityIdentifier());
         $this->assertInternalType('array', $identifier->toPrimitiveArray());
 
 
@@ -49,7 +49,7 @@ class IdentifierTest extends BaseTest
             'id' => $id
         ]);
 
-        $this->assertEquals($id, $identifier->getId());
+        $this->assertEquals($id, $identifier->getEntityIdentifier());
     }
 
 

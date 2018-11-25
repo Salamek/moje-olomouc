@@ -12,7 +12,7 @@ use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
  */
 class ArticleCategory implements IArticleCategory
 {
-    use TIdentifier;
+    use TEntityIdentifier;
 
     /** @var string */
     private $title;
@@ -40,7 +40,7 @@ class ArticleCategory implements IArticleCategory
         $this->setConsumerFlags($consumerFlags);
         $this->setIsImportant($isImportant);
         $this->setIsVisible($isVisible);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
     
     /**

@@ -9,15 +9,15 @@ namespace Salamek\MojeOlomouc\Model;
  */
 class Identifier implements IModel
 {
-    use TIdentifier;
+    use TEntityIdentifier;
 
     /**
      * Identifier constructor.
-     * @param int $id
+     * @param int $entityIdentifier
      */
-    public function __construct(int $id)
+    public function __construct(int $entityIdentifier)
     {
-        $this->setId($id);
+        $this->setEntityIdentifier($entityIdentifier);
     }
 
     /**
@@ -26,7 +26,7 @@ class Identifier implements IModel
     public function toPrimitiveArray(): array
     {
         return [
-            'id' => $this->id
+            'id' => $this->entityIdentifier
         ];
     }
 

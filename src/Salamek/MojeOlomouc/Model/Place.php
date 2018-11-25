@@ -18,7 +18,7 @@ use Salamek\MojeOlomouc\Validator\ObjectArrayValidator;
  */
 class Place implements IPlace
 {
-    use TIdentifier;
+    use TEntityIdentifier;
     
     /** @var string */
     private $title;
@@ -88,7 +88,7 @@ class Place implements IPlace
         $this->setAttachmentUrl($attachmentUrl);
         $this->setIsVisible($isVisible);
         $this->setApproveState($approveState);
-        $this->setId($id);
+        $this->setEntityIdentifier($id);
     }
 
 

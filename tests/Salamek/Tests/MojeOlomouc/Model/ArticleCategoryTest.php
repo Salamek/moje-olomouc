@@ -35,7 +35,7 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
         $this->assertEquals(null, $articleCategory->getIsImportant());
         $this->assertEquals(null, $articleCategory->getIsVisible());
-        $this->assertEquals(null, $articleCategory->getId());
+        $this->assertEquals(null, $articleCategory->getEntityIdentifier());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
@@ -76,7 +76,7 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals($consumerFlags, $articleCategory->getConsumerFlags());
         $this->assertEquals($isImportant, $articleCategory->getIsImportant());
         $this->assertEquals($isVisible, $articleCategory->getIsVisible());
-        $this->assertEquals($id, $articleCategory->getId());
+        $this->assertEquals($id, $articleCategory->getEntityIdentifier());
         $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
 
@@ -143,7 +143,7 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals(null, $articleCategory->getConsumerFlags());
         $this->assertEquals(null, $articleCategory->getIsImportant());
         $this->assertEquals(null, $articleCategory->getIsVisible());
-        $this->assertEquals(null, $articleCategory->getId());
+        $this->assertEquals(null, $articleCategory->getEntityIdentifier());
     }
 
     /**
@@ -175,7 +175,7 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals($consumerFlags, $articleCategory->getConsumerFlags());
         $this->assertEquals($isImportant, $articleCategory->getIsImportant());
         $this->assertEquals($isVisible, $articleCategory->getIsVisible());
-        $this->assertEquals($id, $articleCategory->getId());
+        $this->assertEquals($id, $articleCategory->getEntityIdentifier());
     }
 
     /**

@@ -40,12 +40,12 @@ class PayloadItem
         if (in_array($action, [
             RequestActionCodeEnum::ACTION_CODE_UPDATE,
             RequestActionCodeEnum::ACTION_CODE_DELETE
-        ]) && is_null($entity->getId()))
+        ]) && is_null($entity->getEntityIdentifier()))
         {
             throw new InvalidArgumentException('This action requires model to have set ID');
         }
 
-        $this->setId($entity->getId());
+        $this->setId($entity->getEntityIdentifier());
     }
 
     /**

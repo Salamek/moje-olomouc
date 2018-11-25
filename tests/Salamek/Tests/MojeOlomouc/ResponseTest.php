@@ -76,12 +76,12 @@ class ResponseTest extends BaseTest
         $this->assertObjectHasAttribute('title', $data['tests'][0]);
         $this->assertObjectHasAttribute('consumerFlags', $data['tests'][0]);
         $this->assertObjectHasAttribute('isVisible', $data['tests'][0]);
-        $this->assertObjectHasAttribute('id', $data['tests'][0]);
+        $this->assertObjectHasAttribute('entityIdentifier', $data['tests'][0]);
 
         $this->assertEquals($title, $data['tests'][0]->getTitle());
         $this->assertEquals($consumerFlags, $data['tests'][0]->getConsumerFlags());
         $this->assertEquals($isVisible, $data['tests'][0]->getIsVisible());
-        $this->assertEquals($id, $data['tests'][0]->getId());
+        $this->assertEquals($id, $data['tests'][0]->getEntityIdentifier());
     }
 
 
@@ -112,7 +112,7 @@ class ResponseTest extends BaseTest
         $placeCategory = new PlaceCategory($title);
 
         new Response($responseMock, [], [$placeCategory]);
-        $this->assertEquals($id, $placeCategory->getId());
+        $this->assertEquals($id, $placeCategory->getEntityIdentifier());
     }
     
 
