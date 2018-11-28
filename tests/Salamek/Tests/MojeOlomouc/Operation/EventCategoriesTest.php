@@ -15,6 +15,16 @@ use Salamek\MojeOlomouc\Response;
 
 class EventCategoriesTest extends BaseTest
 {
+    private $hydrator;
+
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IEventCategory::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -23,6 +33,7 @@ class EventCategoriesTest extends BaseTest
      * @param bool $invisible
      * @param bool $withExtraFields
      * @param string $source
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -55,7 +66,7 @@ class EventCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $eventCategories = new EventCategories($request);
+        $eventCategories = new EventCategories($request, $this->hydrator);
         $response = $eventCategories->getAll(
             $from,
             $deleted,
@@ -86,6 +97,7 @@ class EventCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IEventCategory $eventCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IEventCategory $eventCategory)
     {
@@ -110,7 +122,7 @@ class EventCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $eventCategories = new EventCategories($request);
+        $eventCategories = new EventCategories($request, $this->hydrator);
         $response = $eventCategories->create([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -142,6 +154,7 @@ class EventCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IEventCategory $eventCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IEventCategory $eventCategory)
     {
@@ -166,7 +179,7 @@ class EventCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $eventCategories = new EventCategories($request);
+        $eventCategories = new EventCategories($request, $this->hydrator);
         $response = $eventCategories->update([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -197,7 +210,8 @@ class EventCategoriesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IEventCategory $eventCategory
+     * @param IEventCategory|null $eventCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IEventCategory $eventCategory = null)
     {
@@ -222,7 +236,7 @@ class EventCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $eventCategories = new EventCategories($request);
+        $eventCategories = new EventCategories($request, $this->hydrator);
         $response = $eventCategories->delete([$eventCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -244,8 +258,9 @@ class EventCategoriesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IEventCategory $eventCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IEventCategory $eventCategory)
     {
@@ -254,7 +269,7 @@ class EventCategoriesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $eventCategories = new EventCategories($request);
+        $eventCategories = new EventCategories($request, $this->hydrator);
         $eventCategories->delete([$eventCategory]);
     }
 
@@ -319,6 +334,7 @@ class EventCategoriesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

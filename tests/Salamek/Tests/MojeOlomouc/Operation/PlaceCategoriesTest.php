@@ -16,6 +16,16 @@ use Salamek\MojeOlomouc\Response;
 
 class PlaceCategoriesTest extends BaseTest
 {
+    private $hydrator;
+
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IPlaceCategory::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -24,6 +34,7 @@ class PlaceCategoriesTest extends BaseTest
      * @param bool $invisible
      * @param bool $withExtraFields
      * @param string $source
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -56,7 +67,7 @@ class PlaceCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $articleCategories = new PlaceCategories($request);
+        $articleCategories = new PlaceCategories($request, $this->hydrator);
         $response = $articleCategories->getAll(
             $from,
             $deleted,
@@ -87,6 +98,7 @@ class PlaceCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IPlaceCategory $placeCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
@@ -111,7 +123,7 @@ class PlaceCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $placeCategories = new PlaceCategories($request);
+        $placeCategories = new PlaceCategories($request, $this->hydrator);
         $response = $placeCategories->create([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -145,6 +157,7 @@ class PlaceCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IPlaceCategory $placeCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
@@ -169,7 +182,7 @@ class PlaceCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $placeCategories = new PlaceCategories($request);
+        $placeCategories = new PlaceCategories($request, $this->hydrator);
         $response = $placeCategories->update([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -203,6 +216,7 @@ class PlaceCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IPlaceCategory $placeCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
@@ -227,7 +241,7 @@ class PlaceCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $placeCategories = new PlaceCategories($request);
+        $placeCategories = new PlaceCategories($request, $this->hydrator);
         $response = $placeCategories->delete([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -249,8 +263,9 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IPlaceCategory $placeCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IPlaceCategory $placeCategory)
     {
@@ -259,7 +274,7 @@ class PlaceCategoriesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $placeCategories = new PlaceCategories($request);
+        $placeCategories = new PlaceCategories($request, $this->hydrator);
         $placeCategories->delete([$placeCategory]);
     }
 

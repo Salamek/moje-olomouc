@@ -8,6 +8,7 @@ use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\PlaceSourceEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Hydrator\IEntityImage;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\IPlace;
@@ -18,6 +19,21 @@ use Salamek\MojeOlomouc\Response;
 
 class PlacesTest extends BaseTest
 {
+    /** @var \Salamek\MojeOlomouc\Hydrator\IPlace */
+    private $hydrator;
+
+    /** @var IEntityImage */
+    private $entityImageHydrator;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IPlace::class);
+        $this->entityImageHydrator = $this->getHydrator(IEntityImage::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -27,6 +43,7 @@ class PlacesTest extends BaseTest
      * @param bool $withExtraFields
      * @param string $source
      * @param bool $own
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -60,7 +77,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->getAll(
             $from,
             $deleted,
@@ -94,6 +111,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IPlace $place)
     {
@@ -118,13 +136,13 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->create([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -170,6 +188,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IPlace $place)
     {
@@ -194,13 +213,13 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->update([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -246,6 +265,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IPlace $place)
     {
@@ -270,7 +290,7 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->delete([$place]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -291,8 +311,9 @@ class PlacesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IPlace $place)
     {
@@ -301,7 +322,7 @@ class PlacesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $places->delete([$place]);
     }
 

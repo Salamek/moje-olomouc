@@ -7,7 +7,7 @@ namespace Salamek\MojeOlomouc\Model;
  * Class Identifier
  * @package Salamek\MojeOlomouc\Model
  */
-class Identifier implements IModel
+class Identifier implements IIdentifier
 {
     use TEntityIdentifier;
 
@@ -19,24 +19,4 @@ class Identifier implements IModel
     {
         $this->setEntityIdentifier($entityIdentifier);
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        return [
-            'id' => $this->entityIdentifier
-        ];
-    }
-
-    /**
-     * @param array $modelData
-     * @return Identifier
-     */
-    public static function fromPrimitiveArray(array $modelData)
-    {
-        return new Identifier($modelData['id']);
-    }
-
 }

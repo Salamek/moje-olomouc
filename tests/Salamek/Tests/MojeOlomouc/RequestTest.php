@@ -13,6 +13,17 @@ use Salamek\MojeOlomouc\Response;
 
 class RequestTest extends BaseTest
 {
+    private $hydrator;
+
+
+    public function setUp()
+    {
+        parent::setUp();
+
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IIdentifier::class);
+    }
+
     /**
      * @test
      */
@@ -101,7 +112,7 @@ class RequestTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
-        $response = $request->create($uri, [$testingModel], 'test');
+        $response = $request->create($uri, [$testingModel], 'test', $this->hydrator);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -153,7 +164,7 @@ class RequestTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
-        $response = $request->update($uri, [$testingModel], 'test');
+        $response = $request->update($uri, [$testingModel], 'test', $this->hydrator);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -205,7 +216,7 @@ class RequestTest extends BaseTest
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
-        $response = $request->delete($uri, [$testingModel], 'test');
+        $response = $request->delete($uri, [$testingModel], 'test', $this->hydrator);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
         $this->assertInternalType('array', $primitivePayloadItem);

@@ -17,6 +17,19 @@ use Salamek\MojeOlomouc\Response;
 
 class ArticlesTest extends BaseTest
 {
+    private $hydrator;
+
+    /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
+    private $entityImageHydrator;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IArticle::class);
+        $this->entityImageHydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IEntityImage::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -26,6 +39,7 @@ class ArticlesTest extends BaseTest
      * @param bool $withExtraFields
      * @param string $source
      * @param bool $own
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -59,7 +73,7 @@ class ArticlesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $article = new Articles($request);
+        $article = new Articles($request, $this->hydrator);
         $response = $article->getAll(
             $from,
             $deleted,
@@ -93,6 +107,7 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IArticle $article
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IArticle $article)
     {
@@ -117,13 +132,13 @@ class ArticlesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articles = new Articles($request);
+        $articles = new Articles($request, $this->hydrator);
         $response = $articles->create([$article]);
 
         $primitiveImages = [];
         foreach ($article->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -169,6 +184,7 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IArticle $article
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IArticle $article)
     {
@@ -193,13 +209,13 @@ class ArticlesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articles = new Articles($request);
+        $articles = new Articles($request, $this->hydrator);
         $response = $articles->update([$article]);
 
         $primitiveImages = [];
         foreach ($article->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
 
@@ -246,6 +262,7 @@ class ArticlesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IArticle|null $article
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IArticle $article = null)
     {
@@ -270,7 +287,7 @@ class ArticlesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articles = new Articles($request);
+        $articles = new Articles($request, $this->hydrator);
         $response = $articles->delete([$article]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -292,8 +309,9 @@ class ArticlesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IArticle $article
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IArticle $article)
     {
@@ -302,12 +320,13 @@ class ArticlesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $articles = new Articles($request);
+        $articles = new Articles($request, $this->hydrator);
         $articles->delete([$article]);
     }
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideInvalidDeleteConstructorParameters(): array
     {
@@ -330,6 +349,7 @@ class ArticlesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideValidDeleteConstructorParameters(): array
     {
@@ -352,6 +372,7 @@ class ArticlesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideUpdateConstructorParameters(): array
     {
@@ -374,6 +395,7 @@ class ArticlesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideCreateConstructorParameters(): array
     {
@@ -403,6 +425,7 @@ class ArticlesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

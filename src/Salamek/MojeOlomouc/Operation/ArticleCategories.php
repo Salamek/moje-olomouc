@@ -5,9 +5,9 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\ArticleCategorySourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
+use Salamek\MojeOlomouc\Hydrator\IArticleCategory;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\IArticleCategory;
 
 /**
  * Class ArticleCategories
@@ -24,9 +24,9 @@ class ArticleCategories implements IOperation
     /**
      * ArticleCategories constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IArticleCategory $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IArticleCategory $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -39,6 +39,7 @@ class ArticleCategories implements IOperation
      * @param bool $withExtraFields
      * @param string $source
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
         \DateTimeInterface $from = null,
@@ -60,34 +61,37 @@ class ArticleCategories implements IOperation
     }
 
     /**
-     * @param IArticleCategory[] $articleCategories
+     * @param array $articleCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $articleCategories
     ): Response
     {
-        return $this->request->create('/api/import/article-categories', $articleCategories, 'articleCategory');
+        return $this->request->create('/api/import/article-categories', $articleCategories, 'articleCategory', $this->hydrator);
     }
 
     /**
-     * @param IArticleCategory[] $articleCategories
+     * @param array $articleCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $articleCategories
     ): Response
     {
 
-        return $this->request->update('/api/import/article-categories', $articleCategories, 'articleCategory');
+        return $this->request->update('/api/import/article-categories', $articleCategories, 'articleCategory', $this->hydrator);
     }
 
     /**
-     * @param IArticleCategory[] $articleCategories
+     * @param array|null $articleCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(array $articleCategories = null): Response
     {
-        return $this->request->delete('/api/import/article-categories', $articleCategories, 'articleCategory');
+        return $this->request->delete('/api/import/article-categories', $articleCategories, 'articleCategory', $this->hydrator);
     }
 }

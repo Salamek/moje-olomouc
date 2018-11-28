@@ -117,32 +117,4 @@ class EntityImage implements IEntityImage
     {
         return $this->isFeatured;
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        return [
-            'title' => $this->title,
-            'imageUrl' => $this->imageUrl,
-            'contentType' => $this->contentType,
-            'isFeatured' => $this->isFeatured
-        ];
-    }
-
-    /**
-     * @param array $modelData
-     * @return EntityImage
-     */
-    public static function fromPrimitiveArray(array $modelData): EntityImage
-    {
-        return new EntityImage(
-            $modelData['imageUrl'],
-            (array_key_exists('contentType', $modelData) ? $modelData['contentType'] : EntityImageContentTypeEnum::GRAPHICS_POSTER),
-            (array_key_exists('title', $modelData) ? $modelData['title'] : null),
-            (array_key_exists('isFeatured', $modelData) ? $modelData['isFeatured'] : false),
-            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
-        );
-    }
 }

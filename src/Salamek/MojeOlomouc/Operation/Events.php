@@ -5,10 +5,9 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventSourceEnum;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IEvent;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\IEvent;
 
 /**
  * Class Events
@@ -25,9 +24,9 @@ class Events implements IOperation
     /**
      * Events constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IEvent $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IEvent $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -41,6 +40,7 @@ class Events implements IOperation
      * @param string $source
      * @param bool $own
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
         \DateTimeInterface $from = null,
@@ -64,33 +64,36 @@ class Events implements IOperation
     }
 
     /**
-     * @param IEvent[] $events
+     * @param array $events
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $events
     ): Response
     {
-        return $this->request->create('/api/import/events', $events, 'event');
+        return $this->request->create('/api/import/events', $events, 'event', $this->hydrator);
     }
 
     /**
-     * @param IEvent[] $events
+     * @param array $events
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $events
     ): Response
     {
-        return $this->request->update('/api/import/events', $events, 'event');
+        return $this->request->update('/api/import/events', $events, 'event', $this->hydrator);
     }
 
     /**
-     * @param IEvent[] $events
+     * @param array $events
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(array $events): Response
     {
-        return $this->request->delete('/api/import/events', $events, 'event');
+        return $this->request->delete('/api/import/events', $events, 'event', $this->hydrator);
     }
 }

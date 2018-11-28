@@ -18,15 +18,4 @@ interface IModel
      * @return int
      */
     public function getEntityIdentifier(): ?int;
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array;
-
-    /**
-     * @param array $modelData
-     * @return IModel
-     */
-    public static function fromPrimitiveArray(array $modelData);
 }

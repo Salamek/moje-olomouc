@@ -5,10 +5,9 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\ArticleSourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IArticle;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\IArticle;
 
 /**
  * Class Articles
@@ -25,9 +24,9 @@ class Articles implements IOperation
     /**
      * Articles constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IArticle $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IArticle $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -41,6 +40,7 @@ class Articles implements IOperation
      * @param string $source
      * @param bool $own
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
         \DateTimeInterface $from = null,
@@ -64,33 +64,36 @@ class Articles implements IOperation
     }
 
     /**
-     * @param IArticle[] $articles
+     * @param array $articles
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $articles
     ): Response
     {
-        return $this->request->create('/api/import/articles', $articles, 'article');
+        return $this->request->create('/api/import/articles', $articles, 'article', $this->hydrator);
     }
 
     /**
-     * @param IArticle[] $articles
+     * @param array $articles
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $articles
     ): Response
     {
-        return $this->request->update('/api/import/articles', $articles, 'article');
+        return $this->request->update('/api/import/articles', $articles, 'article', $this->hydrator);
     }
 
     /**
-     * @param IArticle[] $articles
+     * @param array $articles
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(array $articles): Response
     {
-        return $this->request->delete('/api/import/articles', $articles, 'article');
+        return $this->request->delete('/api/import/articles', $articles, 'article', $this->hydrator);
     }
 }

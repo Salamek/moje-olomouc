@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc\Model;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
+use Salamek\MojeOlomouc\Hydrator\IImportantMessage;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
@@ -20,7 +21,7 @@ class ImportantMessageTest extends BaseTest
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
      * @param int $severity
-     * @param \DateTimeInterface $expireAt
+     * @param \DateTimeInterface|null $expireAt
      * @param bool $isVisible
      * @param int|null $id
      */
@@ -29,7 +30,7 @@ class ImportantMessageTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt,
+        \DateTimeInterface $expireAt = null,
         bool $isVisible = true,
         int $id = null
     )
@@ -48,17 +49,7 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals(null, $importantMessage->getExpireAt());
         $this->assertEquals(true, $importantMessage->getIsVisible());
         $this->assertEquals(null, $importantMessage->getEntityIdentifier());
-        $this->assertInternalType('array', $importantMessage->toPrimitiveArray());
 
-        $primitiveArrayTest = [
-            'text' => $text,
-            'dateTimeAt'   => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
-            'type'   => $type,
-            'severity'   => $severity,
-            'isVisible'   => $importantMessage->getIsVisible()
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $importantMessage->toPrimitiveArray());
     }
 
 
@@ -69,7 +60,7 @@ class ImportantMessageTest extends BaseTest
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
      * @param int $severity
-     * @param \DateTimeInterface $expireAt
+     * @param \DateTimeInterface|null $expireAt
      * @param bool $isVisible
      * @param int|null $id
      */
@@ -78,7 +69,7 @@ class ImportantMessageTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt,
+        \DateTimeInterface $expireAt = null,
         bool $isVisible = true,
         int $id = null
     )
@@ -100,30 +91,17 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals($severity, $importantMessage->getSeverity());
         $this->assertEquals($isVisible, $importantMessage->getIsVisible());
         $this->assertEquals($id, $importantMessage->getEntityIdentifier());
-        $this->assertInternalType('array', $importantMessage->toPrimitiveArray());
-
-
-        $primitiveArrayTest = [
-            'text' => $text,
-            'dateTimeAt'   => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
-            'type'   => $type,
-            'severity'   => $severity,
-            'expireAt'  => $expireAt->format(DateTime::NOT_A_ISO8601),
-            'isVisible'   => $isVisible
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $importantMessage->toPrimitiveArray());
     }
 
     /**
      * @test
      * @dataProvider provideInvalidConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
      * @param int $severity
-     * @param \DateTimeInterface $expireAt
+     * @param \DateTimeInterface|null $expireAt
      * @param bool $isVisible
      * @param int|null $id
      */
@@ -132,7 +110,7 @@ class ImportantMessageTest extends BaseTest
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt,
+        \DateTimeInterface $expireAt = null,
         bool $isVisible = true,
         int $id = null
     )
@@ -149,88 +127,8 @@ class ImportantMessageTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
-     * @param string $text
-     * @param \DateTimeInterface $dateTimeAt
-     * @param int $type
-     * @param int $severity
-     * @param \DateTimeInterface $expireAt
-     * @param bool $isVisible
-     * @param int|null $id
-     */
-    public function createFromRequiredPrimitiveArrayShouldBeGood(
-        string $text,
-        \DateTimeInterface $dateTimeAt,
-        int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-        int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt,
-        bool $isVisible = true,
-        int $id = null
-    )
-    {
-        $place = ImportantMessage::fromPrimitiveArray(
-            [
-                'text' => $text,
-                'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
-                'type' => $type,
-                'severity' => $severity
-            ]
-        );
-
-        $this->assertEquals($text, $place->getText());
-        $this->assertEquals($dateTimeAt, $place->getDateTimeAt());
-        $this->assertEquals($type, $place->getType());
-        $this->assertEquals($severity, $place->getSeverity());
-        $this->assertEquals(null, $place->getExpireAt());
-        $this->assertEquals(true, $place->getIsVisible());
-        $this->assertEquals(null, $place->getEntityIdentifier());
-    }
-
-    /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
-     * @param string $text
-     * @param \DateTimeInterface $dateTimeAt
-     * @param int $type
-     * @param int $severity
-     * @param \DateTimeInterface $expireAt
-     * @param bool $isVisible
-     * @param int|null $id
-     */
-    public function createFromOptionalPrimitiveArrayShouldBeGood(
-        string $text,
-        \DateTimeInterface $dateTimeAt,
-        int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
-        int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt,
-        bool $isVisible = true,
-        int $id = null
-    )
-    {
-        $place = ImportantMessage::fromPrimitiveArray(
-            [
-                'text' => $text,
-                'dateTimeAt' => $dateTimeAt->format(DateTime::NOT_A_ISO8601),
-                'type' => $type,
-                'severity' => $severity,
-                'expireAt' => $expireAt->format(DateTime::NOT_A_ISO8601),
-                'isVisible' => $isVisible,
-                'id' => $id
-            ]
-        );
-
-        $this->assertEquals($text, $place->getText());
-        $this->assertEquals($dateTimeAt, $place->getDateTimeAt());
-        $this->assertEquals($type, $place->getType());
-        $this->assertEquals($severity, $place->getSeverity());
-        $this->assertEquals($expireAt, $place->getExpireAt());
-        $this->assertEquals($isVisible, $place->getIsVisible());
-        $this->assertEquals($id, $place->getEntityIdentifier());
-    }
-
-    /**
      * @return array
+     * @throws \Exception
      */
     public function provideInvalidConstructorParameters(): array
     {
@@ -244,6 +142,7 @@ class ImportantMessageTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideValidConstructorParameters(): array
     {

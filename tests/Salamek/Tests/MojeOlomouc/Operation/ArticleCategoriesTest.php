@@ -16,6 +16,15 @@ use Salamek\MojeOlomouc\Response;
 
 class ArticleCategoriesTest extends BaseTest
 {
+    private $hydrator;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IArticleCategory::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -24,6 +33,7 @@ class ArticleCategoriesTest extends BaseTest
      * @param bool $invisible
      * @param bool $withExtraFields
      * @param string $source
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -56,7 +66,7 @@ class ArticleCategoriesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $articleCategories = new ArticleCategories($request);
+        $articleCategories = new ArticleCategories($request, $this->hydrator);
         $response = $articleCategories->getAll(
             $from,
             $deleted,
@@ -87,6 +97,7 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IArticleCategory $articleCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IArticleCategory $articleCategory)
     {
@@ -111,7 +122,7 @@ class ArticleCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articleCategories = new ArticleCategories($request);
+        $articleCategories = new ArticleCategories($request, $this->hydrator);
         $response = $articleCategories->create([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -147,6 +158,7 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IArticleCategory $articleCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IArticleCategory $articleCategory)
     {
@@ -171,7 +183,7 @@ class ArticleCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articleCategories = new ArticleCategories($request);
+        $articleCategories = new ArticleCategories($request, $this->hydrator);
         $response = $articleCategories->update([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -207,6 +219,7 @@ class ArticleCategoriesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IArticleCategory|null $articleCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IArticleCategory $articleCategory = null)
     {
@@ -231,7 +244,7 @@ class ArticleCategoriesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $articleCategories = new ArticleCategories($request);
+        $articleCategories = new ArticleCategories($request, $this->hydrator);
         $response = $articleCategories->delete([$articleCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -254,8 +267,9 @@ class ArticleCategoriesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IArticleCategory $articleCategory
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IArticleCategory $articleCategory)
     {
@@ -264,7 +278,7 @@ class ArticleCategoriesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $articleCategories = new ArticleCategories($request);
+        $articleCategories = new ArticleCategories($request, $this->hydrator);
         $articleCategories->delete([$articleCategory]);
     }
 
@@ -337,6 +351,7 @@ class ArticleCategoriesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

@@ -5,9 +5,9 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceSourceEnum;
+use Salamek\MojeOlomouc\Hydrator\IPlace;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\IPlace;
 
 /**
  * Class Places
@@ -24,9 +24,9 @@ class Places implements IOperation
     /**
      * Places constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IPlace $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IPlace $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -40,6 +40,7 @@ class Places implements IOperation
      * @param string $source
      * @param bool $own
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
         \DateTimeInterface $from = null,
@@ -63,35 +64,38 @@ class Places implements IOperation
     }
 
     /**
-     * @param IPlace[] $places
+     * @param array $places
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $places
     ): Response
     {
-        return $this->request->create('/api/import/places', $places, 'place');
+        return $this->request->create('/api/import/places', $places, 'place', $this->hydrator);
     }
 
     /**
-     * @param IPlace[] $places
+     * @param array $places
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $places
     ): Response
     {
-        return $this->request->update('/api/import/places', $places, 'place');
+        return $this->request->update('/api/import/places', $places, 'place', $this->hydrator);
     }
 
     /**
-     * @param IPlace[] $places
+     * @param array $places
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(
         array $places
     ): Response
     {
-        return $this->request->delete('/api/import/places', $places, 'place');
+        return $this->request->delete('/api/import/places', $places, 'place', $this->hydrator);
     }
 }

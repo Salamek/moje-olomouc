@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace Salamek\MojeOlomouc\Operation;
 
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IImportantMessage;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use Salamek\MojeOlomouc\Model\IImportantMessage;
 
 /**
  * Class ImportantMessages
@@ -23,9 +22,9 @@ class ImportantMessages implements IOperation
     /**
      * ImportantMessages constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IImportantMessage $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IImportantMessage $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -33,8 +32,9 @@ class ImportantMessages implements IOperation
 
     /**
      * @return Response
-     * @TODO filters
-     * @TODO is there getter for all important-messages ?
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @internal
+     * @TODO
      */
     public function getAll(): Response
     {
@@ -42,33 +42,36 @@ class ImportantMessages implements IOperation
     }
 
     /**
-     * @param IImportantMessage[] $importantMessages
+     * @param array $importantMessages
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $importantMessages
     ): Response
     {
-        return $this->request->create('/api/import/important-messages', $importantMessages, 'importantMessage');
+        return $this->request->create('/api/import/important-messages', $importantMessages, 'importantMessage', $this->hydrator);
     }
 
     /**
-     * @param IImportantMessage[] $importantMessages
+     * @param array $importantMessages
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $importantMessages
     ): Response
     {
-        return $this->request->update('/api/import/important-messages', $importantMessages, 'importantMessage');
+        return $this->request->update('/api/import/important-messages', $importantMessages, 'importantMessage', $this->hydrator);
     }
 
     /**
-     * @param IImportantMessage[] $importantMessages
+     * @param array $importantMessages
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(array $importantMessages): Response
     {
-        return $this->request->delete('/api/import/important-messages', $importantMessages, 'importantMessage');
+        return $this->request->delete('/api/import/important-messages', $importantMessages, 'importantMessage', $this->hydrator);
     }
 }

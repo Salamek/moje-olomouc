@@ -7,6 +7,7 @@ namespace Salamek\MojeOlomouc;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Middleware;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Hydrator\IHydrator;
 use Salamek\MojeOlomouc\Model\IModel;
 use Salamek\MojeOlomouc\Model\PayloadItem;
 
@@ -51,6 +52,7 @@ class Request
      * @param array $arguments
      * @param array $hydratorMapping
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get(string $endpoint, array $arguments = [], array $hydratorMapping = []): Response
     {
@@ -72,48 +74,55 @@ class Request
 
     /**
      * @param string $endpoint
-     * @param IModel[] $entities
+     * @param array $entities
      * @param string $dataKey
+     * @param IHydrator $hydrator
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create(string $endpoint, array $entities, string $dataKey): Response
+    public function create(string $endpoint, array $entities, string $dataKey, IHydrator $hydrator): Response
     {
-        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_CREATE), true);
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_CREATE, $hydrator), true);
     }
 
     /**
      * @param string $endpoint
-     * @param IModel[] $entities
+     * @param array $entities
      * @param string $dataKey
+     * @param IHydrator $hydrator
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update(string $endpoint, array $entities, string $dataKey): Response
+    public function update(string $endpoint, array $entities, string $dataKey, IHydrator $hydrator): Response
     {
-        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_UPDATE));
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_UPDATE, $hydrator));
     }
 
     /**
      * @param string $endpoint
-     * @param IModel[] $entities
+     * @param array $entities
      * @param string $dataKey
+     * @param IHydrator $hydrator
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete(string $endpoint, array $entities, string $dataKey): Response
+    public function delete(string $endpoint, array $entities, string $dataKey, IHydrator $hydrator): Response
     {
-        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_DELETE));
+        return $this->post($endpoint, $this->createPayloadItemGenerator($entities, $dataKey, RequestActionCodeEnum::ACTION_CODE_DELETE, $hydrator));
     }
 
     /**
      * @param array $entities
      * @param string $dataKey
      * @param int $action
+     * @param IHydrator $hydrator
      * @return \Generator
      */
-    private function createPayloadItemGenerator(array $entities, string $dataKey, int $action)
+    private function createPayloadItemGenerator(array $entities, string $dataKey, int $action, IHydrator $hydrator)
     {
         foreach ($entities AS $entity)
         {
-            yield new PayloadItem($entity, $dataKey, $action);
+            yield new PayloadItem($entity, $dataKey, $action, $hydrator);
         }
     }
 
@@ -122,6 +131,7 @@ class Request
      * @param \Generator $payloadItems
      * @param bool $setIds
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @internal
      */
     public function post(string $endpoint, \Generator $payloadItems, bool $setIds = false)

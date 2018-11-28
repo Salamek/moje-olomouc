@@ -6,6 +6,7 @@ namespace Salamek\Tests\MojeOlomouc\Model;
 
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Hydrator\IHydrator;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\Identifier;
@@ -21,17 +22,20 @@ class PayloadItemTest extends BaseTest
      * @param IModel $entity
      * @param string $dataKey
      * @param int $action
+     * @param IHydrator $hydrator
      */
     public function createRequiredShouldBeGoodTest(
         IModel $entity,
         string $dataKey,
-        int $action
+        int $action,
+        IHydrator $hydrator
     )
     {
         $payloadItem = new PayloadItem(
             $entity,
             $dataKey,
-            $action
+            $action,
+            $hydrator
         );
 
         $this->assertEquals($entity, $payloadItem->getEntity());
@@ -45,7 +49,7 @@ class PayloadItemTest extends BaseTest
                 'code' => $action,
                 'id' => $payloadItem->getId()
             ],
-            $dataKey => $entity->toPrimitiveArray()
+            $dataKey => $hydrator->toPrimitiveArray($entity)
         ];
 
         $this->assertEquals($primitiveArrayTest, $payloadItem->toPrimitiveArray());
@@ -54,21 +58,24 @@ class PayloadItemTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IModel $entity
      * @param string $dataKey
      * @param int $action
+     * @param IHydrator $hydrator
      */
     public function createOptionalShouldFailOnBadData(
         IModel $entity,
         string $dataKey,
-        int $action
+        int $action,
+        IHydrator $hydrator
     )
     {
         new PayloadItem(
             $entity,
             $dataKey,
-            $action
+            $action,
+            $hydrator
         );
     }
 
@@ -78,8 +85,8 @@ class PayloadItemTest extends BaseTest
     public function provideInvalidConstructorParameters(): array
     {
         return [
-            [new EntityImage('imageUrl-'.mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE],
-            [new EntityImage('imageUrl-'.mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_UPDATE],
+            [new EntityImage('imageUrl-'.mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE, new \Salamek\MojeOlomouc\Hydrator\EntityImage(EntityImage::class)],
+            [new EntityImage('imageUrl-'.mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_UPDATE, new \Salamek\MojeOlomouc\Hydrator\EntityImage(EntityImage::class)],
         ];
     }
 
@@ -90,9 +97,9 @@ class PayloadItemTest extends BaseTest
     public function provideValidConstructorParameters(): array
     {
         return [
-            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE],
-            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_UPDATE],
-            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_CREATE],
+            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE, new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class)],
+            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_UPDATE, new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class)],
+            [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_CREATE, new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class)],
         ];
     }
 }
