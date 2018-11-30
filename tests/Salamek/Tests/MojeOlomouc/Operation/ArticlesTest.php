@@ -11,6 +11,7 @@ use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\IArticle;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Operation\Articles;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
@@ -165,7 +166,7 @@ class ArticlesTest extends BaseTest
         $this->assertEquals($article->getTitle(), $primitiveArticle['title']);
         $this->assertEquals($article->getContent(), $primitiveArticle['content']);
         $this->assertEquals($article->getAuthor(), $primitiveArticle['author']);
-        $this->assertEquals($article->getCategoryId(), $primitiveArticle['categoryId']);
+        $this->assertEquals($article->getCategory()->getEntityIdentifier(), $primitiveArticle['categoryId']);
         $this->assertEquals($article->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveArticle['dateTimeAt']);
         $this->assertEquals($primitiveImages, $primitiveArticle['images']);
         if (!is_null($article->getAttachmentUrl())) $this->assertEquals($article->getAttachmentUrl(), $primitiveArticle['attachmentUrl']);
@@ -243,7 +244,7 @@ class ArticlesTest extends BaseTest
         $this->assertEquals($article->getTitle(), $primitiveArticle['title']);
         $this->assertEquals($article->getContent(), $primitiveArticle['content']);
         $this->assertEquals($article->getAuthor(), $primitiveArticle['author']);
-        $this->assertEquals($article->getCategoryId(), $primitiveArticle['categoryId']);
+        $this->assertEquals($article->getCategory()->getEntityIdentifier(), $primitiveArticle['categoryId']);
         $this->assertEquals($article->getDateTimeAt()->format(DateTime::NOT_A_ISO8601), $primitiveArticle['dateTimeAt']);
         $this->assertEquals($primitiveImages, $primitiveArticle['images']);
         if (!is_null($article->getAttachmentUrl())) $this->assertEquals($article->getAttachmentUrl(), $primitiveArticle['attachmentUrl']);
@@ -335,7 +336,7 @@ class ArticlesTest extends BaseTest
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
@@ -358,7 +359,7 @@ class ArticlesTest extends BaseTest
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
@@ -381,7 +382,7 @@ class ArticlesTest extends BaseTest
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
@@ -404,14 +405,14 @@ class ArticlesTest extends BaseTest
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 $this->getDateTime()
             )],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 $this->getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),

@@ -8,6 +8,7 @@ use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\EntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
 class ArticleTest extends BaseTest
@@ -18,7 +19,7 @@ class ArticleTest extends BaseTest
      * @param string $title
      * @param string $content
      * @param string $author
-     * @param int $categoryId
+     * @param Identifier $category
      * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
@@ -31,7 +32,7 @@ class ArticleTest extends BaseTest
         string $title,
         string $content,
         string $author,
-        int $categoryId,
+        Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
@@ -45,14 +46,14 @@ class ArticleTest extends BaseTest
             $title,
             $content,
             $author,
-            $categoryId,
+            $category,
             $dateTimeAt
         );
 
         $this->assertEquals($title, $article->getTitle());
         $this->assertEquals($content, $article->getContent());
         $this->assertEquals($author, $article->getAuthor());
-        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($category, $article->getCategory());
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals([], $article->getImages());
         $this->assertEquals(null, $article->getAttachmentUrl());
@@ -69,7 +70,7 @@ class ArticleTest extends BaseTest
      * @param string $title
      * @param string $content
      * @param string $author
-     * @param int $categoryId
+     * @param Identifier $category
      * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
@@ -82,7 +83,7 @@ class ArticleTest extends BaseTest
         string $title,
         string $content,
         string $author,
-        int $categoryId,
+        Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
@@ -96,7 +97,7 @@ class ArticleTest extends BaseTest
             $title,
             $content,
             $author,
-            $categoryId,
+            $category,
             $dateTimeAt,
             $images,
             $attachmentUrl,
@@ -109,7 +110,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals($title, $article->getTitle());
         $this->assertEquals($content, $article->getContent());
         $this->assertEquals($author, $article->getAuthor());
-        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($category, $article->getCategory());
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals($images, $article->getImages());
         $this->assertEquals($attachmentUrl, $article->getAttachmentUrl());
@@ -127,7 +128,7 @@ class ArticleTest extends BaseTest
      * @param string $title
      * @param string $content
      * @param string $author
-     * @param int $categoryId
+     * @param Identifier $category
      * @param \DateTimeInterface $dateTimeAt
      * @param array $images
      * @param string|null $attachmentUrl
@@ -140,7 +141,7 @@ class ArticleTest extends BaseTest
         string $title,
         string $content,
         string $author,
-        int $categoryId,
+        Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
@@ -154,7 +155,7 @@ class ArticleTest extends BaseTest
             $title,
             $content,
             $author,
-            $categoryId,
+            $category,
             $dateTimeAt,
             $images,
             $attachmentUrl,
@@ -172,9 +173,9 @@ class ArticleTest extends BaseTest
     public function provideInvalidConstructorParameters(): array
     {
         return [
-            [str_repeat('title-'.mt_rand(), 128), 'content-'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content-'.mt_rand(), str_repeat('author-'.mt_rand(), 128), mt_rand(), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content-'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), ['notAEntityImage'], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            [str_repeat('title-'.mt_rand(), 128), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), str_repeat('author-'.mt_rand(), 128), new Identifier(mt_rand()), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), ['notAEntityImage'], 'attachmentUrl-'.mt_rand(), true, false, null, null],
         ];
     }
 
@@ -187,8 +188,8 @@ class ArticleTest extends BaseTest
     {
         $image = new EntityImage('url');
         return [
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
         ];
     }
 }

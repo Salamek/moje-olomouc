@@ -10,6 +10,7 @@ use Salamek\MojeOlomouc\Enum\EventConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\Event;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
 class EventTest extends BaseTest
@@ -24,7 +25,7 @@ class EventTest extends BaseTest
      * @param string $placeDesc
      * @param float $placeLat
      * @param float $placeLon
-     * @param array $categoryIdsArr
+     * @param array $categories
      * @param array $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
@@ -44,7 +45,7 @@ class EventTest extends BaseTest
         string $placeDesc,
         float $placeLat,
         float $placeLon,
-        array $categoryIdsArr,
+        array $categories,
         array $images = [],
         string $attachmentUrl = null,
         string $fee = null,
@@ -65,7 +66,7 @@ class EventTest extends BaseTest
              $placeDesc,
              $placeLat,
              $placeLon,
-             $categoryIdsArr
+            $categories
         );
 
         $this->assertEquals($title, $event->getTitle());
@@ -75,7 +76,7 @@ class EventTest extends BaseTest
         $this->assertEquals($placeDesc, $event->getPlaceDesc());
         $this->assertEquals($placeLat, $event->getPlaceLat());
         $this->assertEquals($placeLon, $event->getPlaceLon());
-        $this->assertEquals($categoryIdsArr, $event->getCategoryIdsArr());
+        $this->assertEquals($categories, $event->getCategories());
         $this->assertEquals([], $event->getImages());
         $this->assertEquals(null, $event->getAttachmentUrl());
         $this->assertEquals(null, $event->getFee());
@@ -99,7 +100,7 @@ class EventTest extends BaseTest
      * @param string $placeDesc
      * @param float $placeLat
      * @param float $placeLon
-     * @param array $categoryIdsArr
+     * @param array $categories
      * @param array $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
@@ -119,7 +120,7 @@ class EventTest extends BaseTest
         string $placeDesc,
         float $placeLat,
         float $placeLon,
-        array $categoryIdsArr,
+        array $categories,
         array $images = [],
         string $attachmentUrl = null,
         string $fee = null,
@@ -140,7 +141,7 @@ class EventTest extends BaseTest
             $placeDesc,
             $placeLat,
             $placeLon,
-            $categoryIdsArr,
+            $categories,
             $images,
             $attachmentUrl,
             $fee,
@@ -160,7 +161,7 @@ class EventTest extends BaseTest
         $this->assertEquals($placeDesc, $event->getPlaceDesc());
         $this->assertEquals($placeLat, $event->getPlaceLat());
         $this->assertEquals($placeLon, $event->getPlaceLon());
-        $this->assertEquals($categoryIdsArr, $event->getCategoryIdsArr());
+        $this->assertEquals($categories, $event->getCategories());
         $this->assertEquals($images, $event->getImages());
         $this->assertEquals($attachmentUrl, $event->getAttachmentUrl());
         $this->assertEquals($fee, $event->getFee());
@@ -184,7 +185,7 @@ class EventTest extends BaseTest
      * @param string $placeDesc
      * @param float $placeLat
      * @param float $placeLon
-     * @param array $categoryIdsArr
+     * @param array $categories
      * @param array $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
@@ -204,7 +205,7 @@ class EventTest extends BaseTest
         string $placeDesc,
         float $placeLat,
         float $placeLon,
-        array $categoryIdsArr,
+        array $categories,
         array $images = [],
         string $attachmentUrl = null,
         string $fee = null,
@@ -225,7 +226,7 @@ class EventTest extends BaseTest
             $placeDesc,
             $placeLat,
             $placeLon,
-            $categoryIdsArr,
+            $categories,
             $images,
             $attachmentUrl,
             $fee,
@@ -254,7 +255,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -274,7 +275,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 102.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -294,7 +295,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -425,7 +426,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -445,7 +446,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -465,7 +466,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -485,7 +486,7 @@ class EventTest extends BaseTest
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
-                [1, 2, 3],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [$image],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),

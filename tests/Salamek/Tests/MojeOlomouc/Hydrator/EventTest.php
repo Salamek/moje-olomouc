@@ -85,6 +85,13 @@ class EventTest extends BaseTest
                 'categoryIdsArr' => $categoryIdsArr
             ]
         );
+
+        $categoryIdsArrDecoded = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArrDecoded[] = $category->getEntityIdentifier();
+        }
+
         $this->assertEquals($title, $event->getTitle());
         $this->assertEquals($description, $event->getDescription());
         $this->assertEquals($startAt, $event->getStartAt());
@@ -92,7 +99,7 @@ class EventTest extends BaseTest
         $this->assertEquals($placeDesc, $event->getPlaceDesc());
         $this->assertEquals($placeLat, $event->getPlaceLat());
         $this->assertEquals($placeLon, $event->getPlaceLon());
-        $this->assertEquals($categoryIdsArr, $event->getCategoryIdsArr());
+        $this->assertEquals($categoryIdsArr, $categoryIdsArrDecoded);
         $this->assertEquals([], $event->getImages());
         $this->assertEquals(null, $event->getAttachmentUrl());
         $this->assertEquals(null, $event->getFee());
@@ -174,6 +181,14 @@ class EventTest extends BaseTest
                 'id' => $id
             ]
         );
+
+
+        $categoryIdsArrDecoded = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArrDecoded[] = $category->getEntityIdentifier();
+        }
+
         $this->assertEquals($title, $event->getTitle());
         $this->assertEquals($description, $event->getDescription());
         $this->assertEquals($startAt, $event->getStartAt());
@@ -181,7 +196,7 @@ class EventTest extends BaseTest
         $this->assertEquals($placeDesc, $event->getPlaceDesc());
         $this->assertEquals($placeLat, $event->getPlaceLat());
         $this->assertEquals($placeLon, $event->getPlaceLon());
-        $this->assertEquals($categoryIdsArr, $event->getCategoryIdsArr());
+        $this->assertEquals($categoryIdsArr, $categoryIdsArrDecoded);
         $this->assertEquals($images, $event->getImages());
         $this->assertEquals($attachmentUrl, $event->getAttachmentUrl());
         $this->assertEquals($fee, $event->getFee());

@@ -106,7 +106,7 @@ class Event implements IEvent
         {
             foreach($modelData['categoryIdsArr'] AS $primitiveCategory)
             {
-                $images[] = new \Salamek\MojeOlomouc\Model\Identifier($primitiveCategory);
+                $categories[] = new \Salamek\MojeOlomouc\Model\Identifier($primitiveCategory);
             }
         }
 

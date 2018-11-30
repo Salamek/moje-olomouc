@@ -6,6 +6,7 @@ namespace Salamek\Tests\MojeOlomouc\Model;
 
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Model\EntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
@@ -19,7 +20,7 @@ class PlaceTest extends BaseTest
      * @param string $address
      * @param float $lat
      * @param float $lon
-     * @param int $categoryId
+     * @param Identifier $category
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -32,7 +33,7 @@ class PlaceTest extends BaseTest
         string $address,
         float $lat,
         float $lon,
-        int $categoryId,
+        Identifier $category,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -46,7 +47,7 @@ class PlaceTest extends BaseTest
             $address,
             $lat,
             $lon,
-            $categoryId
+            $category
         );
 
         $this->assertEquals($title, $place->getTitle());
@@ -54,7 +55,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($address, $place->getAddress());
         $this->assertEquals($lat, $place->getLat());
         $this->assertEquals($lon, $place->getLon());
-        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals($category, $place->getCategory());
         $this->assertEquals([], $place->getImages());
         $this->assertEquals(null, $place->getAttachmentUrl());
         $this->assertEquals(null, $place->getIsVisible());
@@ -71,7 +72,7 @@ class PlaceTest extends BaseTest
      * @param string $address
      * @param float $lat
      * @param float $lon
-     * @param int $categoryId
+     * @param Identifier $category
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -84,7 +85,7 @@ class PlaceTest extends BaseTest
         string $address,
         float $lat,
         float $lon,
-        int $categoryId,
+        Identifier $category,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -98,7 +99,7 @@ class PlaceTest extends BaseTest
             $address,
             $lat,
             $lon,
-            $categoryId,
+            $category,
             $images,
             $attachmentUrl,
             $isVisible,
@@ -111,7 +112,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($address, $place->getAddress());
         $this->assertEquals($lat, $place->getLat());
         $this->assertEquals($lon, $place->getLon());
-        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals($category, $place->getCategory());
         $this->assertEquals($images, $place->getImages());
         $this->assertEquals($attachmentUrl, $place->getAttachmentUrl());
         $this->assertEquals($isVisible, $place->getIsVisible());
@@ -128,7 +129,7 @@ class PlaceTest extends BaseTest
      * @param string $address
      * @param float $lat
      * @param float $lon
-     * @param int $categoryId
+     * @param Identifier $category
      * @param array $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -141,7 +142,7 @@ class PlaceTest extends BaseTest
         string $address,
         float $lat,
         float $lon,
-        int $categoryId,
+        Identifier $category,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = true,
@@ -155,7 +156,7 @@ class PlaceTest extends BaseTest
             $address,
             $lat,
             $lon,
-            $categoryId,
+            $category,
             $images,
             $attachmentUrl,
             $isVisible,
@@ -172,10 +173,10 @@ class PlaceTest extends BaseTest
     public function provideInvalidConstructorParameters(): array
     {
         return [
-            [str_repeat('title-'.mt_rand(), 128), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 1216477, 12.16477, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 1646845646, mt_rand(), [], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [$this->getDateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
+            [str_repeat('title-'.mt_rand(), 128), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, new Identifier(mt_rand()), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 1216477, 12.16477, new Identifier(mt_rand()), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 1646845646, new Identifier(mt_rand()), [], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, new Identifier(mt_rand()), [$this->getDateTime()], 'attachmentUrl-'.mt_rand(), true, null, null],
         ];
     }
 
@@ -187,9 +188,9 @@ class PlaceTest extends BaseTest
     {
         $image = new EntityImage('url');
         return [
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, mt_rand(), [$image], 'attachmentUrl-'.mt_rand(), true, null, null],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()],
-            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, mt_rand(), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), 12.16477, 12.16477, new Identifier(mt_rand()), [$image], 'attachmentUrl-'.mt_rand(), true, null, null],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, new Identifier(mt_rand()), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()],
+            ['title-'.mt_rand(), 'description-'.mt_rand(), 'address-'.mt_rand(), -12.16477, -12.16477, new Identifier(mt_rand()), [], null, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
         ];
     }
 }

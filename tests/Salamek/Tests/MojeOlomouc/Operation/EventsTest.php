@@ -14,6 +14,7 @@ use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Hydrator\IHydrator;
 use Salamek\MojeOlomouc\Model\Event;
 use Salamek\MojeOlomouc\Model\EntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Model\IEvent;
 use Salamek\MojeOlomouc\Operation\Events;
 use Salamek\MojeOlomouc\Request;
@@ -145,6 +146,14 @@ class EventsTest extends BaseTest
             $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
+
+        $categoryIdsArr = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArr[] = $category->getEntityIdentifier();
+        }
+
+
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -180,7 +189,7 @@ class EventsTest extends BaseTest
         $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
         $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
         $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($categoryIdsArr, $primitiveEvent['categoryIdsArr']);
         $this->assertEquals($primitiveImages, $primitiveEvent['images']);
         if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
         if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
@@ -236,6 +245,12 @@ class EventsTest extends BaseTest
             $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
+        $categoryIdsArr = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArr[] = $category->getEntityIdentifier();
+        }
+
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
         $this->assertInternalType('array', $primitivePayloadItem);
@@ -271,7 +286,7 @@ class EventsTest extends BaseTest
         $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
         $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
         $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($categoryIdsArr, $primitiveEvent['categoryIdsArr']);
         $this->assertEquals($primitiveImages, $primitiveEvent['images']);
         if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
         if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
@@ -370,7 +385,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4]
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())]
             )]
         ];
     }
@@ -390,7 +405,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -420,7 +435,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -450,7 +465,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4]
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())]
             )],
             [new Event(
                 'title-'.mt_rand(),
@@ -460,7 +475,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),

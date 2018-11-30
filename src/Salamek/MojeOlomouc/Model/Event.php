@@ -203,7 +203,7 @@ class Event implements IEvent
     public function setCategories(array $categories): void
     {
         ObjectArrayValidator::validate($categories, IIdentifier::class);
-        $this->$categories = $categories;
+        $this->categories = $categories;
     }
 
     /**

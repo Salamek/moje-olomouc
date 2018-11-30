@@ -76,7 +76,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals($title, $article->getTitle());
         $this->assertEquals($content, $article->getContent());
         $this->assertEquals($author, $article->getAuthor());
-        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($categoryId, $article->getCategory()->getEntityIdentifier());
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals($images, $article->getImages());
         $this->assertEquals(null, $article->getAttachmentUrl());
@@ -137,7 +137,7 @@ class ArticleTest extends BaseTest
         $this->assertEquals($title, $article->getTitle());
         $this->assertEquals($content, $article->getContent());
         $this->assertEquals($author, $article->getAuthor());
-        $this->assertEquals($categoryId, $article->getCategoryId());
+        $this->assertEquals($categoryId, $article->getCategory()->getEntityIdentifier());
         $this->assertEquals($dateTimeAt, $article->getDateTimeAt());
         $this->assertEquals($images, $article->getImages());
         $this->assertEquals($attachmentUrl, $article->getAttachmentUrl());

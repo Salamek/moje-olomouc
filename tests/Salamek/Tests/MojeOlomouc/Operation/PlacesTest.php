@@ -9,6 +9,7 @@ use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\PlaceSourceEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Hydrator\IEntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\IPlace;
@@ -171,7 +172,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals($place->getAddress(), $primitivePlace['address']);
         $this->assertEquals($place->getLat(), $primitivePlace['lat']);
         $this->assertEquals($place->getLon(), $primitivePlace['lon']);
-        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($place->getCategory()->getEntityIdentifier(), $primitivePlace['categoryId']);
         $this->assertEquals($primitiveImages, $primitivePlace['images']);
         if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
         if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
@@ -248,7 +249,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals($place->getAddress(), $primitivePlace['address']);
         $this->assertEquals($place->getLat(), $primitivePlace['lat']);
         $this->assertEquals($place->getLon(), $primitivePlace['lon']);
-        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($place->getCategory()->getEntityIdentifier(), $primitivePlace['categoryId']);
         $this->assertEquals($primitiveImages, $primitivePlace['images']);
         if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
         if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
@@ -338,7 +339,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -360,7 +361,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -382,7 +383,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -404,7 +405,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand()
+                new Identifier(mt_rand())
             )],
             [new Place(
                 'title-'.mt_rand(),
@@ -412,7 +413,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -424,6 +425,7 @@ class PlacesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

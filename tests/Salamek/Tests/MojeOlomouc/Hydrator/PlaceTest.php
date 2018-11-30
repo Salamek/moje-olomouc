@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
 
-use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Hydrator\IPlace;
 use Salamek\MojeOlomouc\Model\EntityImage;
@@ -72,7 +71,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($address, $place->getAddress());
         $this->assertEquals($lat, $place->getLat());
         $this->assertEquals($lon, $place->getLon());
-        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals($categoryId, $place->getCategory()->getEntityIdentifier());
         $this->assertEquals([], $place->getImages());
         $this->assertEquals(null, $place->getAttachmentUrl());
         $this->assertEquals(null, $place->getIsVisible());
@@ -133,7 +132,7 @@ class PlaceTest extends BaseTest
         $this->assertEquals($address, $place->getAddress());
         $this->assertEquals($lat, $place->getLat());
         $this->assertEquals($lon, $place->getLon());
-        $this->assertEquals($categoryId, $place->getCategoryId());
+        $this->assertEquals($categoryId, $place->getCategory()->getEntityIdentifier());
         $this->assertEquals($images, $place->getImages());
         $this->assertEquals($attachmentUrl, $place->getAttachmentUrl());
         $this->assertEquals($isVisible, $place->getIsVisible());

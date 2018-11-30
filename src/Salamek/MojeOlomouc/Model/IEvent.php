@@ -135,7 +135,7 @@ interface IEvent extends IModel
     public function getCategories(): array;
 
     /**
-     * @return IEntityImage
+     * @return IEntityImage[]
      */
     public function getImages(): array;
 
