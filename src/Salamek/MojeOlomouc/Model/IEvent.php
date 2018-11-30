@@ -45,12 +45,12 @@ interface IEvent extends IModel
     public function setPlaceLon(float $placeLon): void;
 
     /**
-     * @param array $categoryIdsArr
+     * @param IIdentifier[]|IEventCategory[] $categories
      */
-    public function setCategoryIdsArr(array $categoryIdsArr): void;
+    public function setCategories(array $categories): void;
 
     /**
-     * @param array $images
+     * @param IEntityImage[] $images
      */
     public function setImages(array $images): void;
 
@@ -130,12 +130,12 @@ interface IEvent extends IModel
     public function getPlaceLon(): float;
 
     /**
-     * @return array
+     * @return IIdentifier[]|IEventCategory[]
      */
-    public function getCategoryIdsArr(): array;
+    public function getCategories(): array;
 
     /**
-     * @return array
+     * @return IEntityImage
      */
     public function getImages(): array;
 

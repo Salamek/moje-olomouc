@@ -42,8 +42,8 @@ class Event implements IEvent
     /** @var float */
     private $placeLon;
 
-    /** @var array */
-    private $categoryIdsArr;
+    /** @var IIdentifier[]|EventCategory[] */
+    private $categories;
 
     /** @var EntityImage[] */
     private $images;
@@ -81,7 +81,7 @@ class Event implements IEvent
      * @param string $placeDesc
      * @param float $placeLat
      * @param float $placeLon
-     * @param array $categoryIdsArr
+     * @param IIdentifier[]|EventCategory[] $categories
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
@@ -101,7 +101,7 @@ class Event implements IEvent
         string $placeDesc,
         float $placeLat,
         float $placeLon,
-        array $categoryIdsArr,
+        array $categories,
         array $images = [],
         string $attachmentUrl = null,
         string $fee = null,
@@ -121,7 +121,7 @@ class Event implements IEvent
         $this->setPlaceDesc($placeDesc);
         $this->setPlaceLat($placeLat);
         $this->setPlaceLon($placeLon);
-        $this->setCategoryIdsArr($categoryIdsArr);
+        $this->setCategories($categories);
         $this->setImages($images);
         $this->setAttachmentUrl($attachmentUrl);
         $this->setFee($fee);
@@ -198,11 +198,12 @@ class Event implements IEvent
     }
 
     /**
-     * @param array $categoryIdsArr
+     * @param IIdentifier[]|EventCategory[]
      */
-    public function setCategoryIdsArr(array $categoryIdsArr): void
+    public function setCategories(array $categories): void
     {
-        $this->categoryIdsArr = $categoryIdsArr;
+        ObjectArrayValidator::validate($categories, IIdentifier::class);
+        $this->$categories = $categories;
     }
 
     /**
@@ -367,15 +368,15 @@ class Event implements IEvent
     }
 
     /**
-     * @return array
+     * @return IIdentifier[]|EventCategory[]
      */
-    public function getCategoryIdsArr(): array
+    public function getCategories(): array
     {
-        return $this->categoryIdsArr;
+        return $this->categories;
     }
 
     /**
-     * @return array
+     * @return EntityImage[]
      */
     public function getImages(): array
     {

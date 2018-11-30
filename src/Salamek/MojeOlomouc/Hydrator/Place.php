@@ -58,7 +58,7 @@ class Place implements IPlace
             'address' => $place->getAddress(),
             'lat' => $place->getLat(),
             'lon' => $place->getLon(),
-            'categoryId' => $place->getCategoryId(),
+            'categoryId' => $place->getCategory()->getEntityIdentifier(),
             'images' => $primitiveImages,
         ];
 
@@ -91,7 +91,7 @@ class Place implements IPlace
             $modelData['address'],
             $modelData['lat'],
             $modelData['lon'],
-            $modelData['categoryId'],
+            new \Salamek\MojeOlomouc\Model\Identifier($modelData['categoryId']),
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
             (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),

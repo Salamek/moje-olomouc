@@ -25,8 +25,8 @@ class Article implements IArticle
     /** @var string */
     private $author;
 
-    /** @var int */
-    private $categoryId;
+    /** @var IIdentifier|ArticleCategory */
+    private $category;
 
     /** @var \DateTimeInterface */
     private $dateTimeAt;
@@ -51,7 +51,7 @@ class Article implements IArticle
      * @param string $title
      * @param string $content
      * @param string $author
-     * @param int $categoryId
+     * @param IIdentifier|ArticleCategory $category
      * @param \DateTimeInterface $dateTimeAt
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
@@ -64,7 +64,7 @@ class Article implements IArticle
         string $title,
         string $content,
         string $author,
-        int $categoryId,
+        IIdentifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
@@ -77,7 +77,7 @@ class Article implements IArticle
         $this->setTitle($title);
         $this->setContent($content);
         $this->setAuthor($author);
-        $this->setCategoryId($categoryId);
+        $this->setCategory($category);
         $this->setDateTimeAt($dateTimeAt);
         $this->setImages($images);
         $this->setAttachmentUrl($attachmentUrl);
@@ -115,11 +115,11 @@ class Article implements IArticle
     }
 
     /**
-     * @param int $categoryId
+     * @param IIdentifier|ArticleCategory $category
      */
-    public function setCategoryId(int $categoryId): void
+    public function setCategory(IIdentifier $category): void
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
     }
 
     /**
@@ -205,11 +205,11 @@ class Article implements IArticle
     }
 
     /**
-     * @return int
+     * @return IIdentifier
      */
-    public function getCategoryId(): int
+    public function getCategory(): IIdentifier
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
     /**

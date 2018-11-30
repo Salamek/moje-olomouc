@@ -48,7 +48,7 @@ class Article implements IArticle
             'title' => $article->getTitle(),
             'content' => $article->getContent(),
             'author' => $article->getAuthor(),
-            'categoryId' => $article->getCategoryId(),
+            'categoryId' => $article->getCategory()->getEntityIdentifier(),
             'dateTimeAt' => $article->getDateTimeAt()->format(DateTime::NOT_A_ISO8601),
             'images' => $primitiveImages
         ];
@@ -79,7 +79,7 @@ class Article implements IArticle
             $modelData['title'],
             $modelData['content'],
             $modelData['author'],
-            $modelData['categoryId'],
+            new \Salamek\MojeOlomouc\Model\Identifier($modelData['categoryId']),
             $dateTimeAt,
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),

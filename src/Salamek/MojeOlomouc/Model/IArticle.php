@@ -25,9 +25,9 @@ interface IArticle extends IModel
     public function setAuthor(string $author): void;
 
     /**
-     * @param int $categoryId
+     * @param IIdentifier $category
      */
-    public function setCategoryId(int $categoryId): void;
+    public function setCategory(IIdentifier $category): void;
 
     /**
      * @param \DateTimeInterface $dateTimeAt
@@ -75,9 +75,9 @@ interface IArticle extends IModel
     public function getAuthor(): string;
 
     /**
-     * @return int
+     * @return IIdentifier
      */
-    public function getCategoryId(): int;
+    public function getCategory(): IIdentifier;
 
     /**
      * @return \DateTimeInterface

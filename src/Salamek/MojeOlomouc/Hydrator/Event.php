@@ -53,6 +53,12 @@ class Event implements IEvent
             $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
+        $categoryIdsArr = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArr[] = $category->getEntityIdentifier();
+        }
+        
         // Required
         $primitiveArray = [
             'title' => $event->getTitle(),
@@ -62,7 +68,7 @@ class Event implements IEvent
             'placeDesc' => $event->getPlaceDesc(),
             'placeLat' => $event->getPlaceLat(),
             'placeLon' => $event->getPlaceLon(),
-            'categoryIdsArr' => $event->getCategoryIdsArr(),
+            'categoryIdsArr' => $categoryIdsArr,
             'images'   => $primitiveImages
         ];
 
@@ -94,6 +100,16 @@ class Event implements IEvent
             }
         }
 
+
+        $categories = [];
+        if (array_key_exists('categoryIdsArr', $modelData))
+        {
+            foreach($modelData['categoryIdsArr'] AS $primitiveCategory)
+            {
+                $images[] = new \Salamek\MojeOlomouc\Model\Identifier($primitiveCategory);
+            }
+        }
+
         return new $this->modelClass(
             $modelData['title'],
             $modelData['description'],
@@ -102,7 +118,7 @@ class Event implements IEvent
             $modelData['placeDesc'],
             floatval($modelData['placeLat']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
             floatval($modelData['placeLon']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
-            $modelData['categoryIdsArr'],
+            $categories,
             $images,
             (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
             (array_key_exists('fee', $modelData) ? $modelData['fee'] : null),

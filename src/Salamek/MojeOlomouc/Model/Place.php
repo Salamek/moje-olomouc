@@ -35,8 +35,8 @@ class Place implements IPlace
     /** @var float */
     private $lon;
 
-    /** @var int */
-    private $categoryId;
+    /** @var IIdentifier|PlaceCategory */
+    private $category;
 
     /** @var EntityImage[] */
     private $images;
@@ -57,7 +57,7 @@ class Place implements IPlace
      * @param string $address
      * @param float $lat
      * @param float $lon
-     * @param int $categoryId
+     * @param IIdentifier|PlaceCategory $category
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
      * @param bool $isVisible
@@ -70,7 +70,7 @@ class Place implements IPlace
         string $address,
         float $lat,
         float $lon,
-        int $categoryId,
+        IIdentifier $category,
         array $images = [],
         string $attachmentUrl = null,
         bool $isVisible = null,
@@ -83,7 +83,7 @@ class Place implements IPlace
         $this->setAddress($address);
         $this->setLat($lat);
         $this->setLon($lon);
-        $this->setCategoryId($categoryId);
+        $this->setCategory($category);
         $this->setImages($images);
         $this->setAttachmentUrl($attachmentUrl);
         $this->setIsVisible($isVisible);
@@ -140,11 +140,11 @@ class Place implements IPlace
     }
 
     /**
-     * @param int $categoryId
+     * @param IIdentifier|PlaceCategory $category
      */
-    public function setCategoryId(int $categoryId): void
+    public function setCategory(IIdentifier $category): void
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
     }
 
     /**
@@ -230,11 +230,11 @@ class Place implements IPlace
     }
 
     /**
-     * @return int
+     * @return IIdentifier
      */
-    public function getCategoryId(): int
+    public function getCategory(): IIdentifier
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
     /**
