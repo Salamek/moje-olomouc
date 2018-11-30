@@ -36,14 +36,6 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals(null, $articleCategory->getIsImportant());
         $this->assertEquals(null, $articleCategory->getIsVisible());
         $this->assertEquals(null, $articleCategory->getEntityIdentifier());
-        $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
-
-
-        $primitiveArrayTest = [
-            'title' => $title
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
     }
 
 
@@ -77,24 +69,13 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals($isImportant, $articleCategory->getIsImportant());
         $this->assertEquals($isVisible, $articleCategory->getIsVisible());
         $this->assertEquals($id, $articleCategory->getEntityIdentifier());
-        $this->assertInternalType('array', $articleCategory->toPrimitiveArray());
 
-
-        $primitiveArrayTest = [
-            'title' => $title
-        ];
-
-        if (!is_null($consumerFlags)) $primitiveArrayTest['consumerFlags'] = $consumerFlags;
-        if (!is_null($isImportant)) $primitiveArrayTest['isImportant'] = $isImportant;
-        if (!is_null($isVisible)) $primitiveArrayTest['isVisible'] = $isVisible;
-
-        $this->assertEquals($primitiveArrayTest, $articleCategory->toPrimitiveArray());
     }
 
     /**
      * @test
      * @dataProvider provideInvalidConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isImportant
@@ -116,66 +97,6 @@ class ArticleCategoryTest extends BaseTest
             $isVisible,
             $id
         );
-    }
-
-    /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
-     * @param string $title
-     * @param int|null $consumerFlags
-     * @param bool $isImportant
-     * @param bool $isVisible
-     * @param int|null $id
-     */
-    public function createFromRequiredPrimitiveArrayShouldBeGood(
-        string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
-    )
-    {
-        $articleCategory = ArticleCategory::fromPrimitiveArray([
-            'title' => $title
-        ]);
-
-        $this->assertEquals($title, $articleCategory->getTitle());
-        $this->assertEquals(null, $articleCategory->getConsumerFlags());
-        $this->assertEquals(null, $articleCategory->getIsImportant());
-        $this->assertEquals(null, $articleCategory->getIsVisible());
-        $this->assertEquals(null, $articleCategory->getEntityIdentifier());
-    }
-
-    /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
-     * @param string $title
-     * @param int|null $consumerFlags
-     * @param bool $isImportant
-     * @param bool $isVisible
-     * @param int|null $id
-     */
-    public function createFromOptionalPrimitiveArrayShouldBeGood(
-        string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
-    )
-    {
-        $articleCategory = ArticleCategory::fromPrimitiveArray([
-            'title' => $title,
-            'consumerFlags' => $consumerFlags,
-            'isImportant' => $isImportant,
-            'isVisible' => $isVisible,
-            'id' => $id
-        ]);
-
-        $this->assertEquals($title, $articleCategory->getTitle());
-        $this->assertEquals($consumerFlags, $articleCategory->getConsumerFlags());
-        $this->assertEquals($isImportant, $articleCategory->getIsImportant());
-        $this->assertEquals($isVisible, $articleCategory->getIsVisible());
-        $this->assertEquals($id, $articleCategory->getEntityIdentifier());
     }
 
     /**

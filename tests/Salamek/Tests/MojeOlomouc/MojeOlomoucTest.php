@@ -38,7 +38,7 @@ class MojeOlomoucTest extends BaseTest
     /**
      * @test
      * @dataProvider provideBadApiKey
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      */
     public function checkFailOnBadApiKey(string $apiKey): void
     {
@@ -84,7 +84,7 @@ class MojeOlomoucTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidOperationNames
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $operationName
      * @param string $expectedOperationClass
      */
@@ -97,9 +97,9 @@ class MojeOlomoucTest extends BaseTest
     }
 
     /**
-     * @test
+     * @TODO
      * @dataProvider provideValidOperationNames
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $operationName
      * @param string $expectedOperationClass
      */

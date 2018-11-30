@@ -7,18 +7,22 @@ namespace Salamek\MojeOlomouc;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IArticle;
+use Salamek\MojeOlomouc\Hydrator\IArticleCategory;
+use Salamek\MojeOlomouc\Hydrator\IEntityImage;
+use Salamek\MojeOlomouc\Hydrator\IEvent;
+use Salamek\MojeOlomouc\Hydrator\IEventCategory;
+use Salamek\MojeOlomouc\Hydrator\IImportantMessage;
+use Salamek\MojeOlomouc\Hydrator\IPlace;
+use Salamek\MojeOlomouc\Hydrator\IPlaceCategory;
 use Salamek\MojeOlomouc\Model\Article;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
+use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\Event;
 use Salamek\MojeOlomouc\Model\EventCategory;
-use Salamek\MojeOlomouc\Model\IArticle;
-use Salamek\MojeOlomouc\Model\IArticleCategory;
-use Salamek\MojeOlomouc\Model\IEvent;
-use Salamek\MojeOlomouc\Model\IEventCategory;
-use Salamek\MojeOlomouc\Model\IImportantMessage;
+use Salamek\MojeOlomouc\Model\Identifier;
+use Salamek\MojeOlomouc\Model\IIdentifier;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
-use Salamek\MojeOlomouc\Model\IPlace;
-use Salamek\MojeOlomouc\Model\IPlaceCategory;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\MojeOlomouc\Operation\ArticleCategories;
@@ -26,7 +30,6 @@ use Salamek\MojeOlomouc\Operation\Articles;
 use Salamek\MojeOlomouc\Operation\EventCategories;
 use Salamek\MojeOlomouc\Operation\Events;
 use Salamek\MojeOlomouc\Operation\ImportantMessages;
-use Salamek\MojeOlomouc\Operation\IOperation;
 use Salamek\MojeOlomouc\Operation\PlaceCategories;
 use Salamek\MojeOlomouc\Operation\Places;
 use Salamek\MojeOlomouc\Validator\MaxLengthValidator;
@@ -73,19 +76,13 @@ class MojeOlomouc
      * @param ClientInterface $client
      * @param string $apiKey
      * @param array $hydrationTable
+     * @param bool $appendDefaultHydrationTable
      */
     public function __construct(
         ClientInterface $client,
         string $apiKey,
-        array $hydrationTable = [
-            IArticleCategory::class => ArticleCategory::class,
-            IArticle::class => Article::class,
-            IEventCategory::class => EventCategory::class,
-            IEvent::class => Event::class,
-            IImportantMessage::class => ImportantMessage::class,
-            IPlaceCategory::class => PlaceCategory::class,
-            IPlace::class => Place::class
-        ]
+        array $hydrationTable = [],
+        bool $appendDefaultHydrationTable = true
     )
     {
         MaxLengthValidator::validate($apiKey, 64);
@@ -94,29 +91,36 @@ class MojeOlomouc
         $this->apiKey = $apiKey;
         $this->hydrationTable = $hydrationTable;
 
-        $request = new Request($client, $apiKey);
-
-        $this->articleCategories = new ArticleCategories($request, $this->getHydrator(IArticleCategory::class));
-        $this->articles = new Articles($request, $this->getHydrator(IArticle::class));
-        $this->eventCategories = new EventCategories($request, $this->getHydrator(IEventCategory::class));
-        $this->events = new Events($request, $this->getHydrator(IEvent::class));
-        $this->importantMessages = new ImportantMessages($request, $this->getHydrator(IImportantMessage::class));
-        $this->placeCategories = new PlaceCategories($request, $this->getHydrator(IPlaceCategory::class));
-        $this->places = new Places($request, $this->getHydrator(IPlace::class));
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    private function getHydrator(string $name): string
-    {
-        if (!array_key_exists($name, $this->hydrationTable))
+        if (empty($hydrationTable) || $appendDefaultHydrationTable)
         {
-            throw new InvalidArgumentException(sprintf('Hydrator for %s not found', $name));
+            $this->buildDefaultHydrationTable();
         }
 
-        return $this->hydrationTable[$name];
+        $request = new Request($client, $apiKey);
+
+        $this->articleCategories = new ArticleCategories($request, $this->hydrationTable[IArticleCategory::class]);
+        $this->articles = new Articles($request, $this->hydrationTable[IArticle::class]);
+        $this->eventCategories = new EventCategories($request, $this->hydrationTable[IEventCategory::class]);
+        $this->events = new Events($request, $this->hydrationTable[IEvent::class]);
+        $this->importantMessages = new ImportantMessages($request, $this->hydrationTable[IImportantMessage::class]);
+        $this->placeCategories = new PlaceCategories($request, $this->hydrationTable[IPlaceCategory::class]);
+        $this->places = new Places($request, $this->hydrationTable[IPlace::class]);
+    }
+
+    private function buildDefaultHydrationTable(): void
+    {
+        if (!array_key_exists(IEntityImage::class, $this->hydrationTable)) $this->hydrationTable[IEntityImage::class] = new \Salamek\MojeOlomouc\Hydrator\EntityImage(EntityImage::class);
+        if (!array_key_exists(IIdentifier::class, $this->hydrationTable)) $this->hydrationTable[IIdentifier::class] = new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class);
+
+        if (!array_key_exists(IArticleCategory::class, $this->hydrationTable)) $this->hydrationTable[IArticleCategory::class] = new \Salamek\MojeOlomouc\Hydrator\ArticleCategory(ArticleCategory::class);
+        if (!array_key_exists(IEventCategory::class, $this->hydrationTable)) $this->hydrationTable[IEventCategory::class] = new \Salamek\MojeOlomouc\Hydrator\EventCategory(EventCategory::class);
+        if (!array_key_exists(IPlaceCategory::class, $this->hydrationTable)) $this->hydrationTable[IPlaceCategory::class] = new \Salamek\MojeOlomouc\Hydrator\PlaceCategory(PlaceCategory::class);
+
+        if (!array_key_exists(IImportantMessage::class, $this->hydrationTable)) $this->hydrationTable[IImportantMessage::class] = new \Salamek\MojeOlomouc\Hydrator\ImportantMessage(ImportantMessage::class);
+
+        if (!array_key_exists(IArticle::class, $this->hydrationTable)) $this->hydrationTable[IArticle::class] = new \Salamek\MojeOlomouc\Hydrator\Article(Article::class, $this->hydrationTable[IEntityImage::class]);
+        if (!array_key_exists(IEvent::class, $this->hydrationTable)) $this->hydrationTable[IEvent::class] = new \Salamek\MojeOlomouc\Hydrator\Event(Event::class, $this->hydrationTable[IEntityImage::class]);
+        if (!array_key_exists(IPlace::class, $this->hydrationTable)) $this->hydrationTable[IPlace::class] = new \Salamek\MojeOlomouc\Hydrator\Place(Place::class, $this->hydrationTable[IEntityImage::class]);
     }
 
     /**

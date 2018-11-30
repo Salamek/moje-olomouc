@@ -169,40 +169,4 @@ class ImportantMessage implements IImportantMessage
     {
         return $this->isVisible;
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        $primitiveArray = [
-            'text' => $this->text,
-            'dateTimeAt'   => $this->dateTimeAt->format(DateTime::NOT_A_ISO8601),
-            'type'   => $this->type,
-            'severity'   => $this->severity,
-            'isVisible'   => $this->isVisible
-        ];
-
-        if (!is_null($this->expireAt)) $primitiveArray['expireAt'] = $this->expireAt->format(DateTime::NOT_A_ISO8601);
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return ImportantMessage
-     */
-    public static function fromPrimitiveArray(array $modelData): ImportantMessage
-    {
-        return new ImportantMessage(
-            $modelData['text'],
-            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['dateTimeAt']),
-            (array_key_exists('type', $modelData) ? $modelData['type'] : ImportantMessageTypeEnum::TRAFFIC_SITUATION),
-            (array_key_exists('severity', $modelData) ? $modelData['severity'] : ImportantMessageSeverityEnum::WARNING),
-            (array_key_exists('expireAt', $modelData) ? \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['expireAt']) : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : true),
-            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
-        );
-    }
-
 }

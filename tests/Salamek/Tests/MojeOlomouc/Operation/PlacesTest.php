@@ -8,6 +8,8 @@ use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\PlaceSourceEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Hydrator\IEntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Model\Place;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\MojeOlomouc\Model\IPlace;
@@ -18,6 +20,21 @@ use Salamek\MojeOlomouc\Response;
 
 class PlacesTest extends BaseTest
 {
+    /** @var \Salamek\MojeOlomouc\Hydrator\IPlace */
+    private $hydrator;
+
+    /** @var IEntityImage */
+    private $entityImageHydrator;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IPlace::class);
+        $this->entityImageHydrator = $this->getHydrator(IEntityImage::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -27,6 +44,7 @@ class PlacesTest extends BaseTest
      * @param bool $withExtraFields
      * @param string $source
      * @param bool $own
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -60,7 +78,7 @@ class PlacesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->getAll(
             $from,
             $deleted,
@@ -94,6 +112,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IPlace $place)
     {
@@ -118,13 +137,13 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->create([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -153,7 +172,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals($place->getAddress(), $primitivePlace['address']);
         $this->assertEquals($place->getLat(), $primitivePlace['lat']);
         $this->assertEquals($place->getLon(), $primitivePlace['lon']);
-        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($place->getCategory()->getEntityIdentifier(), $primitivePlace['categoryId']);
         $this->assertEquals($primitiveImages, $primitivePlace['images']);
         if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
         if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
@@ -170,6 +189,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IPlace $place)
     {
@@ -194,13 +214,13 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->update([$place]);
 
         $primitiveImages = [];
         foreach ($place->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -229,7 +249,7 @@ class PlacesTest extends BaseTest
         $this->assertEquals($place->getAddress(), $primitivePlace['address']);
         $this->assertEquals($place->getLat(), $primitivePlace['lat']);
         $this->assertEquals($place->getLon(), $primitivePlace['lon']);
-        $this->assertEquals($place->getCategoryId(), $primitivePlace['categoryId']);
+        $this->assertEquals($place->getCategory()->getEntityIdentifier(), $primitivePlace['categoryId']);
         $this->assertEquals($primitiveImages, $primitivePlace['images']);
         if (!is_null($place->getAttachmentUrl())) $this->assertEquals($place->getAttachmentUrl(), $primitivePlace['attachmentUrl']);
         if (!is_null($place->getIsVisible())) $this->assertEquals($place->getIsVisible(), $primitivePlace['isVisible']);
@@ -246,6 +266,7 @@ class PlacesTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IPlace $place)
     {
@@ -270,7 +291,7 @@ class PlacesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $response = $places->delete([$place]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -291,8 +312,9 @@ class PlacesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IPlace $place
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IPlace $place)
     {
@@ -301,7 +323,7 @@ class PlacesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $places = new Places($request);
+        $places = new Places($request, $this->hydrator);
         $places->delete([$place]);
     }
 
@@ -317,7 +339,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -339,7 +361,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -361,7 +383,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -383,7 +405,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand()
+                new Identifier(mt_rand())
             )],
             [new Place(
                 'title-'.mt_rand(),
@@ -391,7 +413,7 @@ class PlacesTest extends BaseTest
                 'address-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                mt_rand(),
+                new Identifier(mt_rand()),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -403,6 +425,7 @@ class PlacesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

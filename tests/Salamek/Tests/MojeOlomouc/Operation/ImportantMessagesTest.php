@@ -18,6 +18,16 @@ use Salamek\MojeOlomouc\Response;
 
 class ImportantMessagesTest extends BaseTest
 {
+    private $hydrator;
+
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IImportantMessage::class);
+    }
+
     /**
      * @test
      */
@@ -46,7 +56,7 @@ class ImportantMessagesTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $places = new ImportantMessages($request);
+        $places = new ImportantMessages($request, $this->hydrator);
         $response = $places->getAll();
 
         $this->assertEquals('GET', $catchType);
@@ -60,6 +70,7 @@ class ImportantMessagesTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IImportantMessage $importantMessage
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IImportantMessage $importantMessage)
     {
@@ -84,7 +95,7 @@ class ImportantMessagesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $importantMessages = new ImportantMessages($request);
+        $importantMessages = new ImportantMessages($request, $this->hydrator);
         $response = $importantMessages->create([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -123,6 +134,7 @@ class ImportantMessagesTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IImportantMessage $importantMessage
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IImportantMessage $importantMessage)
     {
@@ -147,7 +159,7 @@ class ImportantMessagesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $importantMessages = new ImportantMessages($request);
+        $importantMessages = new ImportantMessages($request, $this->hydrator);
         $response = $importantMessages->update([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -185,7 +197,8 @@ class ImportantMessagesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
-     * @param IImportantMessage $importantMessage
+     * @param IImportantMessage|null $importantMessage
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IImportantMessage $importantMessage = null)
     {
@@ -210,7 +223,7 @@ class ImportantMessagesTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $importantMessages = new ImportantMessages($request);
+        $importantMessages = new ImportantMessages($request, $this->hydrator);
         $response = $importantMessages->delete([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -232,8 +245,9 @@ class ImportantMessagesTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IImportantMessage $importantMessage
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IImportantMessage $importantMessage)
     {
@@ -242,12 +256,13 @@ class ImportantMessagesTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $importantMessages = new ImportantMessages($request);
+        $importantMessages = new ImportantMessages($request, $this->hydrator);
         $importantMessages->delete([$importantMessage]);
     }
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideInvalidDeleteConstructorParameters(): array
     {
@@ -266,6 +281,7 @@ class ImportantMessagesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideValidDeleteConstructorParameters(): array
     {
@@ -284,6 +300,7 @@ class ImportantMessagesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideUpdateConstructorParameters(): array
     {
@@ -302,6 +319,7 @@ class ImportantMessagesTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideCreateConstructorParameters(): array
     {

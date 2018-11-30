@@ -107,37 +107,4 @@ class ArticleCategory implements IArticleCategory
     {
         return $this->isVisible;
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        // Required
-        $primitiveArray = [
-            'title' => $this->title,
-        ];
-
-        // Optional
-        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
-        if (!is_null($this->isImportant)) $primitiveArray['isImportant'] = $this->isImportant;
-        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return ArticleCategory
-     */
-    public static function fromPrimitiveArray(array $modelData): ArticleCategory
-    {
-        return new ArticleCategory(
-            $modelData['title'],
-            (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags']: null),
-            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant']: null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: null),
-            (array_key_exists('id', $modelData) ? $modelData['id']: null)
-        );
-    }
 }

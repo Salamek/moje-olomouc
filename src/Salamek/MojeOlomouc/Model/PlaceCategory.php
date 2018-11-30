@@ -86,36 +86,4 @@ class PlaceCategory implements IPlaceCategory
     {
         return $this->isVisible;
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        // Required
-        $primitiveArray = [
-            'title' => $this->title,
-        ];
-
-        // Optional
-        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
-        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return PlaceCategory
-     */
-    public static function fromPrimitiveArray(array $modelData): PlaceCategory
-    {
-        return new PlaceCategory(
-            $modelData['title'],
-            (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
-            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
-        );
-    }
-    
 }

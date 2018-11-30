@@ -63,31 +63,4 @@ class EventCategory implements IEventCategory
     {
         return $this->isVisible;
     }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        $primitiveArray = [
-            'title' => $this->title
-        ];
-
-        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return EventCategory
-     */
-    public static function fromPrimitiveArray(array $modelData): EventCategory
-    {
-        return new EventCategory(
-            $modelData['title'],
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible']: null),
-            (array_key_exists('id', $modelData) ? $modelData['id']: null)
-        );
-    }
 }

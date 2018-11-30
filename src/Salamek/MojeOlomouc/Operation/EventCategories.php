@@ -5,10 +5,9 @@ namespace Salamek\MojeOlomouc\Operation;
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventCategorySourceEnum;
-use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IEventCategory;
 use Salamek\MojeOlomouc\Request;
 use Salamek\MojeOlomouc\Response;
-use \Salamek\MojeOlomouc\Model\IEventCategory;
 
 /**
  * Class EventCategory
@@ -25,9 +24,9 @@ class EventCategories implements IOperation
     /**
      * EventCategories constructor.
      * @param Request $request
-     * @param string|null $hydrator
+     * @param IEventCategory $hydrator
      */
-    public function __construct(Request $request, string $hydrator = null)
+    public function __construct(Request $request, IEventCategory $hydrator)
     {
         $this->request = $request;
         $this->hydrator = $hydrator;
@@ -40,6 +39,7 @@ class EventCategories implements IOperation
      * @param bool $withExtraFields
      * @param string $source
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
         \DateTimeInterface $from = null,
@@ -61,33 +61,36 @@ class EventCategories implements IOperation
     }
 
     /**
-     * @param IEventCategory[] $eventCategories
+     * @param array $eventCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function create(
         array $eventCategories
     ): Response
     {
-        return $this->request->create('/api/import/event-categories', $eventCategories, 'eventCategory');
+        return $this->request->create('/api/import/event-categories', $eventCategories, 'eventCategory', $this->hydrator);
     }
 
     /**
-     * @param IEventCategory[] $eventCategories
+     * @param array $eventCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function update(
         array $eventCategories
     ): Response
     {
-        return $this->request->update('/api/import/event-categories', $eventCategories, 'eventCategory');
+        return $this->request->update('/api/import/event-categories', $eventCategories, 'eventCategory', $this->hydrator);
     }
 
     /**
-     * @param IEventCategory[] $eventCategories
+     * @param array $eventCategories
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete(array $eventCategories): Response
     {
-        return $this->request->delete('/api/import/event-categories', $eventCategories, 'eventCategory');
+        return $this->request->delete('/api/import/event-categories', $eventCategories, 'eventCategory', $this->hydrator);
     }
 }

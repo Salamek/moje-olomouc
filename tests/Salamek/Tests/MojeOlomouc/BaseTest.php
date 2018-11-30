@@ -9,6 +9,25 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
+use Salamek\MojeOlomouc\Hydrator\IArticle;
+use Salamek\MojeOlomouc\Hydrator\IArticleCategory;
+use Salamek\MojeOlomouc\Hydrator\IEntityImage;
+use Salamek\MojeOlomouc\Hydrator\IEvent;
+use Salamek\MojeOlomouc\Hydrator\IEventCategory;
+use Salamek\MojeOlomouc\Hydrator\IIdentifier;
+use Salamek\MojeOlomouc\Hydrator\IImportantMessage;
+use Salamek\MojeOlomouc\Hydrator\IPlace;
+use Salamek\MojeOlomouc\Hydrator\IPlaceCategory;
+use Salamek\MojeOlomouc\Model\Article;
+use Salamek\MojeOlomouc\Model\ArticleCategory;
+use Salamek\MojeOlomouc\Model\EntityImage;
+use Salamek\MojeOlomouc\Model\Event;
+use Salamek\MojeOlomouc\Model\EventCategory;
+use Salamek\MojeOlomouc\Model\Identifier;
+use Salamek\MojeOlomouc\Model\ImportantMessage;
+use Salamek\MojeOlomouc\Model\Place;
+use Salamek\MojeOlomouc\Model\PlaceCategory;
+
 abstract class BaseTest extends TestCase
 {
     protected function getResponseMock(): ResponseInterface
@@ -71,6 +90,7 @@ abstract class BaseTest extends TestCase
 
     /**
      * @return \DateTime
+     * @throws \Exception
      */
     protected function getDateTime(): \DateTime
     {
@@ -84,5 +104,29 @@ abstract class BaseTest extends TestCase
     protected function boolToString(bool $boolean): string
     {
         return $boolean ? 'true': 'false';
+    }
+
+    /**
+     * @param string $className
+     * @return mixed
+     */
+    protected function getHydrator(string $className)
+    {
+        $hydrationTable = [];
+        $hydrationTable[IIdentifier::class] = new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class);
+        $hydrationTable[IEntityImage::class] = new \Salamek\MojeOlomouc\Hydrator\EntityImage(EntityImage::class);
+
+        $hydrationTable[IArticleCategory::class] = new \Salamek\MojeOlomouc\Hydrator\ArticleCategory(ArticleCategory::class);
+        $hydrationTable[IEventCategory::class] = new \Salamek\MojeOlomouc\Hydrator\EventCategory(EventCategory::class);
+        $hydrationTable[IPlaceCategory::class] = new \Salamek\MojeOlomouc\Hydrator\PlaceCategory(PlaceCategory::class);
+
+        $hydrationTable[IImportantMessage::class] = new \Salamek\MojeOlomouc\Hydrator\ImportantMessage(ImportantMessage::class);
+
+        $hydrationTable[IArticle::class] = new \Salamek\MojeOlomouc\Hydrator\Article(Article::class, $hydrationTable[IEntityImage::class]);
+        $hydrationTable[IEvent::class] = new \Salamek\MojeOlomouc\Hydrator\Event(Event::class, $hydrationTable[IEntityImage::class]);
+        $hydrationTable[IPlace::class] = new \Salamek\MojeOlomouc\Hydrator\Place(Place::class, $hydrationTable[IEntityImage::class]);
+
+
+        return $hydrationTable[$className];
     }
 }

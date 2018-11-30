@@ -42,8 +42,8 @@ class Event implements IEvent
     /** @var float */
     private $placeLon;
 
-    /** @var array */
-    private $categoryIdsArr;
+    /** @var IIdentifier[]|EventCategory[] */
+    private $categories;
 
     /** @var EntityImage[] */
     private $images;
@@ -81,7 +81,7 @@ class Event implements IEvent
      * @param string $placeDesc
      * @param float $placeLat
      * @param float $placeLon
-     * @param array $categoryIdsArr
+     * @param IIdentifier[]|EventCategory[] $categories
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
      * @param string|null $fee
@@ -101,7 +101,7 @@ class Event implements IEvent
         string $placeDesc,
         float $placeLat,
         float $placeLon,
-        array $categoryIdsArr,
+        array $categories,
         array $images = [],
         string $attachmentUrl = null,
         string $fee = null,
@@ -121,7 +121,7 @@ class Event implements IEvent
         $this->setPlaceDesc($placeDesc);
         $this->setPlaceLat($placeLat);
         $this->setPlaceLon($placeLon);
-        $this->setCategoryIdsArr($categoryIdsArr);
+        $this->setCategories($categories);
         $this->setImages($images);
         $this->setAttachmentUrl($attachmentUrl);
         $this->setFee($fee);
@@ -198,11 +198,12 @@ class Event implements IEvent
     }
 
     /**
-     * @param array $categoryIdsArr
+     * @param IIdentifier[]|EventCategory[]
      */
-    public function setCategoryIdsArr(array $categoryIdsArr): void
+    public function setCategories(array $categories): void
     {
-        $this->categoryIdsArr = $categoryIdsArr;
+        ObjectArrayValidator::validate($categories, IIdentifier::class);
+        $this->categories = $categories;
     }
 
     /**
@@ -367,15 +368,15 @@ class Event implements IEvent
     }
 
     /**
-     * @return array
+     * @return IIdentifier[]|EventCategory[]
      */
-    public function getCategoryIdsArr(): array
+    public function getCategories(): array
     {
-        return $this->categoryIdsArr;
+        return $this->categories;
     }
 
     /**
-     * @return array
+     * @return EntityImage[]
      */
     public function getImages(): array
     {
@@ -444,79 +445,5 @@ class Event implements IEvent
     public function getFeaturedLevel(): ?int
     {
         return $this->featuredLevel;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        $primitiveImages = [];
-        foreach ($this->images AS $image)
-        {
-            $primitiveImages[] = $image->toPrimitiveArray();
-        }
-
-        // Required
-        $primitiveArray = [
-            'title' => $this->title,
-            'description' => $this->description,
-            'startAt' => ($this->startAt ? $this->startAt->format(DateTime::NOT_A_ISO8601): null),
-            'endAt' => ($this->endAt ? $this->endAt->format(DateTime::NOT_A_ISO8601): null),
-            'placeDesc' => $this->placeDesc,
-            'placeLat' => $this->placeLat,
-            'placeLon' => $this->placeLon,
-            'categoryIdsArr' => $this->categoryIdsArr,
-            'images'   => $primitiveImages
-        ];
-
-        // Optional
-        if (!is_null($this->attachmentUrl)) $primitiveArray['attachmentUrl'] = $this->attachmentUrl;
-        if (!is_null($this->fee)) $primitiveArray['fee'] = $this->fee;
-        if (!is_null($this->webUrl)) $primitiveArray['webUrl'] = $this->webUrl;
-        if (!is_null($this->facebookUrl)) $primitiveArray['facebookUrl'] = $this->facebookUrl;
-        if (!is_null($this->consumerFlags)) $primitiveArray['consumerFlags'] = $this->consumerFlags;
-        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
-        if (!is_null($this->approveState)) $primitiveArray['approveState'] = $this->approveState;
-        if (!is_null($this->featuredLevel)) $primitiveArray['featuredLevel'] = $this->featuredLevel;
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return Event
-     */
-    public static function fromPrimitiveArray(array $modelData): Event
-    {
-        $images = [];
-        if (array_key_exists('images', $modelData))
-        {
-            foreach($modelData['images'] AS $primitiveImage)
-            {
-                $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
-            }
-        }
-
-        return new Event(
-            $modelData['title'],
-            $modelData['description'],
-            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['startAt']),
-            \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['endAt']),
-            $modelData['placeDesc'],
-            floatval($modelData['placeLat']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
-            floatval($modelData['placeLon']), //@TODO API returns string, but accepts float, we assume that float is a correct variable type
-            $modelData['categoryIdsArr'],
-            $images,
-            (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
-            (array_key_exists('fee', $modelData) ? $modelData['fee'] : null),
-            (array_key_exists('webUrl', $modelData) ? $modelData['webUrl'] : null),
-            (array_key_exists('facebookUrl', $modelData) ? $modelData['facebookUrl'] : null),
-            (array_key_exists('consumerFlags', $modelData) ? $modelData['consumerFlags'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
-            (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
-            (array_key_exists('featuredLevel', $modelData) ? $modelData['featuredLevel'] : null),
-            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
-        );
     }
 }

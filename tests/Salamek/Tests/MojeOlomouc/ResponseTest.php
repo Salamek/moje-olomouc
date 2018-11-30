@@ -13,7 +13,7 @@ class ResponseTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidResponseBody
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidJsonResponseException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidJsonResponseException
      */
     public function constructFailOnWrongData(string $responseContent): void
     {
@@ -67,7 +67,7 @@ class ResponseTest extends BaseTest
 
         $responseMock = $this->getResponseMockWithBody($responseContent);
 
-        $response = new Response($responseMock, ['tests' => PlaceCategory::class]);
+        $response = new Response($responseMock, ['tests' => new \Salamek\MojeOlomouc\Hydrator\PlaceCategory(PlaceCategory::class)]);
         $data = $response->getData();
 
         $this->assertArrayHasKey('tests', $data);
@@ -114,9 +114,10 @@ class ResponseTest extends BaseTest
         new Response($responseMock, [], [$placeCategory]);
         $this->assertEquals($id, $placeCategory->getEntityIdentifier());
     }
-    
 
-
+    /**
+     * @return array
+     */
     public function provideInvalidResponseBody(): array
     {
         return [
@@ -152,6 +153,9 @@ class ResponseTest extends BaseTest
         ];
     }
 
+    /**
+     * @return array
+     */
     public function provideValidResponseBody(): array
     {
         return [

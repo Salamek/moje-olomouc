@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salamek\Tests\MojeOlomouc\Model;
 
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
+use Salamek\MojeOlomouc\Hydrator\IIdentifier;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -25,33 +26,7 @@ class IdentifierTest extends BaseTest
         );
 
         $this->assertEquals($id, $identifier->getEntityIdentifier());
-        $this->assertInternalType('array', $identifier->toPrimitiveArray());
-
-
-        $primitiveArrayTest = [
-            'id' => $id
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $identifier->toPrimitiveArray());
     }
-
-
-    /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
-     * @param int $id
-     */
-    public function createFromRequiredPrimitiveArrayShouldBeGood(
-        int $id
-    )
-    {
-        $identifier = Identifier::fromPrimitiveArray([
-            'id' => $id
-        ]);
-
-        $this->assertEquals($id, $identifier->getEntityIdentifier());
-    }
-
 
     /**
      * @return array

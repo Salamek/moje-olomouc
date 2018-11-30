@@ -20,10 +20,10 @@ class Response
     /** @var int */
     private $httpCode;
 
-    /** @var  */
+    /** @var array */
     private $rawData;
 
-    /** @var object */
+    /** @var array */
     private $data = null;
 
     /** @var int */
@@ -84,7 +84,7 @@ class Response
                     $hydratedItems = [];
                     foreach ($this->data[$itemKey] AS $item)
                     {
-                        $hydratedItems[] = call_user_func(sprintf('%s::fromPrimitiveArray', $hydrator), $item);
+                        $hydratedItems[] = $hydrator->fromPrimitiveArray($item);
                     }
 
                     $this->data[$itemKey] = $hydratedItems;

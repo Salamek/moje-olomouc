@@ -35,9 +35,9 @@ interface IPlace extends IModel
     public function setLon(float $lon): void;
 
     /**
-     * @param int $categoryId
+     * @param IIdentifier $category
      */
-    public function setCategoryId(int $categoryId): void;
+    public function setCategory(IIdentifier $category): void;
 
     /**
      * @param EntityImage[] $images
@@ -85,9 +85,9 @@ interface IPlace extends IModel
     public function getLon(): float;
 
     /**
-     * @return int
+     * @return IIdentifier
      */
-    public function getCategoryId(): int;
+    public function getCategory(): IIdentifier;
 
     /**
      * @return EntityImage[]

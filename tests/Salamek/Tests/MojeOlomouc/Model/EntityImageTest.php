@@ -37,18 +37,6 @@ class EntityImageTest extends BaseTest
         $this->assertEquals(null, $entityImage->getTitle());
         $this->assertEquals(false, $entityImage->getIsFeatured());
         $this->assertEquals(null, $entityImage->getEntityIdentifier());
-
-        $this->assertInternalType('array', $entityImage->toPrimitiveArray());
-
-
-        $primitiveArrayTest = [
-            'title' => $entityImage->getTitle(),
-            'imageUrl' => $imageUrl,
-            'contentType' => $entityImage->getContentType(),
-            'isFeatured' => $entityImage->getIsFeatured()
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $entityImage->toPrimitiveArray());
     }
 
 
@@ -84,23 +72,12 @@ class EntityImageTest extends BaseTest
         $this->assertEquals($isFeatured, $entityImage->getIsFeatured());
         $this->assertEquals($id, $entityImage->getEntityIdentifier());
 
-        $this->assertInternalType('array', $entityImage->toPrimitiveArray());
-
-
-        $primitiveArrayTest = [
-            'title' => $title,
-            'imageUrl' => $imageUrl,
-            'contentType' => $contentType,
-            'isFeatured' => $isFeatured
-        ];
-
-        $this->assertEquals($primitiveArrayTest, $entityImage->toPrimitiveArray());
     }
 
     /**
      * @test
      * @dataProvider provideInvalidConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $imageUrl
      * @param int $contentType
      * @param string $title
@@ -122,72 +99,6 @@ class EntityImageTest extends BaseTest
             $isFeatured,
             $id
         );
-    }
-
-    /**
-     * @test
-     * @param string $imageUrl
-     * @dataProvider provideValidConstructorParameters
-     * @param int $contentType
-     * @param string|null $title
-     * @param bool $isFeatured
-     * @param int|null $id
-     */
-    public function createFromRequiredPrimitiveArrayShouldBeGood(
-        string $imageUrl,
-        int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER,
-        string $title = null,
-        bool $isFeatured = false,
-        int $id = null
-    )
-    {
-
-        $entityImage = EntityImage::fromPrimitiveArray(
-            [
-                'imageUrl' => $imageUrl,
-            ]
-        );
-
-        $this->assertEquals($imageUrl, $entityImage->getImageUrl());
-        $this->assertEquals(EntityImageContentTypeEnum::GRAPHICS_POSTER, $entityImage->getContentType());
-        $this->assertEquals(null, $entityImage->getTitle());
-        $this->assertEquals(false, $entityImage->getIsFeatured());
-        $this->assertEquals(null, $entityImage->getEntityIdentifier());
-    }
-
-    /**
-     * @test
-     * @param string $imageUrl
-     * @dataProvider provideValidConstructorParameters
-     * @param int $contentType
-     * @param string|null $title
-     * @param bool $isFeatured
-     * @param int|null $id
-     */
-    public function createFromOptionalPrimitiveArrayShouldBeGood(
-        string $imageUrl,
-        int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER,
-        string $title = null,
-        bool $isFeatured = false,
-        int $id = null
-    )
-    {
-
-        $entityImage = EntityImage::fromPrimitiveArray(
-            [
-                'imageUrl' => $imageUrl,
-                'contentType' => $contentType,
-                'title' => $title,
-                'isFeatured' => $isFeatured,
-                'id' => $id,
-            ]
-        );
-
-        $this->assertEquals($imageUrl, $entityImage->getImageUrl());
-        $this->assertEquals($contentType, $entityImage->getContentType());
-        $this->assertEquals($title, $entityImage->getTitle());
-        $this->assertEquals($isFeatured, $entityImage->getIsFeatured());
-        $this->assertEquals($id, $entityImage->getEntityIdentifier());
     }
 
     /**

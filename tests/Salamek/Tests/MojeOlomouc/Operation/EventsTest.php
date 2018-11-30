@@ -11,8 +11,10 @@ use Salamek\MojeOlomouc\Enum\EventConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\EventFeaturedLevelEnum;
 use Salamek\MojeOlomouc\Enum\EventSourceEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
+use Salamek\MojeOlomouc\Hydrator\IHydrator;
 use Salamek\MojeOlomouc\Model\Event;
 use Salamek\MojeOlomouc\Model\EntityImage;
+use Salamek\MojeOlomouc\Model\Identifier;
 use Salamek\MojeOlomouc\Model\IEvent;
 use Salamek\MojeOlomouc\Operation\Events;
 use Salamek\MojeOlomouc\Request;
@@ -20,6 +22,19 @@ use Salamek\MojeOlomouc\Response;
 
 class EventsTest extends BaseTest
 {
+    private $hydrator;
+
+    /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
+    private $entityImageHydrator;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IEvent::class);
+        $this->entityImageHydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IEntityImage::class);
+    }
+
     /**
      * @test
      * @dataProvider provideGetAllConstructorParameters
@@ -29,6 +44,7 @@ class EventsTest extends BaseTest
      * @param bool $withExtraFields
      * @param string $source
      * @param bool $own
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAllShouldBeGoodTest(
         \DateTimeInterface $from = null,
@@ -62,7 +78,7 @@ class EventsTest extends BaseTest
 
         $request = new Request($client, $apiKey);
 
-        $article = new Events($request);
+        $article = new Events($request, $this->hydrator);
         $response = $article->getAll(
             $from,
             $deleted,
@@ -96,6 +112,7 @@ class EventsTest extends BaseTest
      * @test
      * @dataProvider provideCreateConstructorParameters
      * @param IEvent $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createShouldBeGoodTest(IEvent $event)
     {
@@ -120,14 +137,22 @@ class EventsTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $events = new Events($request);
+        $events = new Events($request, $this->hydrator);
         $response = $events->create([$event]);
 
         $primitiveImages = [];
         foreach ($event->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
         }
+
+
+        $categoryIdsArr = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArr[] = $category->getEntityIdentifier();
+        }
+
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
@@ -164,7 +189,7 @@ class EventsTest extends BaseTest
         $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
         $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
         $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($categoryIdsArr, $primitiveEvent['categoryIdsArr']);
         $this->assertEquals($primitiveImages, $primitiveEvent['images']);
         if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
         if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
@@ -186,6 +211,7 @@ class EventsTest extends BaseTest
      * @test
      * @dataProvider provideUpdateConstructorParameters
      * @param IEvent $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateShouldBeGoodTest(IEvent $event)
     {
@@ -210,13 +236,19 @@ class EventsTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $events = new Events($request);
+        $events = new Events($request, $this->hydrator);
         $response = $events->update([$event]);
 
         $primitiveImages = [];
         foreach ($event->getImages() AS $image)
         {
-            $primitiveImages[] = $image->toPrimitiveArray();
+            $primitiveImages[] = $this->entityImageHydrator->toPrimitiveArray($image);
+        }
+
+        $categoryIdsArr = [];
+        foreach ($event->getCategories() AS $category)
+        {
+            $categoryIdsArr[] = $category->getEntityIdentifier();
         }
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -254,7 +286,7 @@ class EventsTest extends BaseTest
         $this->assertEquals($event->getPlaceDesc(), $primitiveEvent['placeDesc']);
         $this->assertEquals($event->getPlaceLat(), $primitiveEvent['placeLat']);
         $this->assertEquals($event->getPlaceLon(), $primitiveEvent['placeLon']);
-        $this->assertEquals($event->getCategoryIdsArr(), $primitiveEvent['categoryIdsArr']);
+        $this->assertEquals($categoryIdsArr, $primitiveEvent['categoryIdsArr']);
         $this->assertEquals($primitiveImages, $primitiveEvent['images']);
         if (!is_null($event->getAttachmentUrl())) $this->assertEquals($event->getAttachmentUrl(), $primitiveEvent['attachmentUrl']);
         if (!is_null($event->getFee())) $this->assertEquals($event->getFee(), $primitiveEvent['fee']);
@@ -276,6 +308,7 @@ class EventsTest extends BaseTest
      * @test
      * @dataProvider provideValidDeleteConstructorParameters
      * @param IEvent $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldBeGoodTest(IEvent $event)
     {
@@ -300,7 +333,7 @@ class EventsTest extends BaseTest
             }));
 
         $request = new Request($client, $apiKey);
-        $events = new Events($request);
+        $events = new Events($request, $this->hydrator);
         $response = $events->delete([$event]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
@@ -322,8 +355,9 @@ class EventsTest extends BaseTest
     /**
      * @test
      * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
+     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IEvent $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteRequestShouldFailTest(IEvent $event)
     {
@@ -332,12 +366,13 @@ class EventsTest extends BaseTest
         $client = $this->getClientMock();
 
         $request = new Request($client, $apiKey);
-        $events = new Events($request);
+        $events = new Events($request, $this->hydrator);
         $events->delete([$event]);
     }
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideInvalidDeleteConstructorParameters(): array
     {
@@ -350,13 +385,14 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4]
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())]
             )]
         ];
     }
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideValidDeleteConstructorParameters(): array
     {
@@ -369,7 +405,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -386,6 +422,7 @@ class EventsTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideUpdateConstructorParameters(): array
     {
@@ -398,7 +435,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -415,6 +452,7 @@ class EventsTest extends BaseTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function provideCreateConstructorParameters(): array
     {
@@ -427,7 +465,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4]
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())]
             )],
             [new Event(
                 'title-'.mt_rand(),
@@ -437,7 +475,7 @@ class EventsTest extends BaseTest
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
-                [1, 2, 3, 4],
+                [new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand()), new Identifier(mt_rand())],
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
@@ -453,17 +491,8 @@ class EventsTest extends BaseTest
     }
 
     /**
-     * @param \DateTimeInterface|null $from
-     * @param bool $deleted
-     * @param bool $invisible
-     * @param bool $withExtraFields
-     * @param string $source
-     * @param bool $own
-     */
-
-
-    /**
      * @return array
+     * @throws \Exception
      */
     public function provideGetAllConstructorParameters(): array
     {

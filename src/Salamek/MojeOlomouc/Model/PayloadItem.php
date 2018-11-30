@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Salamek\MojeOlomouc\Model;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Exception\InvalidArgumentException;
+use Salamek\MojeOlomouc\Hydrator\IHydrator;
 use Salamek\MojeOlomouc\Validator\IntInArrayValidator;
 
 /**
@@ -24,17 +25,22 @@ class PayloadItem
     /** @var int|null */
     private $id;
 
+    /** @var IHydrator */
+    private $hydrator;
+
     /**
      * PayloadItem constructor.
      * @param IModel $entity
      * @param string $dataKey
      * @param int $action
+     * @param IHydrator $hydrator
      */
-    public function __construct(IModel $entity, string $dataKey, int $action)
+    public function __construct(IModel $entity, string $dataKey, int $action, IHydrator $hydrator)
     {
         $this->setEntity($entity);
         $this->setAction($action);
         $this->setDataKey($dataKey);
+        $this->setHydrator($hydrator);
 
         // These actions require ID
         if (in_array($action, [
@@ -46,6 +52,14 @@ class PayloadItem
         }
 
         $this->setId($entity->getEntityIdentifier());
+    }
+
+    /**
+     * @param IHydrator $hydrator
+     */
+    public function setHydrator(IHydrator $hydrator): void
+    {
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -129,7 +143,7 @@ class PayloadItem
             ]
         ];
 
-        $primitiveArray[$this->dataKey] = $this->entity->toPrimitiveArray();
+        $primitiveArray[$this->dataKey] = $this->hydrator->toPrimitiveArray($this->entity);
 
         return $primitiveArray;
     }

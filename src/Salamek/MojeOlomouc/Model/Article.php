@@ -25,8 +25,8 @@ class Article implements IArticle
     /** @var string */
     private $author;
 
-    /** @var int */
-    private $categoryId;
+    /** @var IIdentifier|ArticleCategory */
+    private $category;
 
     /** @var \DateTimeInterface */
     private $dateTimeAt;
@@ -51,7 +51,7 @@ class Article implements IArticle
      * @param string $title
      * @param string $content
      * @param string $author
-     * @param int $categoryId
+     * @param IIdentifier|ArticleCategory $category
      * @param \DateTimeInterface $dateTimeAt
      * @param EntityImage[] $images
      * @param string|null $attachmentUrl
@@ -64,7 +64,7 @@ class Article implements IArticle
         string $title,
         string $content,
         string $author,
-        int $categoryId,
+        IIdentifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
         string $attachmentUrl = null,
@@ -77,7 +77,7 @@ class Article implements IArticle
         $this->setTitle($title);
         $this->setContent($content);
         $this->setAuthor($author);
-        $this->setCategoryId($categoryId);
+        $this->setCategory($category);
         $this->setDateTimeAt($dateTimeAt);
         $this->setImages($images);
         $this->setAttachmentUrl($attachmentUrl);
@@ -115,11 +115,11 @@ class Article implements IArticle
     }
 
     /**
-     * @param int $categoryId
+     * @param IIdentifier|ArticleCategory $category
      */
-    public function setCategoryId(int $categoryId): void
+    public function setCategory(IIdentifier $category): void
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
     }
 
     /**
@@ -205,11 +205,11 @@ class Article implements IArticle
     }
 
     /**
-     * @return int
+     * @return IIdentifier
      */
-    public function getCategoryId(): int
+    public function getCategory(): IIdentifier
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
     /**
@@ -258,62 +258,5 @@ class Article implements IArticle
     public function getApproveState(): ?int
     {
         return $this->approveState;
-    }
-
-    /**
-     * @return array
-     */
-    public function toPrimitiveArray(): array
-    {
-        $primitiveImages = [];
-        foreach ($this->images AS $image)
-        {
-            $primitiveImages[] = $image->toPrimitiveArray();
-        }
-
-        $primitiveArray = [
-            'title' => $this->title,
-            'content' => $this->content,
-            'author' => $this->author,
-            'categoryId' => $this->categoryId,
-            'dateTimeAt' => $this->dateTimeAt->format(DateTime::NOT_A_ISO8601),
-            'images' => $primitiveImages
-        ];
-
-        if (!is_null($this->attachmentUrl)) $primitiveArray['attachmentUrl'] = $this->attachmentUrl;
-        if (!is_null($this->isVisible)) $primitiveArray['isVisible'] = $this->isVisible;
-        if (!is_null($this->isImportant)) $primitiveArray['isImportant'] = $this->isImportant;
-        if (!is_null($this->approveState)) $primitiveArray['approveState'] = $this->approveState;
-
-        return $primitiveArray;
-    }
-
-    /**
-     * @param array $modelData
-     * @return Article
-     */
-    public static function fromPrimitiveArray(array $modelData): Article
-    {
-        $images = [];
-        foreach($modelData['images'] AS $primitiveImage)
-        {
-            $images[] = EntityImage::fromPrimitiveArray($primitiveImage);
-        }
-
-        $dateTimeAt = \DateTime::createFromFormat(DateTime::NOT_A_ISO8601, $modelData['dateTimeAt']);
-
-        return new Article(
-            $modelData['title'],
-            $modelData['content'],
-            $modelData['author'],
-            $modelData['categoryId'],
-            $dateTimeAt,
-            $images,
-            (array_key_exists('attachmentUrl', $modelData) ? $modelData['attachmentUrl'] : null),
-            (array_key_exists('isVisible', $modelData) ? $modelData['isVisible'] : null),
-            (array_key_exists('isImportant', $modelData) ? $modelData['isImportant'] : null),
-            (array_key_exists('approveState', $modelData) ? $modelData['approveState'] : null),
-            (array_key_exists('id', $modelData) ? $modelData['id'] : null)
-        );
     }
 }
