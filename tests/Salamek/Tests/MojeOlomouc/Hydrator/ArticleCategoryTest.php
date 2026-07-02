@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Hydrator\IArticleCategory;
@@ -14,7 +17,7 @@ class ArticleCategoryTest extends BaseTest
     /** @var IArticleCategory */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,20 +26,21 @@ class ArticleCategoryTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isImportant
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isImportant = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = $this->hydrator->fromPrimitiveArray([
@@ -49,20 +53,21 @@ class ArticleCategoryTest extends BaseTest
         $this->assertEquals(null, $articleCategory->getEntityIdentifier());
     }
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isImportant
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isImportant = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = $this->hydrator->fromPrimitiveArray([
@@ -83,7 +88,8 @@ class ArticleCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['title-'.mt_rand(), null, false, true, null],

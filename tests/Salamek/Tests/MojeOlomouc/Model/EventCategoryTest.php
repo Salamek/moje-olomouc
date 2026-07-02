@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Model\EventCategory;
 use Salamek\Tests\MojeOlomouc\BaseTest;
 
 class EventCategoryTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $title,
-        bool $isVisible = null,
-        int $id = null
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $eventCategory = new EventCategory(
@@ -33,16 +37,17 @@ class EventCategoryTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $title,
-        bool $isVisible = null,
-        int $id = null
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $eventCategory = new EventCategory(
@@ -57,19 +62,20 @@ class EventCategoryTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $title,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new EventCategory(
             $title,
             $isVisible,
@@ -80,7 +86,8 @@ class EventCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
             [str_repeat('title-'.mt_rand(), 128), true, null],
@@ -91,7 +98,8 @@ class EventCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['title-'.mt_rand(), true, null],

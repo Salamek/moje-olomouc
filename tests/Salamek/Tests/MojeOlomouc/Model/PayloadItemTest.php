@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
 use Salamek\MojeOlomouc\Hydrator\IHydrator;
@@ -17,13 +20,14 @@ use Salamek\Tests\MojeOlomouc\BaseTest;
 class PayloadItemTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param IModel $entity
      * @param string $dataKey
      * @param int $action
      * @param IHydrator $hydrator
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         IModel $entity,
         string $dataKey,
@@ -42,7 +46,7 @@ class PayloadItemTest extends BaseTest
         $this->assertEquals($dataKey, $payloadItem->getDataKey());
         $this->assertEquals($action, $payloadItem->getAction());
         $this->assertEquals($entity->getEntityIdentifier(), $payloadItem->getId());
-        $this->assertInternalType('array', $payloadItem->toPrimitiveArray());
+        $this->assertIsArray($payloadItem->toPrimitiveArray());
 
         $primitiveArrayTest = [
             'action' => [
@@ -56,14 +60,14 @@ class PayloadItemTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IModel $entity
      * @param string $dataKey
      * @param int $action
      * @param IHydrator $hydrator
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         IModel $entity,
         string $dataKey,
@@ -71,6 +75,7 @@ class PayloadItemTest extends BaseTest
         IHydrator $hydrator
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new PayloadItem(
             $entity,
             $dataKey,
@@ -82,7 +87,8 @@ class PayloadItemTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
             [new EntityImage('imageUrl-'.mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE, new \Salamek\MojeOlomouc\Hydrator\EntityImage(EntityImage::class)],
@@ -94,7 +100,8 @@ class PayloadItemTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             [new Identifier(mt_rand()), 'test', RequestActionCodeEnum::ACTION_CODE_DELETE, new \Salamek\MojeOlomouc\Hydrator\Identifier(Identifier::class)],

@@ -8,6 +8,9 @@
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use PHPUnit\Framework\TestCase;
 use Salamek\MojeOlomouc\Validator\MinLengthValidator;
@@ -15,18 +18,18 @@ use Salamek\MojeOlomouc\Validator\MinLengthValidator;
 class MinLengthValidatorTest extends BaseTest
 {
     /**
-     * @test
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      */
+#[Test]
+
     public function MinLengthValidatorFailOverLength(): void
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         MinLengthValidator::validate(str_repeat('a', 50), 100);
     }
 
-    /**
-     * @test
-     * @dataProvider provideGoodMinLengthString
-     */
+    #[Test]
+#[DataProvider('provideGoodMinLengthString')]
+
     public function MinLengthValidatorSuccessOverLength(string $minLengthString, int $minLength): void
     {
         MinLengthValidator::validate($minLengthString, $minLength);
@@ -35,7 +38,7 @@ class MinLengthValidatorTest extends BaseTest
 
 
 
-    public function provideGoodMinLengthString(): array
+    public static function provideGoodMinLengthString(): array
     {
         return [
             [str_repeat('a', 70), 64],

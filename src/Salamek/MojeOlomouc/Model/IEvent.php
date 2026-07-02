@@ -57,42 +57,42 @@ interface IEvent extends IModel
     /**
      * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl = null): void;
+    public function setAttachmentUrl(?string $attachmentUrl = null): void;
 
     /**
      * @param string|null $fee
      */
-    public function setFee(string $fee = null): void;
+    public function setFee(?string $fee = null): void;
 
     /**
      * @param string|null $webUrl
      */
-    public function setWebUrl(string $webUrl = null): void;
+    public function setWebUrl(?string $webUrl = null): void;
 
     /**
      * @param string|null $facebookUrl
      */
-    public function setFacebookUrl(string $facebookUrl = null): void;
+    public function setFacebookUrl(?string $facebookUrl = null): void;
 
     /**
      * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags = null): void;
+    public function setConsumerFlags(?int $consumerFlags = null): void;
 
     /**
      * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void;
+    public function setIsVisible(?bool $isVisible = null): void;
 
     /**
      * @param int|null $approveState
      */
-    public function setApproveState(int $approveState = null): void;
+    public function setApproveState(?int $approveState = null): void;
 
     /**
      * @param int|null $featuredLevel
      */
-    public function setFeaturedLevel(int $featuredLevel = null): void;
+    public function setFeaturedLevel(?int $featuredLevel = null): void;
     
     /**
      * @return string

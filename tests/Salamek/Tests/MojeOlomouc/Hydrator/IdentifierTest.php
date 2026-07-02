@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Hydrator\IIdentifier;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -17,7 +20,7 @@ class IdentifierTest extends BaseTest
     /** @var IIdentifier */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -26,10 +29,11 @@ class IdentifierTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param int $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         int $id
     )
@@ -43,7 +47,8 @@ class IdentifierTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             [mt_rand()],

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
@@ -19,7 +22,7 @@ class ArticleTest extends BaseTest
     /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
     private $entityImageHydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -29,8 +32,6 @@ class ArticleTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $content
      * @param string $author
@@ -43,6 +44,9 @@ class ArticleTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
         string $content,
@@ -50,11 +54,11 @@ class ArticleTest extends BaseTest
         int $categoryId,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
 
@@ -86,8 +90,6 @@ class ArticleTest extends BaseTest
         $this->assertEquals(null, $article->getEntityIdentifier());
     }
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $content
      * @param string $author
@@ -100,6 +102,9 @@ class ArticleTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
         string $content,
@@ -107,11 +112,11 @@ class ArticleTest extends BaseTest
         int $categoryId,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $primitiveImages = [];
@@ -152,12 +157,13 @@ class ArticleTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         $image = new EntityImage('url');
         return [
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), $this->getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), self::getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), mt_rand(), self::getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
         ];
     }
 }

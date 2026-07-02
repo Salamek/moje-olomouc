@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
@@ -20,7 +23,7 @@ class ImportantMessageTest extends BaseTest
     /** @var IImportantMessage */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -29,8 +32,6 @@ class ImportantMessageTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
@@ -39,14 +40,17 @@ class ImportantMessageTest extends BaseTest
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $text,
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $place = $this->hydrator->fromPrimitiveArray(
@@ -66,8 +70,6 @@ class ImportantMessageTest extends BaseTest
         $this->assertEquals(null, $place->getEntityIdentifier());
     }
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
@@ -76,14 +78,17 @@ class ImportantMessageTest extends BaseTest
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $text,
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $place = $this->hydrator->fromPrimitiveArray(
@@ -110,14 +115,15 @@ class ImportantMessageTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::WIND_CONDITIONS, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::OTHER, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, $this->getDateTime(), true, mt_rand()],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::WIND_CONDITIONS, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::OTHER, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, self::getDateTime(), true, mt_rand()],
         ];
     }
 

@@ -12,7 +12,7 @@ interface IModel
     /**
      * @param int|null $entityIdentifier
      */
-    public function setEntityIdentifier(int $entityIdentifier = null): void;
+    public function setEntityIdentifier(?int $entityIdentifier = null): void;
 
     /**
      * @return int

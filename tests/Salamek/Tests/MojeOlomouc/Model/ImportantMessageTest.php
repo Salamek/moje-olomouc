@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Hydrator\IImportantMessage;
 use Salamek\MojeOlomouc\Model\ImportantMessage;
@@ -15,8 +18,6 @@ use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
 class ImportantMessageTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
@@ -25,14 +26,17 @@ class ImportantMessageTest extends BaseTest
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $text,
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $importantMessage = new ImportantMessage(
@@ -54,8 +58,6 @@ class ImportantMessageTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
@@ -64,14 +66,17 @@ class ImportantMessageTest extends BaseTest
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $text,
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $importantMessage = new ImportantMessage(
@@ -94,9 +99,6 @@ class ImportantMessageTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $text
      * @param \DateTimeInterface $dateTimeAt
      * @param int $type
@@ -105,16 +107,20 @@ class ImportantMessageTest extends BaseTest
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $text,
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new ImportantMessage(
             $text,
             $dateTimeAt,
@@ -130,12 +136,13 @@ class ImportantMessageTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
-            [str_repeat('title-'.mt_rand(), 128), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), 128, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, 192, $this->getDateTime(), true, null],
+            [str_repeat('title-'.mt_rand(), 128), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), 128, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, 192, self::getDateTime(), true, null],
         ];
     }
 
@@ -144,14 +151,15 @@ class ImportantMessageTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::WIND_CONDITIONS, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::OTHER, ImportantMessageSeverityEnum::WARNING, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, $this->getDateTime(), true, null],
-            ['title-'.mt_rand(), $this->getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, $this->getDateTime(), true, mt_rand()],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::WIND_CONDITIONS, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::OTHER, ImportantMessageSeverityEnum::WARNING, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, self::getDateTime(), true, null],
+            ['title-'.mt_rand(), self::getDateTime(), ImportantMessageTypeEnum::TRAFFIC_SITUATION, ImportantMessageSeverityEnum::DANGER, self::getDateTime(), true, mt_rand()],
         ];
     }
 }

@@ -72,10 +72,10 @@ class Place implements IPlace
         float $lon,
         IIdentifier $category,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $this->setTitle($title);
@@ -159,7 +159,7 @@ class Place implements IPlace
     /**
      * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl = null): void
+    public function setAttachmentUrl(?string $attachmentUrl = null): void
     {
         $this->attachmentUrl = $attachmentUrl;
     }
@@ -167,7 +167,7 @@ class Place implements IPlace
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void
+    public function setIsVisible(?bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -175,7 +175,7 @@ class Place implements IPlace
     /**
      * @param int|null $approveState
      */
-    public function setApproveState(int $approveState = null): void
+    public function setApproveState(?int $approveState = null): void
     {
         if (!is_null($approveState))
         {

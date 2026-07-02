@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleCategorySourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
@@ -19,7 +22,7 @@ class PlaceCategoriesTest extends BaseTest
     private $hydrator;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -27,8 +30,6 @@ class PlaceCategoriesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideGetAllConstructorParameters
      * @param \DateTimeInterface|null $from
      * @param bool $deleted
      * @param bool $invisible
@@ -36,15 +37,18 @@ class PlaceCategoriesTest extends BaseTest
      * @param string $source
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideGetAllConstructorParameters')]
+
     public function getAllShouldBeGoodTest(
-        \DateTimeInterface $from = null,
+        ?\DateTimeInterface $from = null,
         bool $deleted = false,
         bool $invisible = false,
         bool $withExtraFields = false,
         string $source = ArticleCategorySourceEnum::PUBLISHED
     ): void
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -57,12 +61,12 @@ class PlaceCategoriesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
 
         $request = new Request($client, $apiKey);
@@ -76,16 +80,16 @@ class PlaceCategoriesTest extends BaseTest
             $source
         );
 
-        $this->assertInternalType('array', $catchRequestInfo['query']);
+        $this->assertIsArray($catchRequestInfo['query']);
         $this->assertArrayHasKey('from', $catchRequestInfo['query']);
         $this->assertArrayHasKey('deleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('invisible', $catchRequestInfo['query']);
         $this->assertArrayHasKey('withExtraFields', $catchRequestInfo['query']);
         $this->assertArrayHasKey('source', $catchRequestInfo['query']);
         $this->assertEquals(($from ? $from->format(DateTime::A_ISO8601) : null), $catchRequestInfo['query']['from']);
-        $this->assertEquals($this->boolToString($deleted), $catchRequestInfo['query']['deleted']);
-        $this->assertEquals($this->boolToString($invisible), $catchRequestInfo['query']['invisible']);
-        $this->assertEquals($this->boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
+        $this->assertEquals(self::boolToString($deleted), $catchRequestInfo['query']['deleted']);
+        $this->assertEquals(self::boolToString($invisible), $catchRequestInfo['query']['invisible']);
+        $this->assertEquals(self::boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
         $this->assertEquals($source, $catchRequestInfo['query']['source']);
         $this->assertEquals('GET', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
@@ -95,14 +99,15 @@ class PlaceCategoriesTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideCreateConstructorParameters
      * @param IPlaceCategory $placeCategory
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideCreateConstructorParameters')]
+
     public function createShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -115,12 +120,12 @@ class PlaceCategoriesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request, $this->hydrator);
@@ -128,15 +133,15 @@ class PlaceCategoriesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('placeCategory', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitivePlaceCategory = $primitivePayloadItem['placeCategory'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitivePlaceCategory);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitivePlaceCategory);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitivePlaceCategory);
         if (!is_null($placeCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitivePlaceCategory);
         if (!is_null($placeCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlaceCategory);
@@ -154,14 +159,15 @@ class PlaceCategoriesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideUpdateConstructorParameters
      * @param IPlaceCategory $placeCategory
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideUpdateConstructorParameters')]
+
     public function updateShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -174,12 +180,12 @@ class PlaceCategoriesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request, $this->hydrator);
@@ -187,15 +193,15 @@ class PlaceCategoriesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('placeCategory', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitivePlaceCategory = $primitivePayloadItem['placeCategory'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitivePlaceCategory);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitivePlaceCategory);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitivePlaceCategory);
         if (!is_null($placeCategory->getConsumerFlags())) $this->assertArrayHasKey('consumerFlags', $primitivePlaceCategory);
         if (!is_null($placeCategory->getIsVisible())) $this->assertArrayHasKey('isVisible', $primitivePlaceCategory);
@@ -213,14 +219,15 @@ class PlaceCategoriesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidDeleteConstructorParameters
      * @param IPlaceCategory $placeCategory
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideValidDeleteConstructorParameters')]
+
     public function deleteRequestShouldBeGoodTest(IPlaceCategory $placeCategory)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -233,24 +240,24 @@ class PlaceCategoriesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request, $this->hydrator);
         $response = $placeCategories->delete([$placeCategory]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveAction);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
@@ -261,17 +268,18 @@ class PlaceCategoriesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IPlaceCategory $placeCategory
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideInvalidDeleteConstructorParameters')]
+
     public function deleteRequestShouldFailTest(IPlaceCategory $placeCategory)
     {
-        $apiKey = $this->getTestApiKey();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey();
 
-        $client = $this->getClientMock();
+        $client = $this->getClientStub();
 
         $request = new Request($client, $apiKey);
         $placeCategories = new PlaceCategories($request, $this->hydrator);
@@ -281,7 +289,8 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidDeleteConstructorParameters(): array
+
+    public static function provideInvalidDeleteConstructorParameters(): array
     {
         return [
             [new PlaceCategory(
@@ -296,7 +305,8 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidDeleteConstructorParameters(): array
+
+    public static function provideValidDeleteConstructorParameters(): array
     {
         return [
             [new PlaceCategory(
@@ -311,7 +321,8 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @return array
      */
-    public function provideUpdateConstructorParameters(): array
+
+    public static function provideUpdateConstructorParameters(): array
     {
         return [
             [new PlaceCategory(
@@ -326,7 +337,8 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @return array
      */
-    public function provideCreateConstructorParameters(): array
+
+    public static function provideCreateConstructorParameters(): array
     {
         return [
             [new PlaceCategory(
@@ -344,7 +356,8 @@ class PlaceCategoriesTest extends BaseTest
     /**
      * @return array
      */
-    public function provideGetAllConstructorParameters(): array
+
+    public static function provideGetAllConstructorParameters(): array
     {
         return [
             [
@@ -354,7 +367,7 @@ class PlaceCategoriesTest extends BaseTest
                 false,
             ],
             [
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 true,
                 false,

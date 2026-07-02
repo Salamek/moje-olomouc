@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\EntityImageContentTypeEnum;
 use Salamek\MojeOlomouc\Model\EntityImage;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -11,20 +14,21 @@ use Salamek\Tests\MojeOlomouc\BaseTest;
 class EntityImageTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $imageUrl
      * @param int $contentType
      * @param string $title
      * @param bool $isFeatured
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $imageUrl,
         int $contentType,
-        string $title = null,
+        ?string $title = null,
         bool $isFeatured = false,
-        int $id = null
+        ?int $id = null
     )
     {
         $entityImage = new EntityImage(
@@ -41,20 +45,21 @@ class EntityImageTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $imageUrl
      * @param int $contentType
      * @param string $title
      * @param bool $isFeatured
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $imageUrl,
         int $contentType,
-        string $title = null,
+        ?string $title = null,
         bool $isFeatured = false,
-        int $id = null
+        ?int $id = null
     )
     {
         $entityImage = new EntityImage(
@@ -75,23 +80,24 @@ class EntityImageTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $imageUrl
      * @param int $contentType
      * @param string $title
      * @param bool $isFeatured
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $imageUrl,
         int $contentType,
-        string $title = null,
+        ?string $title = null,
         bool $isFeatured = false,
-        int $id = null
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new EntityImage(
             $imageUrl,
             $contentType,
@@ -104,7 +110,8 @@ class EntityImageTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
             ['url-'.mt_rand(), 192, 'title-'.mt_rand(), false, null]
@@ -115,7 +122,8 @@ class EntityImageTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['url-'.mt_rand(), EntityImageContentTypeEnum::GRAPHICS_POSTER, 'title-'.mt_rand(), false, null],

@@ -47,17 +47,17 @@ interface IPlace extends IModel
     /**
      * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl = null): void;
+    public function setAttachmentUrl(?string $attachmentUrl = null): void;
 
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void;
+    public function setIsVisible(?bool $isVisible = null): void;
 
     /**
      * @param int|null $approveState
      */
-    public function setApproveState(int $approveState = null): void;
+    public function setApproveState(?int $approveState = null): void;
 
     /**
      * @return string

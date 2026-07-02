@@ -17,12 +17,12 @@ interface IPlaceCategory extends IModel
     /**
      * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags = null): void;
+    public function setConsumerFlags(?int $consumerFlags = null): void;
 
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void;
+    public function setIsVisible(?bool $isVisible = null): void;
 
     /**
      * @return string

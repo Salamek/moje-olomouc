@@ -17,17 +17,17 @@ interface IArticleCategory extends IModel
     /**
      * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags = null): void;
+    public function setConsumerFlags(?int $consumerFlags = null): void;
 
     /**
      * @param boolean|null $isImportant
      */
-    public function setIsImportant(bool $isImportant = null): void;
+    public function setIsImportant(?bool $isImportant = null): void;
 
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void;
+    public function setIsVisible(?bool $isVisible = null): void;
     
     /**
      * @return string

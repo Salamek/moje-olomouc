@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\ArticleSourceEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
@@ -23,7 +26,7 @@ class ArticlesTest extends BaseTest
     /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
     private $entityImageHydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -32,8 +35,6 @@ class ArticlesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideGetAllConstructorParameters
      * @param \DateTimeInterface|null $from
      * @param bool $deleted
      * @param bool $invisible
@@ -42,8 +43,11 @@ class ArticlesTest extends BaseTest
      * @param bool $own
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideGetAllConstructorParameters')]
+
     public function getAllShouldBeGoodTest(
-        \DateTimeInterface $from = null,
+        ?\DateTimeInterface $from = null,
         bool $deleted = false,
         bool $invisible = false,
         bool $withExtraFields = false,
@@ -51,7 +55,7 @@ class ArticlesTest extends BaseTest
         bool $own = false
     ): void
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -64,12 +68,12 @@ class ArticlesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
 
         $request = new Request($client, $apiKey);
@@ -84,7 +88,7 @@ class ArticlesTest extends BaseTest
             $own
         );
 
-        $this->assertInternalType('array', $catchRequestInfo['query']);
+        $this->assertIsArray($catchRequestInfo['query']);
         $this->assertArrayHasKey('from', $catchRequestInfo['query']);
         $this->assertArrayHasKey('deleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('invisible', $catchRequestInfo['query']);
@@ -92,11 +96,11 @@ class ArticlesTest extends BaseTest
         $this->assertArrayHasKey('source', $catchRequestInfo['query']);
         $this->assertArrayHasKey('own', $catchRequestInfo['query']);
         $this->assertEquals(($from ? $from->format(DateTime::A_ISO8601) : null), $catchRequestInfo['query']['from']);
-        $this->assertEquals($this->boolToString($deleted), $catchRequestInfo['query']['deleted']);
-        $this->assertEquals($this->boolToString($invisible), $catchRequestInfo['query']['invisible']);
-        $this->assertEquals($this->boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
+        $this->assertEquals(self::boolToString($deleted), $catchRequestInfo['query']['deleted']);
+        $this->assertEquals(self::boolToString($invisible), $catchRequestInfo['query']['invisible']);
+        $this->assertEquals(self::boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
         $this->assertEquals($source, $catchRequestInfo['query']['source']);
-        $this->assertEquals($this->boolToString($own), $catchRequestInfo['query']['own']);
+        $this->assertEquals(self::boolToString($own), $catchRequestInfo['query']['own']);
         $this->assertEquals('GET', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/export/articles', $catchUri);
@@ -105,14 +109,15 @@ class ArticlesTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideCreateConstructorParameters
      * @param IArticle $article
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideCreateConstructorParameters')]
+
     public function createShouldBeGoodTest(IArticle $article)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -125,12 +130,12 @@ class ArticlesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request, $this->hydrator);
@@ -144,15 +149,15 @@ class ArticlesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('article', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveArticle = $primitivePayloadItem['article'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveArticle);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveArticle);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitiveArticle);
         $this->assertArrayHasKey('content', $primitiveArticle);
         $this->assertArrayHasKey('author', $primitiveArticle);
@@ -182,14 +187,15 @@ class ArticlesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideUpdateConstructorParameters
      * @param IArticle $article
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideUpdateConstructorParameters')]
+
     public function updateShouldBeGoodTest(IArticle $article)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -202,12 +208,12 @@ class ArticlesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request, $this->hydrator);
@@ -222,15 +228,15 @@ class ArticlesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('article', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveArticle = $primitivePayloadItem['article'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveArticle);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveArticle);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitiveArticle);
         $this->assertArrayHasKey('content', $primitiveArticle);
         $this->assertArrayHasKey('author', $primitiveArticle);
@@ -260,14 +266,15 @@ class ArticlesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidDeleteConstructorParameters
      * @param IArticle|null $article
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function deleteRequestShouldBeGoodTest(IArticle $article = null)
+#[Test]
+#[DataProvider('provideValidDeleteConstructorParameters')]
+
+    public function deleteRequestShouldBeGoodTest(?IArticle $article = null)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -280,24 +287,24 @@ class ArticlesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request, $this->hydrator);
         $response = $articles->delete([$article]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveAction);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
@@ -308,17 +315,18 @@ class ArticlesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IArticle $article
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideInvalidDeleteConstructorParameters')]
+
     public function deleteRequestShouldFailTest(IArticle $article)
     {
-        $apiKey = $this->getTestApiKey();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey();
 
-        $client = $this->getClientMock();
+        $client = $this->getClientStub();
 
         $request = new Request($client, $apiKey);
         $articles = new Articles($request, $this->hydrator);
@@ -329,7 +337,8 @@ class ArticlesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidDeleteConstructorParameters(): array
+
+    public static function provideInvalidDeleteConstructorParameters(): array
     {
         return [
             [new Article(
@@ -337,7 +346,7 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 new Identifier(mt_rand()),
-                $this->getDateTime(),
+                self::getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -352,7 +361,8 @@ class ArticlesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidDeleteConstructorParameters(): array
+
+    public static function provideValidDeleteConstructorParameters(): array
     {
         return [
             [new Article(
@@ -360,7 +370,7 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 new Identifier(mt_rand()),
-                $this->getDateTime(),
+                self::getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -375,7 +385,8 @@ class ArticlesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideUpdateConstructorParameters(): array
+
+    public static function provideUpdateConstructorParameters(): array
     {
         return [
             [new Article(
@@ -383,7 +394,7 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 new Identifier(mt_rand()),
-                $this->getDateTime(),
+                self::getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -398,7 +409,8 @@ class ArticlesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideCreateConstructorParameters(): array
+
+    public static function provideCreateConstructorParameters(): array
     {
         return [
             [new Article(
@@ -406,14 +418,14 @@ class ArticlesTest extends BaseTest
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 new Identifier(mt_rand()),
-                $this->getDateTime()
+                self::getDateTime()
             )],
             [new Article(
                 'title-'.mt_rand(),
                 'content-'.mt_rand(),
                 'author-'.mt_rand(),
                 new Identifier(mt_rand()),
-                $this->getDateTime(),
+                self::getDateTime(),
                 [new EntityImage('url-'.mt_rand())],
                 'attachmentUrl-'.mt_rand(),
                 false,
@@ -428,7 +440,8 @@ class ArticlesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideGetAllConstructorParameters(): array
+
+    public static function provideGetAllConstructorParameters(): array
     {
         return [
             [
@@ -436,41 +449,47 @@ class ArticlesTest extends BaseTest
                 false,
                 true,
                 true,
+                ArticleSourceEnum::PUBLISHED,
                 false,
             ],
             [
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 true,
                 true,
-                false,
-            ],
-            [
-                null,
-                true,
-                true,
-                true,
+                ArticleSourceEnum::PUBLISHED,
                 false,
             ],
             [
                 null,
-                false,
-                false,
                 true,
+                true,
+                true,
+                ArticleSourceEnum::PUBLISHED,
                 false,
             ],
             [
                 null,
                 false,
-                true,
                 false,
+                true,
+                ArticleSourceEnum::PUBLISHED,
                 false,
             ],
             [
                 null,
                 false,
                 true,
+                false,
+                ArticleSourceEnum::PUBLISHED,
+                false,
+            ],
+            [
+                null,
+                false,
                 true,
+                true,
+                ArticleSourceEnum::PUBLISHED,
                 true,
             ]
         ];

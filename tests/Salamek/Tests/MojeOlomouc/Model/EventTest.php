@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\EventConsumerFlagEnum;
@@ -16,8 +19,6 @@ use Salamek\Tests\MojeOlomouc\BaseTest;
 class EventTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param \DateTimeInterface $startAt
@@ -37,6 +38,9 @@ class EventTest extends BaseTest
      * @param int|null $featuredLevel
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $title,
         string $description,
@@ -47,15 +51,15 @@ class EventTest extends BaseTest
         float $placeLon,
         array $categories,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
         $event = new Event(
@@ -91,8 +95,6 @@ class EventTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param \DateTimeInterface $startAt
@@ -112,6 +114,9 @@ class EventTest extends BaseTest
      * @param int|null $featuredLevel
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $title,
         string $description,
@@ -122,15 +127,15 @@ class EventTest extends BaseTest
         float $placeLon,
         array $categories,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
         $event = new Event(
@@ -175,9 +180,6 @@ class EventTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param string $description
      * @param \DateTimeInterface $startAt
@@ -197,6 +199,9 @@ class EventTest extends BaseTest
      * @param int|null $featuredLevel
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $title,
         string $description,
@@ -207,17 +212,18 @@ class EventTest extends BaseTest
         float $placeLon,
         array $categories,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new Event(
             $title,
             $description,
@@ -244,14 +250,15 @@ class EventTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
             [
                 str_repeat('title-'.mt_rand(), 128),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -270,8 +277,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 102.5467678,
                 -22.5467678,
@@ -290,8 +297,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
@@ -310,8 +317,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
@@ -330,13 +337,13 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
                 [],
-                [$this->getDateTime()],
+                [self::getDateTime()],
                 'attachmentUrl-'.mt_rand(),
                 'fee-'.mt_rand(),
                 'webUrl-'.mt_rand(),
@@ -350,8 +357,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
@@ -370,8 +377,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
@@ -389,8 +396,8 @@ class EventTest extends BaseTest
             ],[
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -202.5467678,
@@ -414,15 +421,16 @@ class EventTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         $image = new EntityImage('url');
         return [
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -441,8 +449,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -461,8 +469,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -481,8 +489,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,

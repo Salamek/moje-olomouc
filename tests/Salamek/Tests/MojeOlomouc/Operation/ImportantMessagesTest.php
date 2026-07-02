@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\ImportantMessageSeverityEnum;
 use Salamek\MojeOlomouc\Enum\ImportantMessageTypeEnum;
@@ -21,19 +24,18 @@ class ImportantMessagesTest extends BaseTest
     private $hydrator;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IImportantMessage::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function getAllShouldBeGoodTest(): void
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -46,12 +48,12 @@ class ImportantMessagesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
 
         $request = new Request($client, $apiKey);
@@ -67,14 +69,15 @@ class ImportantMessagesTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideCreateConstructorParameters
      * @param IImportantMessage $importantMessage
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideCreateConstructorParameters')]
+
     public function createShouldBeGoodTest(IImportantMessage $importantMessage)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -87,12 +90,12 @@ class ImportantMessagesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request, $this->hydrator);
@@ -100,15 +103,15 @@ class ImportantMessagesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('importantMessage', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveImportantMessage = $primitivePayloadItem['importantMessage'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveImportantMessage);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveImportantMessage);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('text', $primitiveImportantMessage);
         $this->assertArrayHasKey('dateTimeAt', $primitiveImportantMessage);
         $this->assertArrayHasKey('type', $primitiveImportantMessage);
@@ -131,14 +134,15 @@ class ImportantMessagesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideUpdateConstructorParameters
      * @param IImportantMessage $importantMessage
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideUpdateConstructorParameters')]
+
     public function updateShouldBeGoodTest(IImportantMessage $importantMessage)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -151,12 +155,12 @@ class ImportantMessagesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request, $this->hydrator);
@@ -164,15 +168,15 @@ class ImportantMessagesTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('importantMessage', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveImportantMessage = $primitivePayloadItem['importantMessage'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveImportantMessage);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveImportantMessage);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('text', $primitiveImportantMessage);
         $this->assertArrayHasKey('dateTimeAt', $primitiveImportantMessage);
         $this->assertArrayHasKey('type', $primitiveImportantMessage);
@@ -195,14 +199,15 @@ class ImportantMessagesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidDeleteConstructorParameters
      * @param IImportantMessage|null $importantMessage
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function deleteRequestShouldBeGoodTest(IImportantMessage $importantMessage = null)
+#[Test]
+#[DataProvider('provideValidDeleteConstructorParameters')]
+
+    public function deleteRequestShouldBeGoodTest(?IImportantMessage $importantMessage = null)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -215,24 +220,24 @@ class ImportantMessagesTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request, $this->hydrator);
         $response = $importantMessages->delete([$importantMessage]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveAction);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
@@ -243,17 +248,18 @@ class ImportantMessagesTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IImportantMessage $importantMessage
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideInvalidDeleteConstructorParameters')]
+
     public function deleteRequestShouldFailTest(IImportantMessage $importantMessage)
     {
-        $apiKey = $this->getTestApiKey();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey();
 
-        $client = $this->getClientMock();
+        $client = $this->getClientStub();
 
         $request = new Request($client, $apiKey);
         $importantMessages = new ImportantMessages($request, $this->hydrator);
@@ -264,15 +270,16 @@ class ImportantMessagesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidDeleteConstructorParameters(): array
+
+    public static function provideInvalidDeleteConstructorParameters(): array
     {
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                $this->getDateTime(),
+                self::getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 null
             )]
@@ -283,15 +290,16 @@ class ImportantMessagesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidDeleteConstructorParameters(): array
+
+    public static function provideValidDeleteConstructorParameters(): array
     {
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                $this->getDateTime(),
+                self::getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 mt_rand()
             )]
@@ -302,15 +310,16 @@ class ImportantMessagesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideUpdateConstructorParameters(): array
+
+    public static function provideUpdateConstructorParameters(): array
     {
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                $this->getDateTime(),
+                self::getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 mt_rand()
             )],
@@ -321,21 +330,22 @@ class ImportantMessagesTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideCreateConstructorParameters(): array
+
+    public static function provideCreateConstructorParameters(): array
     {
         return [
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                $this->getDateTime(),
+                self::getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING
             )],
             [new ImportantMessage(
                 'text-'.mt_rand(),
-                $this->getDateTime(),
+                self::getDateTime(),
                 ImportantMessageTypeEnum::TRAFFIC_SITUATION,
                 ImportantMessageSeverityEnum::WARNING,
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 mt_rand()
             )],

@@ -35,7 +35,7 @@ class EntityImage implements IEntityImage
      * @param bool $isFeatured
      * @param int|null $id
      */
-    public function __construct(string $imageUrl, int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER, string $title = null, bool $isFeatured = false, int $id = null)
+    public function __construct(string $imageUrl, int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER, ?string $title = null, bool $isFeatured = false, ?int $id = null)
     {
         $this->setImageUrl($imageUrl);
         $this->setContentType($contentType);
@@ -47,7 +47,7 @@ class EntityImage implements IEntityImage
     /**
      * @param string|null $title
      */
-    public function setTitle(string $title = null): void
+    public function setTitle(?string $title = null): void
     {
         if (!is_null($title))
         {

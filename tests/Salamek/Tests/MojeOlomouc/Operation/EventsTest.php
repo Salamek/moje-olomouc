@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
@@ -27,7 +30,7 @@ class EventsTest extends BaseTest
     /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
     private $entityImageHydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -36,8 +39,6 @@ class EventsTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideGetAllConstructorParameters
      * @param \DateTimeInterface|null $from
      * @param bool $deleted
      * @param bool $invisible
@@ -46,8 +47,11 @@ class EventsTest extends BaseTest
      * @param bool $own
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideGetAllConstructorParameters')]
+
     public function getAllShouldBeGoodTest(
-        \DateTimeInterface $from = null,
+        ?\DateTimeInterface $from = null,
         bool $deleted = false,
         bool $invisible = false,
         bool $withExtraFields = false,
@@ -55,7 +59,7 @@ class EventsTest extends BaseTest
         bool $own = false
     ): void
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -68,12 +72,12 @@ class EventsTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
 
         $request = new Request($client, $apiKey);
@@ -88,7 +92,7 @@ class EventsTest extends BaseTest
             $own
         );
 
-        $this->assertInternalType('array', $catchRequestInfo['query']);
+        $this->assertIsArray($catchRequestInfo['query']);
         $this->assertArrayHasKey('from', $catchRequestInfo['query']);
         $this->assertArrayHasKey('deleted', $catchRequestInfo['query']);
         $this->assertArrayHasKey('invisible', $catchRequestInfo['query']);
@@ -96,11 +100,11 @@ class EventsTest extends BaseTest
         $this->assertArrayHasKey('source', $catchRequestInfo['query']);
         $this->assertArrayHasKey('own', $catchRequestInfo['query']);
         $this->assertEquals(($from ? $from->format(DateTime::A_ISO8601) : null), $catchRequestInfo['query']['from']);
-        $this->assertEquals($this->boolToString($deleted), $catchRequestInfo['query']['deleted']);
-        $this->assertEquals($this->boolToString($invisible), $catchRequestInfo['query']['invisible']);
-        $this->assertEquals($this->boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
+        $this->assertEquals(self::boolToString($deleted), $catchRequestInfo['query']['deleted']);
+        $this->assertEquals(self::boolToString($invisible), $catchRequestInfo['query']['invisible']);
+        $this->assertEquals(self::boolToString($withExtraFields), $catchRequestInfo['query']['withExtraFields']);
         $this->assertEquals($source, $catchRequestInfo['query']['source']);
-        $this->assertEquals($this->boolToString($own), $catchRequestInfo['query']['own']);
+        $this->assertEquals(self::boolToString($own), $catchRequestInfo['query']['own']);
         $this->assertEquals('GET', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
         $this->assertEquals('/api/export/events', $catchUri);
@@ -109,14 +113,15 @@ class EventsTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideCreateConstructorParameters
      * @param IEvent $event
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideCreateConstructorParameters')]
+
     public function createShouldBeGoodTest(IEvent $event)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -129,12 +134,12 @@ class EventsTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $events = new Events($request, $this->hydrator);
@@ -156,15 +161,15 @@ class EventsTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('event', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveEvent = $primitivePayloadItem['event'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveEvent);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveEvent);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitiveEvent);
         $this->assertArrayHasKey('description', $primitiveEvent);
         $this->assertArrayHasKey('startAt', $primitiveEvent);
@@ -208,14 +213,15 @@ class EventsTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideUpdateConstructorParameters
      * @param IEvent $event
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideUpdateConstructorParameters')]
+
     public function updateShouldBeGoodTest(IEvent $event)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -228,12 +234,12 @@ class EventsTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $events = new Events($request, $this->hydrator);
@@ -253,15 +259,15 @@ class EventsTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('event', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveEvent = $primitivePayloadItem['event'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveEvent);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveEvent);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('title', $primitiveEvent);
         $this->assertArrayHasKey('description', $primitiveEvent);
         $this->assertArrayHasKey('startAt', $primitiveEvent);
@@ -305,14 +311,15 @@ class EventsTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidDeleteConstructorParameters
      * @param IEvent $event
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideValidDeleteConstructorParameters')]
+
     public function deleteRequestShouldBeGoodTest(IEvent $event)
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $catchType = null;
         $catchUri = null;
@@ -325,24 +332,24 @@ class EventsTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $events = new Events($request, $this->hydrator);
         $response = $events->delete([$event]);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveAction);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);
@@ -353,17 +360,18 @@ class EventsTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidDeleteConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param IEvent $event
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
+#[Test]
+#[DataProvider('provideInvalidDeleteConstructorParameters')]
+
     public function deleteRequestShouldFailTest(IEvent $event)
     {
-        $apiKey = $this->getTestApiKey();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey();
 
-        $client = $this->getClientMock();
+        $client = $this->getClientStub();
 
         $request = new Request($client, $apiKey);
         $events = new Events($request, $this->hydrator);
@@ -374,14 +382,15 @@ class EventsTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidDeleteConstructorParameters(): array
+
+    public static function provideInvalidDeleteConstructorParameters(): array
     {
         return [
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
@@ -394,14 +403,15 @@ class EventsTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidDeleteConstructorParameters(): array
+
+    public static function provideValidDeleteConstructorParameters(): array
     {
         return [
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
@@ -424,14 +434,15 @@ class EventsTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideUpdateConstructorParameters(): array
+
+    public static function provideUpdateConstructorParameters(): array
     {
         return [
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
@@ -454,14 +465,15 @@ class EventsTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideCreateConstructorParameters(): array
+
+    public static function provideCreateConstructorParameters(): array
     {
         return [
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
@@ -470,8 +482,8 @@ class EventsTest extends BaseTest
             [new Event(
                 'title-'.mt_rand(),
                 'description-'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc-'.mt_rand(),
                 floatval('12.'.mt_rand()),
                 floatval('-12.'.mt_rand()),
@@ -494,7 +506,8 @@ class EventsTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideGetAllConstructorParameters(): array
+
+    public static function provideGetAllConstructorParameters(): array
     {
         return [
             [
@@ -506,7 +519,7 @@ class EventsTest extends BaseTest
                 false,
             ],
             [
-                $this->getDateTime(),
+                self::getDateTime(),
                 false,
                 true,
                 true,

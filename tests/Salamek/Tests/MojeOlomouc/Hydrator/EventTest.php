@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Enum\EventApproveStateEnum;
@@ -21,7 +24,7 @@ class EventTest extends BaseTest
     /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
     private $entityImageHydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -31,8 +34,6 @@ class EventTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param \DateTimeInterface $startAt
@@ -52,6 +53,9 @@ class EventTest extends BaseTest
      * @param int|null $featuredLevel
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
         string $description,
@@ -62,15 +66,15 @@ class EventTest extends BaseTest
         float $placeLon,
         array $categoryIdsArr,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
         $event = $this->hydrator->fromPrimitiveArray(
@@ -112,8 +116,6 @@ class EventTest extends BaseTest
         $this->assertEquals(null, $event->getEntityIdentifier());
     }
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param \DateTimeInterface $startAt
@@ -133,6 +135,9 @@ class EventTest extends BaseTest
      * @param int|null $featuredLevel
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
         string $description,
@@ -143,15 +148,15 @@ class EventTest extends BaseTest
         float $placeLon,
         array $categoryIdsArr,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
         $primitiveImages = [];
@@ -214,15 +219,16 @@ class EventTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         $image = new EntityImage('url');
         return [
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -241,8 +247,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -261,8 +267,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,
@@ -281,8 +287,8 @@ class EventTest extends BaseTest
             [
                 'title-'.mt_rand(),
                 'content'.mt_rand(),
-                $this->getDateTime(),
-                $this->getDateTime(),
+                self::getDateTime(),
+                self::getDateTime(),
                 'placeDesc'.mt_rand(),
                 12.5467678,
                 -22.5467678,

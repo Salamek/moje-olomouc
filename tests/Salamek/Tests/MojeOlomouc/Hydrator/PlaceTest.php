@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\PlaceApproveStateEnum;
 use Salamek\MojeOlomouc\Hydrator\IPlace;
@@ -18,7 +21,7 @@ class PlaceTest extends BaseTest
     /** @var \Salamek\MojeOlomouc\Hydrator\IEntityImage */
     private $entityImageHydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -28,8 +31,6 @@ class PlaceTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param string $address
@@ -42,6 +43,9 @@ class PlaceTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
         string $description,
@@ -50,10 +54,10 @@ class PlaceTest extends BaseTest
         float $lon,
         int $categoryId,
         array $images = [],
-        string $attachmentUrl = null,
+        ?string $attachmentUrl = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $place = $this->hydrator->fromPrimitiveArray(
@@ -79,8 +83,6 @@ class PlaceTest extends BaseTest
         $this->assertEquals(null, $place->getEntityIdentifier());
     }
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $description
      * @param string $address
@@ -93,6 +95,9 @@ class PlaceTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
         string $description,
@@ -101,10 +106,10 @@ class PlaceTest extends BaseTest
         float $lon,
         int $categoryId,
         array $images = [],
-        string $attachmentUrl = null,
+        ?string $attachmentUrl = null,
         bool $isVisible = true,
-        int $approveState = null,
-        int $id = null
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $primitiveImages = [];
@@ -143,7 +148,8 @@ class PlaceTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         $image = new EntityImage('url');
         return [

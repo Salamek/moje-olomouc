@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use PHPUnit\Framework\TestCase;
 use Salamek\MojeOlomouc\Validator\GpsStringValidator;
 
 class GpsStringValidatorTest extends BaseTest
 {
-    /**
-     * @test
-     * @dataProvider provideBadGpsString
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     */
+    #[Test]
+#[DataProvider('provideBadGpsString')]
+
     public function GpsStringValidatorFailOnGpsString(string $gpsString): void
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         GpsStringValidator::validate($gpsString);
     }
 
-    /**
-     * @test
-     * @dataProvider provideGoodGpsString
-     */
+    #[Test]
+#[DataProvider('provideGoodGpsString')]
+
     public function GpsStringValidatorSuccessOnGpsString(string $gpsString): void
     {
         GpsStringValidator::validate($gpsString);
@@ -32,7 +33,8 @@ class GpsStringValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideBadGpsString(): array
+
+    public static function provideBadGpsString(): array
     {
         return [
             [''],
@@ -45,7 +47,8 @@ class GpsStringValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideGoodGpsString(): array
+
+    public static function provideGoodGpsString(): array
     {
         return [
             ['49.5808551'],

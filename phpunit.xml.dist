@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         verbose="false"
-         bootstrap="tests/bootstrap.php"
->
-    <logging>
-      <log type="coverage-html" target="tests/phpunit_report/report"
-           lowUpperBound="35" highLowerBound="70"/>
-    </logging>
-    <php>
-      <ini name="display_errors" value="on"/>
-    </php>
-
-    <testsuites>
-        <testsuite name="MojeOlomouc Tests Suite">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-      <!--blacklist>
-        <directory>vendor</directory>
-        <directory>tests</directory>
-      </blacklist-->
-      <whitelist>
-        <directory>src</directory>
-      </whitelist>
-    </filter>
-
+<phpunit backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="tests/bootstrap.php" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <php>
+    <ini name="display_errors" value="on"/>
+  </php>
+  <testsuites>
+    <testsuite name="MojeOlomouc Tests Suite">
+      <directory>tests</directory>
+      <exclude>tests/Salamek/Tests/MojeOlomouc/BaseTest.php</exclude>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory>src</directory>
+    </include>
+  </source>
 </phpunit>
-

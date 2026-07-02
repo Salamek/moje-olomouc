@@ -50,9 +50,9 @@ class ImportantMessage implements IImportantMessage
         \DateTimeInterface $dateTimeAt,
         int $type = ImportantMessageTypeEnum::TRAFFIC_SITUATION,
         int $severity = ImportantMessageSeverityEnum::WARNING,
-        \DateTimeInterface $expireAt = null,
+        ?\DateTimeInterface $expireAt = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $this->setText($text);
@@ -84,7 +84,7 @@ class ImportantMessage implements IImportantMessage
     /**
      * @param \DateTimeInterface|null $expireAt
      */
-    public function setExpireAt(\DateTimeInterface $expireAt = null): void
+    public function setExpireAt(?\DateTimeInterface $expireAt = null): void
     {
         $this->expireAt = $expireAt;
     }

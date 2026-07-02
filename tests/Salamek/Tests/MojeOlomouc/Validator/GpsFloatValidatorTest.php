@@ -4,26 +4,31 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Validator\GpsFloatValidator;
 
 class GpsFloatValidatorTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideBadGpsFloat
      * @param float $gpsFloat
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      */
+#[Test]
+#[DataProvider('provideBadGpsFloat')]
+
     public function gpsFloatValidatorFailOnGpsFloat(float $gpsFloat): void
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         GpsFloatValidator::validate($gpsFloat);
     }
 
     /**
-     * @test
-     * @dataProvider provideGoodGpsFloat
      * @param float $gpsFloat
      */
+#[Test]
+#[DataProvider('provideGoodGpsFloat')]
+
     public function gpsFloatValidatorSuccessOnGpsFloat(float $gpsFloat): void
     {
         GpsFloatValidator::validate($gpsFloat);
@@ -33,7 +38,8 @@ class GpsFloatValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideBadGpsFloat(): array
+
+    public static function provideBadGpsFloat(): array
     {
         return [
             [1000],
@@ -46,7 +52,8 @@ class GpsFloatValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideGoodGpsFloat(): array
+
+    public static function provideGoodGpsFloat(): array
     {
         return [
             [49.5808551],

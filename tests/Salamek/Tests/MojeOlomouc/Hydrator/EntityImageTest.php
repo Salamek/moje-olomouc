@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\EntityImageContentTypeEnum;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -14,7 +17,7 @@ class EntityImageTest extends BaseTest
     /** @var IEntityImage */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,20 +26,21 @@ class EntityImageTest extends BaseTest
 
 
     /**
-     * @test
      * @param string $imageUrl
-     * @dataProvider provideValidConstructorParameters
      * @param int $contentType
      * @param string|null $title
      * @param bool $isFeatured
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $imageUrl,
         int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER,
-        string $title = null,
+        ?string $title = null,
         bool $isFeatured = false,
-        int $id = null
+        ?int $id = null
     )
     {
         $entityImage = $this->hydrator->fromPrimitiveArray(
@@ -51,20 +55,21 @@ class EntityImageTest extends BaseTest
         $this->assertEquals(null, $entityImage->getEntityIdentifier());
     }
     /**
-     * @test
      * @param string $imageUrl
-     * @dataProvider provideValidConstructorParameters
      * @param int $contentType
      * @param string|null $title
      * @param bool $isFeatured
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $imageUrl,
         int $contentType = EntityImageContentTypeEnum::GRAPHICS_POSTER,
-        string $title = null,
+        ?string $title = null,
         bool $isFeatured = false,
-        int $id = null
+        ?int $id = null
     )
     {
         $entityImage = $this->hydrator->fromPrimitiveArray(
@@ -86,7 +91,8 @@ class EntityImageTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['url-'.mt_rand(), EntityImageContentTypeEnum::GRAPHICS_POSTER, 'title-'.mt_rand(), false, null],

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\PlaceCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Hydrator\IPlaceCategory;
@@ -14,7 +17,7 @@ class PlaceCategoryTest extends BaseTest
     /** @var IPlaceCategory */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,18 +26,19 @@ class PlaceCategoryTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
-        int $consumerFlags = null,
+        ?int $consumerFlags = null,
         bool $isVisible = true,
-        int $id = null
+        ?int $id = null
     )
     {
         $placeCategory = $this->hydrator->fromPrimitiveArray([
@@ -47,18 +51,19 @@ class PlaceCategoryTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
-        int $consumerFlags = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $placeCategory = $this->hydrator->fromPrimitiveArray([
@@ -76,14 +81,15 @@ class PlaceCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
-            ['title-'.mt_rand(), null, false, true, null],
-            ['title-'.mt_rand(), PlaceCategoryConsumerFlagEnum::CITIZEN, false, true, null],
-            ['title-'.mt_rand(), null, true, true, null],
-            ['title-'.mt_rand(), null, false, false, null],
-            ['title-'.mt_rand(), null, false, false, mt_rand()],
+            ['title-'.mt_rand(), null, true, null],
+            ['title-'.mt_rand(), PlaceCategoryConsumerFlagEnum::CITIZEN, true, null],
+            ['title-'.mt_rand(), null, true, null],
+            ['title-'.mt_rand(), null, false, null],
+            ['title-'.mt_rand(), null, false, mt_rand()],
         ];
     }
 

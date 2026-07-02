@@ -42,7 +42,7 @@ class ArticleCategories implements IOperation
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
-        \DateTimeInterface $from = null,
+        ?\DateTimeInterface $from = null,
         bool $deleted = false,
         bool $invisible = false,
         bool $withExtraFields = false,
@@ -90,7 +90,7 @@ class ArticleCategories implements IOperation
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete(array $articleCategories = null): Response
+    public function delete(?array $articleCategories = null): Response
     {
         return $this->request->delete('/api/import/article-categories', $articleCategories, 'articleCategory', $this->hydrator);
     }

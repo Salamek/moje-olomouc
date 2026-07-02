@@ -4,28 +4,33 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Validator\FloatPrecisionValidator;
 
 class FloatPrecisionValidatorTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideBadFloatPrecisionFloat
      * @param float $float
      * @param int $precision
-     * @expectedException Salamek\MojeOlomouc\Exception\InvalidArgumentException
      */
+#[Test]
+#[DataProvider('provideBadFloatPrecisionFloat')]
+
     public function floatPrecisionValidatorFailOnFloat(float $float, int $precision): void
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         FloatPrecisionValidator::validate($float, $precision);
     }
 
     /**
-     * @test
-     * @dataProvider provideGoodFloatPrecisionFloat
      * @param float $float
      * @param int $precision
      */
+#[Test]
+#[DataProvider('provideGoodFloatPrecisionFloat')]
+
     public function floatPrecisionValidatorSuccessOnFloat(float $float, int $precision): void
     {
         FloatPrecisionValidator::validate($float, $precision);
@@ -35,7 +40,8 @@ class FloatPrecisionValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideBadFloatPrecisionFloat(): array
+
+    public static function provideBadFloatPrecisionFloat(): array
     {
         return [
             [1000, 2],
@@ -48,7 +54,8 @@ class FloatPrecisionValidatorTest extends BaseTest
     /**
      * @return array
      */
-    public function provideGoodFloatPrecisionFloat(): array
+
+    public static function provideGoodFloatPrecisionFloat(): array
     {
         return [
             [49.5808551, 3],

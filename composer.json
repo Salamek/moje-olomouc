@@ -3,12 +3,12 @@
     "description" : "MojeOlomouc Client",
     "license"     : "LGPL-3.0",
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=8.3.0",
         "ext-json": "*",
-        "guzzlehttp/guzzle": "~6.2"
+        "guzzlehttp/guzzle": "~7.13.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.4"
+        "phpunit/phpunit": "^13.2.2"
     },
     "authors": [
         {

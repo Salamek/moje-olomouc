@@ -12,7 +12,7 @@ interface IEntityImage extends IModel
     /**
      * @param string|null $title
      */
-    public function setTitle(string $title = null): void;
+    public function setTitle(?string $title = null): void;
 
     /**
      * @param string $imageUrl

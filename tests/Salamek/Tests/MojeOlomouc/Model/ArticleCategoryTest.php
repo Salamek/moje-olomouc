@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleCategoryConsumerFlagEnum;
 use Salamek\MojeOlomouc\Model\ArticleCategory;
 use Salamek\Tests\MojeOlomouc\BaseTest;
@@ -11,20 +14,21 @@ use Salamek\Tests\MojeOlomouc\BaseTest;
 class ArticleCategoryTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool|null $isImportant
      * @param bool|null $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isImportant = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = new ArticleCategory(
@@ -40,20 +44,21 @@ class ArticleCategoryTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isImportant
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isImportant = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = new ArticleCategory(
@@ -73,23 +78,24 @@ class ArticleCategoryTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param int|null $consumerFlags
      * @param bool $isImportant
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $title,
-        int $consumerFlags = null,
-        bool $isImportant = null,
-        bool $isVisible = null,
-        int $id = null
+        ?int $consumerFlags = null,
+        ?bool $isImportant = null,
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new ArticleCategory(
             $title,
             $consumerFlags,
@@ -102,7 +108,8 @@ class ArticleCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
             [str_repeat('title-'.mt_rand(), 128), null, false, true, null],
@@ -113,7 +120,8 @@ class ArticleCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['title-'.mt_rand(), null, false, true, null],

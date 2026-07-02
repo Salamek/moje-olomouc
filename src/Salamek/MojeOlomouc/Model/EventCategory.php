@@ -24,7 +24,7 @@ class EventCategory implements IEventCategory
      * @param bool $isVisible
      * @param null $id
      */
-    public function __construct(string $title, bool $isVisible = null, $id = null)
+    public function __construct(string $title, ?bool $isVisible = null, $id = null)
     {
         $this->setTitle($title);
         $this->setIsVisible($isVisible);
@@ -43,7 +43,7 @@ class EventCategory implements IEventCategory
     /**
      * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void
+    public function setIsVisible(?bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }

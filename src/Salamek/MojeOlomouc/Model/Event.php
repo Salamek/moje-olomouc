@@ -103,15 +103,15 @@ class Event implements IEvent
         float $placeLon,
         array $categories,
         array $images = [],
-        string $attachmentUrl = null,
-        string $fee = null,
-        string $webUrl = null,
-        string $facebookUrl = null,
-        int $consumerFlags = null,
-        bool $isVisible = null,
-        int $approveState = null,
-        int $featuredLevel = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?string $fee = null,
+        ?string $webUrl = null,
+        ?string $facebookUrl = null,
+        ?int $consumerFlags = null,
+        ?bool $isVisible = null,
+        ?int $approveState = null,
+        ?int $featuredLevel = null,
+        ?int $id = null
     )
     {
         $this->setTitle($title);
@@ -218,7 +218,7 @@ class Event implements IEvent
     /**
      * @param string|null $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl = null): void
+    public function setAttachmentUrl(?string $attachmentUrl = null): void
     {
         if (!is_null($attachmentUrl))
         {
@@ -230,7 +230,7 @@ class Event implements IEvent
     /**
      * @param string|null $fee
      */
-    public function setFee(string $fee = null): void
+    public function setFee(?string $fee = null): void
     {
         if (!is_null($fee))
         {
@@ -242,7 +242,7 @@ class Event implements IEvent
     /**
      * @param string|null $webUrl
      */
-    public function setWebUrl(string $webUrl = null): void
+    public function setWebUrl(?string $webUrl = null): void
     {
         if (!is_null($webUrl))
         {
@@ -254,7 +254,7 @@ class Event implements IEvent
     /**
      * @param string|null $facebookUrl
      */
-    public function setFacebookUrl(string $facebookUrl = null): void
+    public function setFacebookUrl(?string $facebookUrl = null): void
     {
         if (!is_null($facebookUrl))
         {
@@ -266,7 +266,7 @@ class Event implements IEvent
     /**
      * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags = null): void
+    public function setConsumerFlags(?int $consumerFlags = null): void
     {
         $this->consumerFlags = $consumerFlags;
     }
@@ -274,7 +274,7 @@ class Event implements IEvent
     /**
      * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void
+    public function setIsVisible(?bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -282,7 +282,7 @@ class Event implements IEvent
     /**
      * @param int|null $approveState
      */
-    public function setApproveState(int $approveState = null): void
+    public function setApproveState(?int $approveState = null): void
     {
         if (!is_null($approveState))
         {
@@ -299,7 +299,7 @@ class Event implements IEvent
     /**
      * @param int|null $featuredLevel
      */
-    public function setFeaturedLevel(int $featuredLevel = null): void
+    public function setFeaturedLevel(?int $featuredLevel = null): void
     {
         if (!is_null($featuredLevel))
         {

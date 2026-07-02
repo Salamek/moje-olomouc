@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\MojeOlomouc;
 use Salamek\MojeOlomouc\Operation\ArticleCategories;
 use Salamek\MojeOlomouc\Operation\Articles;
@@ -17,122 +20,120 @@ use Salamek\MojeOlomouc\Operation\Places;
 class MojeOlomoucTest extends BaseTest
 {
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function instantiationShouldBeGood(): void
     {
-        $mojeOlomouc = new MojeOlomouc($this->getClientMock(), $this->getTestApiKey());
+        $mojeOlomouc = new MojeOlomouc($this->getClientStub(), self::getTestApiKey());
         $this->assertInstanceOf(MojeOlomouc::class, $mojeOlomouc);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function createShouldBeGood(): void
     {
-        $mojeOlomouc = MojeOlomouc::create($this->getTestApiKey());
+        $mojeOlomouc = MojeOlomouc::create(self::getTestApiKey());
         $this->assertInstanceOf(MojeOlomouc::class, $mojeOlomouc);
     }
     
-    /**
-     * @test
-     * @dataProvider provideBadApiKey
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
-     */
+    #[Test]
+#[DataProvider('provideBadApiKey')]
+
     public function checkFailOnBadApiKey(string $apiKey): void
     {
-        new MojeOlomouc($this->getClientMock(), $apiKey);
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        new MojeOlomouc($this->getClientStub(), $apiKey);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function getApiKeyShouldReturnApiKey(): void
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $mojeOlomouc = new MojeOlomouc($this->getClientMock(), $apiKey);
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $mojeOlomouc = new MojeOlomouc($this->getClientStub(), $apiKey);
         $this->assertEquals($apiKey, $mojeOlomouc->getApiKey());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function getClientShouldReturnClient(): void
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey);
         $this->assertEquals($client, $mojeOlomouc->getClient());
     }
 
     /**
-     * @test
-     * @dataProvider provideValidOperationNames
      * @param string $operationName
      * @param string $expectedOperationClass
      */
+#[Test]
+#[DataProvider('provideValidOperationNames')]
+
     public function getOperationByGetOperationMethodShouldBeGood(string $operationName, string $expectedOperationClass)
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey);
         $operation = $mojeOlomouc->getOperation($operationName);
         $this->assertInstanceOf($expectedOperationClass, $operation);
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidOperationNames
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $operationName
      * @param string $expectedOperationClass
      */
+#[Test]
+#[DataProvider('provideInvalidOperationNames')]
+
     public function getOperationByGetOperationMethodShouldFail(string $operationName, string $expectedOperationClass)
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey);
         $mojeOlomouc->getOperation($operationName);
     }
 
     /**
      * @TODO
-     * @dataProvider provideValidOperationNames
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $operationName
      * @param string $expectedOperationClass
      */
+#[DataProvider('provideValidOperationNames')]
+
     public function getOperationByGetOperationMethodShouldFailOnHydrator(string $operationName, string $expectedOperationClass)
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey, []);
         $mojeOlomouc->getOperation($operationName);
     }
 
     /**
-     * @test
-     * @dataProvider provideValidOperationNames
      * @param string $operationName
      * @param string $expectedOperationClass
      */
+#[Test]
+#[DataProvider('provideValidOperationNames')]
+
     public function getOperationByMagicGetMethodShouldBeGood(string $operationName, string $expectedOperationClass)
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey);
         $operation = $mojeOlomouc->{$operationName};
         $this->assertInstanceOf($expectedOperationClass, $operation);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function getTestGetOperationSingleInstanceMethod()
     {
-        $apiKey = $this->getTestApiKey((string)mt_rand());
-        $client = $this->getClientMock();
+        $apiKey = self::getTestApiKey((string)mt_rand());
+        $client = $this->getClientStub();
         $mojeOlomouc = new MojeOlomouc($client, $apiKey);
         $operationOne = $mojeOlomouc->getOperation('articles');
         $operationTwo = $mojeOlomouc->getOperation('articles');
@@ -142,7 +143,8 @@ class MojeOlomoucTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidOperationNames(): array
+
+    public static function provideValidOperationNames(): array
     {
         return [
             ['articleCategories', ArticleCategories::class],
@@ -158,7 +160,8 @@ class MojeOlomoucTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidOperationNames(): array
+
+    public static function provideInvalidOperationNames(): array
     {
         return [
             ['articleCategories'.mt_rand(), ArticleCategories::class],
@@ -174,12 +177,13 @@ class MojeOlomoucTest extends BaseTest
     /**
      * @return array
      */
-    public function provideBadApiKey(): array
+
+    public static function provideBadApiKey(): array
     {
         return [
             [''],
             ['shortApiKey'],
-            [$this->getTestApiKey().$this->getTestApiKey()],
+            [self::getTestApiKey().self::getTestApiKey()],
         ];
     }
 }

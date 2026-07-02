@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Hydrator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Hydrator\IArticleCategory;
 use Salamek\MojeOlomouc\Hydrator\IEventCategory;
@@ -14,7 +17,7 @@ class EventCategoryTest extends BaseTest
     /** @var IArticleCategory */
     private $hydrator;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,16 +26,17 @@ class EventCategoryTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromRequiredPrimitiveArrayShouldBeGood(
         string $title,
-        bool $isVisible = null,
-        int $id = null
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = $this->hydrator->fromPrimitiveArray([
@@ -44,16 +48,17 @@ class EventCategoryTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param bool $isVisible
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createFromOptionalPrimitiveArrayShouldBeGood(
         string $title,
-        bool $isVisible = null,
-        int $id = null
+        ?bool $isVisible = null,
+        ?int $id = null
     )
     {
         $articleCategory = $this->hydrator->fromPrimitiveArray([
@@ -69,7 +74,8 @@ class EventCategoryTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         return [
             ['title-'.mt_rand(), true, null],

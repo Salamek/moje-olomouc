@@ -45,7 +45,12 @@ abstract class BaseTest extends TestCase
         return $this->createMock('GuzzleHttp\ClientInterface');
     }
 
-    protected function getTestApiKey(string $input = 'testKey'): string
+    protected function getClientStub(): ClientInterface
+    {
+        return $this->createStub('GuzzleHttp\ClientInterface');
+    }
+
+    protected static function getTestApiKey(string $input = 'testKey'): string
     {
         return hash('sha256', $input);
     }
@@ -55,16 +60,16 @@ abstract class BaseTest extends TestCase
         $streamMock = $this->createMock('Psr\Http\Message\StreamInterface');
         $streamMock->expects($this->once())
             ->method('getContents')
-            ->will($this->returnValue($responseContent));
+            ->willReturn($responseContent);
 
         $responseMock = $this->getResponseMock();
         $responseMock->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($streamMock));
+            ->willReturn($streamMock);
 
         $responseMock->expects($this->once())
             ->method('getStatusCode')
-            ->will($this->returnValue($responseCode));
+            ->willReturn($responseCode);
 
         return $responseMock;
     }
@@ -92,7 +97,7 @@ abstract class BaseTest extends TestCase
      * @return \DateTime
      * @throws \Exception
      */
-    protected function getDateTime(): \DateTime
+    protected static function getDateTime(): \DateTime
     {
         return \DateTime::createFromFormat(\DateTime::ISO8601, (new \DateTime())->format(\DateTime::ISO8601));
     }
@@ -101,7 +106,7 @@ abstract class BaseTest extends TestCase
      * @param bool $boolean
      * @return string
      */
-    protected function boolToString(bool $boolean): string
+    protected static function boolToString(bool $boolean): string
     {
         return $boolean ? 'true': 'false';
     }

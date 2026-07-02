@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Model\PlaceCategory;
 use Salamek\MojeOlomouc\Response;
 
 class ResponseTest extends BaseTest
 {
-    /**
-     * @test
-     * @dataProvider provideInvalidResponseBody
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidJsonResponseException
-     */
+    #[Test]
+#[DataProvider('provideInvalidResponseBody')]
+
     public function constructFailOnWrongData(string $responseContent): void
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidJsonResponseException::class);
         $responseMock = $this->getResponseMockWithBody($responseContent);
 
         new Response($responseMock);
     }
 
-    /**
-     * @test
-     * @dataProvider provideValidResponseBody
-     */
+    #[Test]
+#[DataProvider('provideValidResponseBody')]
+
     public function constructOkOnGoodData(bool $isError, string $responseContent): void
     {
         $responseMock = $this->getResponseMockWithBody($responseContent);
@@ -40,9 +41,8 @@ class ResponseTest extends BaseTest
         $this->assertEquals(200, $response->getHttpCode());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function dataHydratorShouldHydrateData()
     {
         $title = 'title-'.mt_rand();
@@ -73,10 +73,10 @@ class ResponseTest extends BaseTest
         $this->assertArrayHasKey('tests', $data);
         $this->assertNotEmpty($data['tests']);
         $this->assertInstanceOf(PlaceCategory::class, $data['tests'][0]);
-        $this->assertObjectHasAttribute('title', $data['tests'][0]);
-        $this->assertObjectHasAttribute('consumerFlags', $data['tests'][0]);
-        $this->assertObjectHasAttribute('isVisible', $data['tests'][0]);
-        $this->assertObjectHasAttribute('entityIdentifier', $data['tests'][0]);
+        $this->assertObjectHasProperty('title', $data['tests'][0]);
+        $this->assertObjectHasProperty('consumerFlags', $data['tests'][0]);
+        $this->assertObjectHasProperty('isVisible', $data['tests'][0]);
+        $this->assertObjectHasProperty('entityIdentifier', $data['tests'][0]);
 
         $this->assertEquals($title, $data['tests'][0]->getTitle());
         $this->assertEquals($consumerFlags, $data['tests'][0]->getConsumerFlags());
@@ -85,9 +85,8 @@ class ResponseTest extends BaseTest
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function idHydratorShouldHydrateId()
     {
         $title = 'title-'.mt_rand();
@@ -118,7 +117,8 @@ class ResponseTest extends BaseTest
     /**
      * @return array
      */
-    public function provideInvalidResponseBody(): array
+
+    public static function provideInvalidResponseBody(): array
     {
         return [
             [
@@ -156,7 +156,8 @@ class ResponseTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidResponseBody(): array
+
+    public static function provideValidResponseBody(): array
     {
         return [
             [

@@ -67,11 +67,11 @@ class Article implements IArticle
         IIdentifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $this->setTitle($title);
@@ -142,7 +142,7 @@ class Article implements IArticle
     /**
      * @param string $attachmentUrl
      */
-    public function setAttachmentUrl(string $attachmentUrl = null): void
+    public function setAttachmentUrl(?string $attachmentUrl = null): void
     {
         $this->attachmentUrl = $attachmentUrl;
     }
@@ -150,7 +150,7 @@ class Article implements IArticle
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void
+    public function setIsVisible(?bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }
@@ -158,7 +158,7 @@ class Article implements IArticle
     /**
      * @param boolean|null $isImportant
      */
-    public function setIsImportant(bool $isImportant = null): void
+    public function setIsImportant(?bool $isImportant = null): void
     {
         $this->isImportant = $isImportant;
     }
@@ -166,7 +166,7 @@ class Article implements IArticle
     /**
      * @param int $approveState
      */
-    public function setApproveState(int $approveState = null): void
+    public function setApproveState(?int $approveState = null): void
     {
         if (!is_null($approveState))
         {

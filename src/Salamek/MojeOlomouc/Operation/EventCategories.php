@@ -42,7 +42,7 @@ class EventCategories implements IOperation
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAll(
-        \DateTimeInterface $from = null,
+        ?\DateTimeInterface $from = null,
         bool $deleted = false,
         bool $invisible = false,
         bool $withExtraFields = false,

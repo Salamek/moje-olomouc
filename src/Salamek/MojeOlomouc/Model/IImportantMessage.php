@@ -23,7 +23,7 @@ interface IImportantMessage extends IModel
     /**
      * @param \DateTimeInterface|null $expireAt
      */
-    public function setExpireAt(\DateTimeInterface $expireAt = null): void;
+    public function setExpireAt(?\DateTimeInterface $expireAt = null): void;
 
     /**
      * @param int $type

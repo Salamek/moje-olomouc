@@ -30,7 +30,7 @@ class PlaceCategory implements IPlaceCategory
      * @param bool|null $isVisible
      * @param int|null $id
      */
-    public function __construct(string $title, int $consumerFlags = null, bool $isVisible = null, int $id = null)
+    public function __construct(string $title, ?int $consumerFlags = null, ?bool $isVisible = null, ?int $id = null)
     {
         $this->setTitle($title);
         $this->setConsumerFlags($consumerFlags);
@@ -50,7 +50,7 @@ class PlaceCategory implements IPlaceCategory
     /**
      * @param int|null $consumerFlags
      */
-    public function setConsumerFlags(int $consumerFlags = null): void
+    public function setConsumerFlags(?int $consumerFlags = null): void
     {
         $this->consumerFlags = $consumerFlags;
     }
@@ -58,7 +58,7 @@ class PlaceCategory implements IPlaceCategory
     /**
      * @param boolean|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void
+    public function setIsVisible(?bool $isVisible = null): void
     {
         $this->isVisible = $isVisible;
     }

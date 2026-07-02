@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc;
 
+use PHPUnit\Framework\Attributes\Test;
+
 
 use Salamek\MojeOlomouc\Enum\EntityImageContentTypeEnum;
 use Salamek\MojeOlomouc\Enum\RequestActionCodeEnum;
@@ -16,7 +18,7 @@ class RequestTest extends BaseTest
     private $hydrator;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -24,26 +26,24 @@ class RequestTest extends BaseTest
         $this->hydrator = $this->getHydrator(\Salamek\MojeOlomouc\Hydrator\IIdentifier::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function createShouldBeGoodTest()
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
         
-        $client = $this->getClientMock();
+        $client = $this->getClientStub();
 
         new Request($client, $apiKey);
 
         $this->assertEquals(true, true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function getRequestShouldBeGoodTest()
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $uri = 'uri-'.mt_rand();
         $arguments = [
@@ -62,17 +62,17 @@ class RequestTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
         
         $request = new Request($client, $apiKey);
         $response = $request->get($uri, $arguments);
 
-        $this->assertInternalType('array', $catchRequestInfo['query']);
+        $this->assertIsArray($catchRequestInfo['query']);
         $this->assertArrayHasKey('a', $catchRequestInfo['query']);
         $this->assertArrayHasKey('foo', $catchRequestInfo['query']);
         $this->assertEquals('b', $catchRequestInfo['query']['a']);
@@ -83,12 +83,11 @@ class RequestTest extends BaseTest
         $this->assertInstanceOf(Response::class, $response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function createRequestShouldBeGoodTest()
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $uri = 'uri-'.mt_rand();
 
@@ -103,12 +102,12 @@ class RequestTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
@@ -116,15 +115,15 @@ class RequestTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('test', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveTest = $primitivePayloadItem['test'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveTest);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveTest);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('id', $primitiveTest);
         $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveTest['id']);
         $this->assertEquals('POST', $catchType);
@@ -135,12 +134,11 @@ class RequestTest extends BaseTest
         $this->assertInstanceOf(Response::class, $response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function updateRequestShouldBeGoodTest()
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $uri = 'uri-'.mt_rand();
 
@@ -155,12 +153,12 @@ class RequestTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
@@ -168,15 +166,15 @@ class RequestTest extends BaseTest
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
 
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('test', $primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveTest = $primitivePayloadItem['test'];
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveTest);
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveTest);
+        $this->assertIsArray($primitiveAction);
         $this->assertArrayHasKey('id', $primitiveTest);
         $this->assertEquals($testingModel->getEntityIdentifier(), $primitiveTest['id']);
         $this->assertEquals('POST', $catchType);
@@ -187,12 +185,11 @@ class RequestTest extends BaseTest
         $this->assertInstanceOf(Response::class, $response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
+
     public function deleteRequestShouldBeGoodTest()
     {
-        $apiKey = $this->getTestApiKey();
+        $apiKey = self::getTestApiKey();
 
         $uri = 'uri-'.mt_rand();
 
@@ -207,24 +204,24 @@ class RequestTest extends BaseTest
         $client = $this->getClientMock();
         $client->expects($this->once())
             ->method('request')
-            ->will($this->returnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
+            ->willReturnCallback(function ($type, $uri, $requestInfo) use (&$catchRequestInfo, &$catchType, &$catchUri, $response) {
                 $catchType = $type;
                 $catchUri = $uri;
                 $catchRequestInfo = $requestInfo;
                 return $response;
-            }));
+            });
 
         $request = new Request($client, $apiKey);
         $testingModel = new Identifier(mt_rand());
         $response = $request->delete($uri, [$testingModel], 'test', $this->hydrator);
 
         $primitivePayloadItem = $catchRequestInfo['json'][0];
-        $this->assertInternalType('array', $primitivePayloadItem);
+        $this->assertIsArray($primitivePayloadItem);
         $this->assertArrayHasKey('action', $primitivePayloadItem);
 
         $primitiveAction = $primitivePayloadItem['action'];
 
-        $this->assertInternalType('array', $primitiveAction);
+        $this->assertIsArray($primitiveAction);
 
         $this->assertEquals('POST', $catchType);
         $this->assertEquals('Basic '.$apiKey, $catchRequestInfo['headers']['Authorization']);

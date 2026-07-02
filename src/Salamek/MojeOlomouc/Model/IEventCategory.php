@@ -17,7 +17,7 @@ interface IEventCategory extends IModel
     /**
      * @param bool|null $isVisible
      */
-    public function setIsVisible(bool $isVisible = null): void;
+    public function setIsVisible(?bool $isVisible = null): void;
     
     /**
      * @return string

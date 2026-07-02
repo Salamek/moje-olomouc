@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Salamek\Tests\MojeOlomouc\Model;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+
 use Salamek\MojeOlomouc\Enum\ArticleApproveStateEnum;
 use Salamek\MojeOlomouc\Enum\DateTime;
 use Salamek\MojeOlomouc\Model\Article;
@@ -14,8 +17,6 @@ use Salamek\Tests\MojeOlomouc\BaseTest;
 class ArticleTest extends BaseTest
 {
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $content
      * @param string $author
@@ -28,6 +29,9 @@ class ArticleTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createRequiredShouldBeGoodTest(
         string $title,
         string $content,
@@ -35,11 +39,11 @@ class ArticleTest extends BaseTest
         Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $article = new Article(
@@ -65,8 +69,6 @@ class ArticleTest extends BaseTest
 
 
     /**
-     * @test
-     * @dataProvider provideValidConstructorParameters
      * @param string $title
      * @param string $content
      * @param string $author
@@ -79,6 +81,9 @@ class ArticleTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideValidConstructorParameters')]
+
     public function createOptionalShouldBeGoodTest(
         string $title,
         string $content,
@@ -86,11 +91,11 @@ class ArticleTest extends BaseTest
         Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
         $article = new Article(
@@ -122,9 +127,6 @@ class ArticleTest extends BaseTest
     }
 
     /**
-     * @test
-     * @dataProvider provideInvalidConstructorParameters
-     * @expectedException \Salamek\MojeOlomouc\Exception\InvalidArgumentException
      * @param string $title
      * @param string $content
      * @param string $author
@@ -137,6 +139,9 @@ class ArticleTest extends BaseTest
      * @param int|null $approveState
      * @param int|null $id
      */
+#[Test]
+#[DataProvider('provideInvalidConstructorParameters')]
+
     public function createOptionalShouldFailOnBadData(
         string $title,
         string $content,
@@ -144,13 +149,14 @@ class ArticleTest extends BaseTest
         Identifier $category,
         \DateTimeInterface $dateTimeAt,
         array $images = [],
-        string $attachmentUrl = null,
-        bool $isVisible = null,
-        bool $isImportant = null,
-        int $approveState = null,
-        int $id = null
+        ?string $attachmentUrl = null,
+        ?bool $isVisible = null,
+        ?bool $isImportant = null,
+        ?int $approveState = null,
+        ?int $id = null
     )
     {
+        $this->expectException(\Salamek\MojeOlomouc\Exception\InvalidArgumentException::class);
         new Article(
             $title,
             $content,
@@ -170,12 +176,13 @@ class ArticleTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideInvalidConstructorParameters(): array
+
+    public static function provideInvalidConstructorParameters(): array
     {
         return [
-            [str_repeat('title-'.mt_rand(), 128), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content-'.mt_rand(), str_repeat('author-'.mt_rand(), 128), new Identifier(mt_rand()), $this->getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), ['notAEntityImage'], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            [str_repeat('title-'.mt_rand(), 128), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), self::getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), str_repeat('author-'.mt_rand(), 128), new Identifier(mt_rand()), self::getDateTime(), [], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content-'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), self::getDateTime(), ['notAEntityImage'], 'attachmentUrl-'.mt_rand(), true, false, null, null],
         ];
     }
 
@@ -184,12 +191,13 @@ class ArticleTest extends BaseTest
      * @return array
      * @throws \Exception
      */
-    public function provideValidConstructorParameters(): array
+
+    public static function provideValidConstructorParameters(): array
     {
         $image = new EntityImage('url');
         return [
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
-            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), $this->getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), self::getDateTime(), [$image], 'attachmentUrl-'.mt_rand(), true, false, null, null],
+            ['title-'.mt_rand(), 'content'.mt_rand(), 'author-'.mt_rand(), new Identifier(mt_rand()), self::getDateTime(), [], null, false, true, ArticleApproveStateEnum::WAITING_FOR_DELETE, mt_rand()]
         ];
     }
 }
