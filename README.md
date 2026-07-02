@@ -1,6 +1,6 @@
 # Moje Olomouc PHP API Client
 
-[![Build Status](https://secure.travis-ci.org/Salamek/moje-olomouc.png?branch=master)](https://travis-ci.org/Salamek/moje-olomouc)
+[![CI](https://github.com/Salamek/moje-olomouc/actions/workflows/ci.yml/badge.svg)](https://github.com/Salamek/moje-olomouc/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/Salamek/moje-olomouc/branch/master/graph/badge.svg)](https://codecov.io/gh/Salamek/moje-olomouc)
 
 It's been designed to be object oriented, testable and uses [Guzzle](http://guzzlephp.org) as a
